@@ -1,4 +1,9 @@
 ### BotanizeR
+  # define starting score
+  #if(length(unique(species_list$SCORE))==1) {
+  #  species_list$SCORE <- length(hints)
+  #}
+  
 
 BotanizeR_quiz <- function(species_list, hints = c("image","image2","description","status","habitat","family","German name")){
   
@@ -40,23 +45,29 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
   # infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
   
   # photo
-  #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_list$NAMNR[i], sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
-  download.file(paste("https://www.floraweb.de/pflanzenarten/",grep("foto",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[1]], value = T), sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
-  html_photo <- htmlTreeParse(file = file.path(dir,"photo.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-  infos_photo <- xpathApply(html_photo, "//div[@id='content']//p",xmlValue)
-  # photolink <- xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs)[[1]][3]
-  photolinks <- sapply(xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs), function(x) grep("bilder", x, value=T))
-  
   image=NA
   image2=NA
-  if(photolinks[1]!="../bilder/arten/"){
-    try(image <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep="")),silent = T)
-    try(image2 <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+  
+  #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_list$NAMNR[i], sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
+  
+  if(grepl("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))[1]){
+    download.file(paste("https://www.floraweb.de/pflanzenarten/",grep("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[1]], value = T), sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
+    html_photo <- htmlTreeParse(file = file.path(dir,"photo.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+    infos_photo <- xpathApply(html_photo, "//div[@id='content']//p",xmlValue)
+    # photolink <- xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs)[[1]][3]
+    photolinks <- sapply(xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs), function(x) grep("bilder", x, value=T))
+    
+    if(photolinks[1]!="../bilder/arten/"){
+      try(image <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep="")),silent = T)
+      if (length(photolinks)>1){
+        try(image2 <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+      }
+    }
   }
   
   attempts <- 0
   attempt <- "start"
-  while(attempt != species & attempt != "skip" & attempt != "noinfo" & attempts <= 10){
+  while(attempt != species & attempt != "skip" & attempt != "exit" & attempt != "noinfo" & attempts <= 10){
     
     for(k in 1:length(hints)){
       
@@ -66,9 +77,9 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
         if(!is.na(image[1])) {
           plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
           Sys.sleep(0.3)
-          plot(image, xaxt="n", yaxt="n")
+          plot(image, axes=FALSE)
           
-          while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+          while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
             attempts <- attempts + 1
             
             attempt <- readline("Species: ")
@@ -76,11 +87,11 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
             if(attempt==""){
               next
             }
-            if(species!=attempt & attempt != "skip") {
+            if(species!=attempt & attempt != "skip" & attempt != "exit") {
               message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n",""))     
             }
           }
-          if(species==attempt | attempt == "skip" | attempts > 10){
+          if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
             break()
           }
         } else {
@@ -93,9 +104,9 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
         if(!is.na(image2[1])) {
           plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
           Sys.sleep(0.3)
-          plot(image2, xaxt="n", yaxt="n")
+          plot(image2, axes=FALSE)
           
-          while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+          while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
             attempts <- attempts + 1
             
             attempt <- readline("Species: ")
@@ -103,11 +114,11 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
             if(attempt==""){
               next
             }
-            if(species!=attempt & attempt != "skip") {
+            if(species!=attempt & attempt != "skip" & attempt != "exit") {
               message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n",""))     
             }
           }
-          if(species==attempt | attempt == "skip" | attempts > 10){
+          if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
             break()
           }
         }
@@ -117,7 +128,7 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
         message(infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
         # message(infos_biology[[2]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
           
           attempt <- readline("Species: ")
@@ -125,18 +136,18 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip"){        
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
             message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
           }
         }
-        if(species==attempt | attempt == "skip" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
           break()
         }
       }
       if(hints[k]=="status"){
         message(infos_main[[7]],"\n",infos_main[[8]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
           
           attempt <- readline("Species: ")
@@ -144,18 +155,18 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip"){        
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
             message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
           }
         }
-        if(species==attempt | attempt == "skip" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
           break()
         }
       }
       if(hints[k]=="family"){
         message(infos_main[[6]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
           
           attempt <- readline("Species: ")
@@ -163,18 +174,18 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip"){        
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
             message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
           }
         }
-        if(species==attempt | attempt == "skip" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
           break()
         }
       }
       if(hints[k]=="German name"){
         message(infos_main[[5]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
           
           attempt <- readline("Species: ")
@@ -182,18 +193,18 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip"){        
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
             message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
           }
         }
-        if(species==attempt | attempt == "skip" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
           break()
         }
       }
       if(hints[k]=="habitat"){
         message(infos_ecology[[3]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
           
           attempt <- readline("Species: ")
@@ -201,17 +212,21 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip"){        
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
             message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
           }
         }
-        if(species==attempt | attempt == "skip" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
           break()
         }
       }
     }
   }
+  
+  species_list$SCORE[i] <- species_list$SCORE[i] + attempts
+  
   if(species==attempt){
+    species_list$COUNT[i] <- species_list$COUNT[i] + 1
     message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
   } else {
     if(attempt=="noinfo"){
@@ -220,7 +235,12 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
       message("Species not correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
     }
   }
-  BotanizeR_quiz(species_list, hints)
+  if(attempt=="exit"){
+    message("Goodbye")
+    return(species_list)
+  } else {
+    BotanizeR_quiz(species_list, hints)
+  }
 }
 
 

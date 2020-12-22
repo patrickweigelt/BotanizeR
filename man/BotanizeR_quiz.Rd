@@ -20,5 +20,10 @@ A vector of new probabilities per species.
 \examples{
 data(floraweb_species)
 floraweb_species <- floraweb_species[which(floraweb_species$SUMMER == 1)] # subset for nearly 200 species forestry students in Göttingen learn.
-BotanizeR_quiz()
+# Type in species name, or press enter for next hint or type "skip" and press 
+# enter for next species or type "exit" to end quiz and save results
+floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
+                                           hints = c("image","image2","description","status",
+                                                     "habitat","family","German name"))
+
 }
