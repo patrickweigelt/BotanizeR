@@ -1,20 +1,18 @@
 ### BotanizeR
 
-library(imager)
-library(XML)
-
-hints <- c("image","description","floristic status","conservation status","family","German name")
-
-species_list <- read.csv("floraweb_allspecies_subset.csv")
-
-species_list$COUNT <- 1
-species_list$SCORE <- length(hints)
-
-species_list <- species_list[which(species_list$SUMMER==1),]
-
-
-BotanizeR <- function(){
+BotanizeR_quiz <- function(species_list, hints = c("image","description","floristic status","conservation status","family","German name")){
   
+  # 1. Controls ----
+  # Package dependencies
+  require(imager)
+  require(XML)
+  
+  # Arguments
+  if(!all(hints %in% c("image","description","floristic status","conservation status","family","German name"))){
+    stop('"hints" must be a subset of c("image","description","floristic status","conservation status","family","German name")')
+  }
+  
+  # 2. Quiz ----
   i <- sample(1:nrow(species_list), 1, prob = species_list$SCORE/species_list$COUNT)
   
   species <- species_list$SPECIES[i]
@@ -100,18 +98,9 @@ BotanizeR <- function(){
   } else {
     message("Species not correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]])
   }
-  BotanizeR()
+  BotanizeR_quiz(species_list, hints)
 }
 
 
-# Type in species name, or press enter for next hint or type "skip" and press enter for next species
-BotanizeR()
-
-
-# TODO: update score dynamically
-# skip hints that are not available, skip species if no picture available and give message
-# package structure
-# Genus correct
-# spaces
 
 

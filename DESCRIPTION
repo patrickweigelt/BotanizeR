@@ -1,0 +1,17 @@
+Package: BotanizeR
+Type: Package
+Title: Little quiz game to memorize the plant species of Germany
+Version: 0.1.0
+Authors@R: c(
+  person("Patrick", "Weigelt", email = "weigelt.patrick@gmail.com",
+    role = c("aut" , "cre"), comment = c(ORCID = "0000-0002-2485-3708"))
+  )
+Description: Navigates through species from floraweb.de (or a defined subset thereof), shows pictures and descriptions and other hints and let's the user guess the species name. Number of tries and attempts are used to calculate scores that will be used to update probabilities for the random sampling of subsequent species.
+Depends:
+  R (>= 3.5.3)
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports:
+  imager,
+  XML

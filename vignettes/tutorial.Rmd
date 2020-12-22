@@ -1,0 +1,55 @@
+---
+title: "BotanizeR tutorial"
+author: "Patrick Weigelt"
+date: "`r Sys.Date()`"
+output: 
+  html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+vignette: >
+ %\VignetteIndexEntry{Tutorial for BotanizeR R package}
+ %\VignetteEncoding{UTF-8} 
+ %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+ chunk_output_type: console
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 8, fig.height = 8)
+# Packages --------------------------------------------------------------------
+suppressPackageStartupMessages({
+  suppressWarnings({
+    library(dplyr)
+  })
+})
+
+options(tinytex.verbose = TRUE)
+
+#devtools::load_all()
+```
+
+
+# 1. Overview
+
+BotanizeR.
+
+\newpage
+
+# 2. Main function
+## 2.1. BotanizeR_quiz
+Main function to run the script
+
+```{r credentials, eval=FALSE}
+data(floraweb_species)
+floraweb_species <- floraweb_species[which(floraweb_species$SUMMER == 1),] # subset for nearly 200 species forestry students in Göttingen learn.
+BotanizeR_quiz(floraweb_species)
+```
+

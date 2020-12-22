@@ -1,0 +1,189 @@
+<html>
+   <head>
+      <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <link rel="SHORTCUT ICON" href="../images/favicon.ico">
+      <link type="text/css" rel="stylesheet" media="screen" href="../floraweb.css">
+      <link type="text/css" rel="stylesheet" media="print" href="../florawebprint.css">
+      <meta http-equiv="imagetoolbar" content="false">
+      <title>FloraWeb: Daten und Informationen zu Wildpflanzen und zur Vegetation Deutschlands</title>
+      <meta name="copyright" content="BfN - Bundesamt für Naturschutz">
+      <meta name="robots" content="index, follow">
+      <link rel="bookmark" type="text/html" href="http://www.floraweb.de/" title="FloraWeb: Daten und Informationen zu Wildpflanzen und zur Vegetation Deutschlands">
+      <meta http-equiv="content-language" content="de">
+   </head>
+   <body>
+      <div id="headerblock">
+         <div id="bfnlogo"><a href="http://www.bfn.de" target="_blank"><img src="../images/logo_bfn.gif" width="130" height="110" border="0" alt="Logo des BfN" title="Bundesamt für Naturschutz">
+            </a>
+         </div>
+         <div id="header"><a href="../index.html"><img src="../images/header.gif" alt="FloraWeb" width="567" height="90" border="0" title="FloraWeb - Daten und Informationen zu Wildpflanzen und zur Vegetation Deutschlands">
+            </a>
+         </div>
+      </div>
+      <div id="topnavblock">
+         <ul id="topnav">
+            <li class="currentnav"><a href="pflanzenarten.html" title="Pflanzenarten">Pflanzenarten</a>
+            </li>
+            <li class="topnavnav"><a href="../vegetation/vegetation.html" title="Vegetation"><strong>Vegetation</strong>
+               </a>
+            </li>
+            <li class="topnavnav"><a href="../ueberfloraweb/ueberfloraweb.html" title="ÜberFloraWeb">ÜberFloraWeb</a>
+            </li>
+         </ul><br class="clearer">
+         <div id="subnavblock">
+            <ul id="subnav">
+               <li><a href="cg_floramap/" target="_blank">FloraMap</a>
+               </li>
+               <li><a href="https://neobiota.bfn.de/handbuch/gefaesspflanzen.html" target="_blank">Neoflora</a>
+               </li>
+               <li><a href="http://www.wisia.de" target="_blank">WISIA</a>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <div id="breadcrumbblock">
+         <p><a href="../index.html">Startseite</a>&nbsp;>&nbsp;<a href="pflanzenarten.html">Pflanzenarten</a>&nbsp;>&nbsp;<a href="artensteckbriefe.html">Artensteckbriefe</a>
+         </p>
+      </div>
+      <div id="navigation">
+         <div id="navblock">
+            <ul id="nav">
+               <li class="open"><a href="artensteckbriefe.html" title="Artensteckbriefe" class="active">Artensteckbriefe</a>
+                  <ul>
+                     <li><a href="namenssuche.html" title="Namenssuche">Namenssuche</a>
+                     </li>
+                     <li><a href="register.xsql" title="Auswahlliste botanische Namen">Auswahlliste botanische Namen</a>
+                     </li>
+                     <li><a href="register_d.xsql" title="Auswahlliste deutsche Namen">Auswahlliste deutsche Namen</a>
+                     </li>
+                     <li><a href="systematik1.xsql?suchnr=60000" title="Stammbaum">Stammbaum</a>
+                     </li>
+                     <li><a href="eigenschaften1.xsql" title="Suche nach Eigenschaften">Suche nach Eigenschaften</a>
+                     </li>
+                     <li><a href="schmetterlingspflanzen.xsql" title="Schmetterlingspflanzen">Schmetterlingspflanzen</a>
+                     </li>
+                  </ul>
+               </li>
+               <li><a href="rotelisten.html" title="Rote Listen">Rote Listen</a>
+               </li>
+               <li><a href="ffharten.html" title="FFH Arten">FFH Arten</a>
+               </li>
+               <li><a href="neophyten.html" title="Neophyten">Neophyten</a>
+               </li>
+               <li><a href="sonderthemen.html" title="Sonderthemen">Sonderthemen</a>
+               </li>
+               <li style="list-style: none"><br>
+               </li>
+               <li><a href="neues.html" title="Neues">Neues</a>
+               </li>
+               <li><a href="hintergrundtexte.html" title="Hintergrundtexte">Hintergrundtexte</a>
+               </li>
+               <li><a href="links.html" title="Links">Links</a>
+               </li>
+               <li style="list-style: none"><br>
+                  <!-- <li><a href="../foren/index.php"  title="Forum">Forum</a></li> -->
+               </li>
+            </ul>
+         </div>
+         <div id="servicebereich">
+            <form action="taxoquery.xsql" method="get">
+               <fieldset>
+                  <legend class="legend">Artensuche</legend><label>Artensuche</label><input type="text" size="21" name="taxname" value="Pflanzenname" onfocus="if(this.value=='Pflanzenname'){this.value='';}" onblur="if(this.value==''){this.value='Pflanzenname';}"><input type="image" name="submit" src="../images/icon_suche.gif" alt="Suche starten" title="Suche starten"><input type="hidden" name="max-rows" value="10"><input type="hidden" name="skip-rows" value="0">
+               </fieldset>
+            </form>
+            <ul id="servicenav">
+               <li><a href="../index.html" title="Zur Startseite von FloraWeb">Startseite</a>
+               </li>
+               <li><a href="../kontakt.html">Kontakt</a>
+               </li>
+               <li><a href="../impressum.html">Impressum</a>
+               </li>
+               <li><a href="../datenschutz.html" title="Datenschutz">Datenschutz</a>
+               </li>
+               <li><a href="../sitemap.html" title="Sitemap / Seitenübersicht">Sitemap</a>
+               </li>
+               <li><a href="../glossar.html" title="Glossar">Glossar</a>
+               </li>
+               <li><a href="../hilfe.html" title="Hilfe für die Verwendung von pdf-Dateien">Hilfe</a>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <div class="divider">
+         <hr>
+      </div>
+      <div id="contentblock">
+         <div id="content">
+            <h1>Lebensraum und Ökologie</h1>
+            <p>Zum Lebensraum und zur Ökologie von <b>Mercurialis perennis L., Ausdauerndes Bingelkraut</b> &nbsp;liegen folgende Angaben vor:</p>
+            <p><b>Lebensraum</b>
+            </p>
+            <p><a href="../glossar.html#bfor">Formation</a>: <br>Hochstaudenfluren und Gebüsche der Gebirge (Hauptvorkommen)&nbsp; <br>Bruch- und Auenwälder (Hauptvorkommen)&nbsp; <br>Laub- und Tannenwälder mittlerer Standorte (Schwerpunktvorkommen)&nbsp; <br>Wälder und Gebüsche trockenwarmer Standorte (Hauptvorkommen)&nbsp; </p>
+            <p><a href="../glossar.html#bbtp">Biotoptyp (nach Rote Liste Biotoptypen 2017):</a><br>Eschen- und Eschen-Bergahornwald feuchter Standorte:&nbsp; gefährdet bis stark gefährdet&nbsp; (2-3) <br>Buchenwald basenreicher Standorte der planaren bis submontanen Stufe:&nbsp; akute Vorwarnliste&nbsp; (3-V) <br>Montane Buchen-Tannenwälder (Buchenanteil &gt; 50 %):&nbsp; gefährdet bis stark gefährdet&nbsp; (2-3) <br>Montaner Buchen-Tannen-Fichtenwald basenreicher Standorte:&nbsp; gefährdet bis stark gefährdet&nbsp; (2-3) </p>
+            <p><a href="../glossar.html#bwald">Bindung an Wald (nach BfN-Skript 299: Schmidt et. a. 2011):</a>&nbsp;<i><a href="https://www.bfn.de/fileadmin/MDB/documents/service/skript299.pdf" target="_blank">download in neuem Fenster</a>
+               </i><br>ALPEN : Krautschicht: Im Wald wie im Offenland<br>BERGLAND : Krautschicht: Weitgehend an Wald gebunden: vorwiegend im geschlossenen Wald<br>TIEFLAND : Krautschicht: Weitgehend an Wald gebunden: vorwiegend im geschlossenen Wald</p>
+            <!--p><a href="../glossar.html#bbio" >Biotoptyp</a>:<br/>
+      Hier soll demn&auml;chst das Vorkommen in Biotoptypen nach dem "Bildatlas der Farn- und
+      Bl&uuml;tenpflanzen Deutschlands" (von H. Haeupler &amp; T. Muer; erscheint im
+      September 2000 beim <a href="http://www.ulmer.de">Ulmer-Verlag</a>) angegeben werden.
+    </p-->
+            <p><a href="../glossar.html#bpfl">Bindung an Pflanzengesellschaften (nach Oberdorfer 1983)</a>:<br>Ordnung&nbsp; Fagetalia sylvaticae&nbsp; Pawl. 1928:&nbsp; &nbsp; Kennart&nbsp; &nbsp; <br>Verband&nbsp; Fagion sylvaticae&nbsp; Pawl. 1928:&nbsp; &nbsp; Schwerpunktvorkommen&nbsp; &nbsp; <br>Verband&nbsp; Carpinion&nbsp; Issl. 1931 em Oberd. 1953:&nbsp; &nbsp; Hauptvorkommen&nbsp; &nbsp; (feuchte Ausbildungen)<br>Verband&nbsp; Alno-Ulmion&nbsp; Br.-Bl. et Tx. 1943:&nbsp; &nbsp; Hauptvorkommen&nbsp; (Alno-Padion Knapp 1948)&nbsp; <br>
+            </p>
+            <p><b>Zeigerwerte</b>(nach Ellenberg; von <i>Rubus</i>-Arten: nach Weber)</p>
+            <p><a href="../glossar.html#bzei">Lichtzahl</a>: 2 = Tiefschatte- bis Schattenpflanze</p>
+            <p><a href="../glossar.html#bzei">Temperaturzahl</a>: indifferent</p>
+            <p><a href="../glossar.html#bmee">Kontinentalitätszahl</a>: 3 = See- bis gemäßigtes Seeklima zeigend</p>
+            <p><a href="../glossar.html#bzei">Feuchtezahl</a>: indifferen</p>
+            <p><a href="../glossar.html#bzei">Feuchtewechsel</a>: keinen Wechsel der Feuchte zeigend</p>
+            <p><a href="../glossar.html#bzei">Reaktionszahl</a>: 8 = Schwachbasen- bis Basen-/Kalkzeiger</p>
+            <p><a href="../glossar.html#bzei">Stickstoffzahl</a>: 7 = Stickstoffreichtum zeigend</p>
+            <p><a href="../glossar.html#bzei">Salzzahl</a>: 0 = nicht salzertragend</p>
+            <p><a href="../glossar.html#bzei">Schwermetallresistenz</a>: nicht schwermetallresistent</p>
+            <p><b>Zivilisationseinfluß</b><br><br><a href="../glossar.html#bhem">Hemerobie (menschlicher Einfluss auf den Lebensraum):</a><br>oligohemerob:<br><i>Arten schwach durchforsteter oder schwach beweideter Wälder, anwachsender Dünen, wachsender Flach- und Hochmoore sowie naturnaher Heiden und Trockenrasen</i><br>mesohemerob:<br><i>Arten in Forsten mit entwickelter Strauch- und Krautschicht, Heiden, Trocken- und Magerrasen, extensive Wiesen und Weiden</i><br><br><a href="../glossar.html#burb">Urbanität (Bindung an Siedlungen):</a><br>mäßig urbanophob:<br><i>Art kommt vorwiegend außerhalb menschlicher Siedlungen vor</i>
+            </p>
+            <!--    <p><a href="../glossar.html#burb">Bindung an St&auml;dte (Urbanit&auml;t)</a>:
+    <daisy-result field="URBANITY">urbanity</daisy-result></p>
+-->
+            <p><b>Strategietyp</b>
+            </p>
+            <p><a href="../glossar.html#bstr">Ökologischer Strategietyp (nach Grime)</a>: <br>cs : Konkurrenz-Stress-Strategen</p>
+         </div>
+      </div>
+      <div class="divider">
+         <hr>
+      </div>
+      <div id="marginal">
+         <div class="additional">
+            <h2>weitere Informationen</h2>
+            <ul class="nav">
+               <li><a HREF="artenhome.xsql?suchnr=3694&amp;">Artinformation</a>
+               </li>
+               <li><a HREF="taxonomie.xsql?sipnr=3694&amp;">Artname/Taxonomie</a>
+               </li>
+               <li><a HREF="gefaerdung.xsql?sipnr=3694&amp;">Gefährdung &amp; Schutz</a>
+               </li>
+               <li><a HREF="verbreitung.xsql?suchnr=3694&amp;">Verbreitung/Areal</a>
+               </li>
+               <li><a class="active" HREF="oekologie.xsql?suchnr=3694&amp;">Lebensraum &amp; Ökologie</a>
+               </li>
+               <li><a HREF="biologie.xsql?suchnr=3694&amp;">Biologische Merkmale</a>
+               </li>
+               <li><a HREF="schmetterlinge.xsql?suchnr=3694&amp;sipnr=3694&amp;">Schmetterlinge</a>
+               </li>
+               <li><a HREF="nutzung.xsql?suchnr=3694&amp;sipnr=3694&amp;">Nutzung</a>
+               </li>
+               <li><a HREF="druck.xsql?suchnr=3694&amp;sipnr=3694&amp;">Alle Angaben anzeigen</a>
+               </li>
+            </ul>
+         </div>
+         <div class="pagefunction">
+            <p><img src="../images/drucken.gif" width="24" height="15" border="0" alt="" title=""><a href="javascript:window.print();">Seite drucken</a><br>
+            </p>
+         </div>
+      </div>
+      <div class="divider">
+         <hr>
+      </div>
+   </body>
+</html>
