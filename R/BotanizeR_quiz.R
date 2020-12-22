@@ -1,10 +1,4 @@
 ### BotanizeR
-  # define starting score
-  #if(length(unique(species_list$SCORE))==1) {
-  #  species_list$SCORE <- length(hints)
-  #}
-  
-
 BotanizeR_quiz <- function(species_list, hints = c("image","image2","description","status","habitat","family","German name")){
   
   # 1. Controls ----
