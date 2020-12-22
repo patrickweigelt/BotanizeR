@@ -10,6 +10,7 @@ BotanizeR_quiz()
 \arguments{
 }
 \details{
+After running the main function BotanizeR_quiz() you need to click into the console to type the species names in there. If you have no clou, press enter and the next hint will appear (you have ten tries). If you type the name slightly wrong the function will tell you. If the genus is correct it will also tell you. It shows several photos if available. If you want to skip a species write "skip". If you want to cancel the quiz write "exit". Don't hit Esc if you want to save your progress. The function counts your attempts and successes and uses this as sampling probabilities for choosing the species randomly. The better you know a species the less likely it will be shown again.
 }
 \value{
 A vector of new probabilities per species.
