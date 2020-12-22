@@ -19,3 +19,6 @@ floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species,
                                            hints = c("image","image2","description","status",
                                                      "habitat","family","German name"))
 ```
+
+Sources  
+Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
