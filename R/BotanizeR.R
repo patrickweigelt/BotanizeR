@@ -10,12 +10,8 @@ species_list <- read.csv("floraweb_allspecies_subset.csv")
 species_list$COUNT <- 1
 species_list$SCORE <- length(hints)
 
-species_summer <- read.csv("Artenliste_Sommer_final.csv")
-species_summer$species <- paste(species_summer$Gattung,species_summer$Art)
+species_list <- species_list[which(species_list$SUMMER==1),]
 
-
-species_list <- species_list[which(species_list$SPECIES %in% species_summer$species),]
-i
 
 BotanizeR <- function(){
   
@@ -108,5 +104,14 @@ BotanizeR <- function(){
 }
 
 
+# Type in species name, or press enter for next hint or type "skip" and press enter for next species
 BotanizeR()
+
+
+# TODO: update score dynamically
+# skip hints that are not available, skip species if no picture available and give message
+# package structure
+# Genus correct
+# spaces
+
 
