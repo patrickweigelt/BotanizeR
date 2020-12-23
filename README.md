@@ -22,3 +22,5 @@ floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species,
 
 Sources  
 Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
+
+Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)

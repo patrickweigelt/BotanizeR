@@ -1,5 +1,5 @@
 ### BotanizeR
-BotanizeR_quiz <- function(species_list, hints = c("image","image2","description","status","habitat","family","German name")){
+BotanizeR_quiz <- function(species_list, hints = c("description","status","habitat","family","German name"), startat = 0){
   
   # 1. Controls ----
   # Package dependencies
@@ -7,8 +7,8 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
   require(XML)
   
   # Arguments
-  if(!all(hints %in% c("image","image2","description","status","habitat","family","German name"))){
-    stop('"hints" must be a subset of c("image","image2","description","status","habitat","family","German name")')
+  if(!all(hints %in% c("description","status","habitat","family","German name"))){
+    stop('"hints" must be a subset of c("description","status","habitat","family","German name")')
   }
   
   # Create folder for temp files
@@ -59,144 +59,66 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
     }
   }
   
+  par(mar=c(0.5,0.5,0.5,0.5))
+  plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
+  
+  if(is.na(image2[1])){
+    hints_i <- c("image", hints)
+  } else {
+    hints_i <- c("image","image2", hints)
+  }
+  
   attempts <- 0
   attempt <- "start"
-  while(attempt != species & attempt != "skip" & attempt != "exit" & attempt != "noinfo" & attempts <= 10){
+  startat <- startat + 1
+  
+  if(startat == 1){
+    message("Welcome to BotanizeR quiz!\n\nPlease click into the console to enter the species name.\nIf you have no clou, press enter and the image or next hint will appear. If you want to skip a species enter 'skip'. If you want to cancel the quiz write 'exit'.\nDon't hit Esc if you want to save your progress.\n\n")
+  }
+  
+  message(startat, ". ---------------------------------\n")
+  
+  if(is.na(image[1])) { 
+    message("No image for ",species, ".\n\n")
+    species_list$SCORE[i] <- 0 # Species will have zero probability to appear again
+  } else {  
     
-    for(k in 1:length(hints)){
+    while(attempt != species & attempt != "skip" & attempt != "exit" & attempts <= 10){
       
-      attempt <- "start" 
-      
-      if(hints[k]=="image"){
-        if(!is.na(image[1])) {
-          plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
-          Sys.sleep(0.3)
+      for(k in 1:length(hints_i)){
+        
+        attempt <- "start" 
+        
+        if(hints_i[k]=="image"){
           plot(image, axes=FALSE)
-          
-          while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-            attempts <- attempts + 1
-            
-            attempt <- readline("Species: ")
-            
-            if(attempt==""){
-              next
-            }
-            if(species!=attempt & attempt != "skip" & attempt != "exit") {
-              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n",""))     
-            }
-          }
-          if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-            break()
-          }
-        } else {
-          attempt <- "noinfo"
-          break()
-        }
-      } 
-
-      if(hints[k]=="image2"){
-        if(!is.na(image2[1])) {
+        } 
+        
+        if(hints_i[k]=="image2"){
           plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
           Sys.sleep(0.3)
           plot(image2, axes=FALSE)
-          
-          while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-            attempts <- attempts + 1
-            
-            attempt <- readline("Species: ")
-            
-            if(attempt==""){
-              next
-            }
-            if(species!=attempt & attempt != "skip" & attempt != "exit") {
-              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n",""))     
-            }
-          }
-          if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-            break()
-          }
         }
-      } 
-      
-      if(hints[k]=="description"){
-        message(infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
-        # message(infos_biology[[2]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-          attempts <- attempts + 1
-          
-          attempt <- readline("Species: ")
-          
-          if(attempt==""){
-            next()
-          }
-          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
-            message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
-          }
+        if(hints_i[k]=="description"){
+          message(infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
+          # message(infos_biology[[2]])
         }
-        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-          break()
+
+        if(hints_i[k]=="status"){
+          message(infos_main[[7]],"\n",infos_main[[8]])
         }
-      }
-      if(hints[k]=="status"){
-        message(infos_main[[7]],"\n",infos_main[[8]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-          attempts <- attempts + 1
-          
-          attempt <- readline("Species: ")
-          
-          if(attempt==""){
-            next()
-          }
-          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
-            message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
-          }
+        if(hints_i[k]=="family"){
+          message(infos_main[[6]])
         }
-        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-          break()
-        }
-      }
-      if(hints[k]=="family"){
-        message(infos_main[[6]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-          attempts <- attempts + 1
-          
-          attempt <- readline("Species: ")
-          
-          if(attempt==""){
-            next()
-          }
-          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
-            message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
-          }
+        if(hints_i[k]=="German name"){
+          message(infos_main[[5]])
         }
-        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-          break()
-        }
-      }
-      if(hints[k]=="German name"){
-        message(infos_main[[5]])
         
-        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
-          attempts <- attempts + 1
-          
-          attempt <- readline("Species: ")
-          
-          if(attempt==""){
-            next()
-          }
-          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
-            message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
-          }
+        if(hints_i[k]=="habitat"){
+          message(infos_ecology[[3]])
         }
-        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-          break()
-        }
-      }
-      if(hints[k]=="habitat"){
-        message(infos_ecology[[3]])
         
         while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
@@ -215,25 +137,22 @@ BotanizeR_quiz <- function(species_list, hints = c("image","image2","description
         }
       }
     }
-  }
-  
-  species_list$SCORE[i] <- species_list$SCORE[i] + attempts
-  
-  if(species==attempt){
-    species_list$COUNT[i] <- species_list$COUNT[i] + 1
-    message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
-  } else {
-    if(attempt=="noinfo"){
-      message("No image for ",species, ".\n\n")
+    
+    species_list$SCORE[i] <- species_list$SCORE[i] + attempts
+    
+    if(species==attempt){
+      species_list$COUNT[i] <- species_list$COUNT[i] + 1
+      message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
     } else {
       message("Species not correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
     }
   }
+  
   if(attempt=="exit"){
     message("Goodbye")
     return(species_list)
   } else {
-    BotanizeR_quiz(species_list, hints)
+    BotanizeR_quiz(species_list, hints, startat)
   }
 }
 
