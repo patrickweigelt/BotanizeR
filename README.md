@@ -10,7 +10,7 @@ library(BotanizeR)
 # Species list for Germany with IDs from floraweb.de
 data(floraweb_species)
 
-# subset for nearly 200 species forestry students in Göttingen learn.
+# subset for nearly 200 species forestry students in Göttingen learn
 floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1),]
 
 # Type in species name, or press enter for next hint or type "skip" and press 
