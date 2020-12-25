@@ -1,5 +1,6 @@
 ### BotanizeR
-BotanizeR_quiz <- function(species_list, hints = c("description","status","habitat","family","German name"), startat = 0){
+BotanizeR_quiz <- function(species_list, hints = c("description","status","habitat","family","German name"), 
+                           case_sensitive = TRUE, startat = 0){
   
   # 1. Controls ----
   # Package dependencies
@@ -21,7 +22,10 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   # Species i
   species <- species_list$SPECIES[i]
   
-
+  if(!case_sensitive){
+    species <- tolower(species)
+  }
+  
   # main infos
   # I need this step because of an error in RCURL when getting the url
   download.file(paste("https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"main.txt"), quiet = T)
@@ -44,7 +48,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   
   #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_list$NAMNR[i], sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
   
-  if(grepl("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))[1]){
+  if(length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & grepl("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))[1]){
     download.file(paste("https://www.floraweb.de/pflanzenarten/",grep("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[1]], value = T), sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
     html_photo <- htmlTreeParse(file = file.path(dir,"photo.txt"), isURL = F, isHTML=T, useInternalNodes = T)
     infos_photo <- xpathApply(html_photo, "//div[@id='content']//p",xmlValue)
@@ -117,19 +121,31 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
         }
         
         if(hints_i[k]=="habitat"){
-          message(infos_ecology[[3]])
+          if(infos_ecology[[3]] != "Formation: \r\nTaxon keiner Formation zugeordnet "){
+            message(infos_ecology[[3]])
+          } else {
+            next()
+          }
         }
         
         while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
-          
+
           attempt <- readline("Species: ")
-          
+
+          if(!case_sensitive){
+            attempt <- tolower(attempt)
+          }
+
           if(attempt==""){
             next()
           }
-          if(species!=attempt & attempt != "skip" & attempt != "exit"){        
-            message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
+          if(species!=attempt & attempt != "skip" & attempt != "exit"){
+            if(case_sensitive){
+              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
+            } else {
+              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==tolower(species_list$GENUS[i]),"Genus correct\n","")) 
+            }
           }
         }
         if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
@@ -152,7 +168,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     message("Goodbye")
     return(species_list)
   } else {
-    BotanizeR_quiz(species_list, hints, startat)
+    BotanizeR_quiz(species_list, hints, case_sensitive, startat)
   }
 }
 
