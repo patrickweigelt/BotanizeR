@@ -17,7 +17,8 @@ floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1),]
 # enter for next species or type "exit" to end quiz and save results
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
                                            hints = c("description","status",
-                                                     "habitat","family","German name"))
+                                                     "habitat","family","German name"),
+                                                     case_sensitive = FALSE)
 ```
 
 Sources  

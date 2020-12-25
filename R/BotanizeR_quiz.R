@@ -1,6 +1,6 @@
 ### BotanizeR
 BotanizeR_quiz <- function(species_list, hints = c("description","status","habitat","family","German name"), 
-                           case_sensitive = TRUE, startat = 0){
+                           case_sensitive = TRUE, startat = 0, file_location="temporary"){
   
   # 1. Controls ----
   # Package dependencies
@@ -12,27 +12,31 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     stop('"hints" must be a subset of c("description","status","habitat","family","German name")')
   }
   
-  # Create folder for temp files
-  dir <- tempfile()
-  dir.create(dir)
-  
-  # Quiz ----
-  i <- sample(1:nrow(species_list), 1, prob = species_list$SCORE/species_list$COUNT)
-  
+  # 2. Prep ----
+  if(file_location=="temporary"){
+    # Create folder for temp files
+    dir <- tempfile()
+    dir.create(dir)
+  } else {
+    dir <- file_location
+  }
+
+    
   # Species i
+  i <- sample(1:nrow(species_list), 1, prob = species_list$SCORE/species_list$COUNT)
   species <- species_list$SPECIES[i]
   
   if(!case_sensitive){
     species <- tolower(species)
   }
   
-  # main infos
+  # 3. Main infos ----
   # I need this step because of an error in RCURL when getting the url
   download.file(paste("https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"main.txt"), quiet = T)
   html_main <- htmlTreeParse(file = file.path(dir,"main.txt"), isURL = F, isHTML=T, useInternalNodes = T)
   infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)
 
-  # photo
+  # 4. Photo ----
   image=NA
   image2=NA
   
@@ -62,6 +66,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     hints_i <- c("image","image2", hints)
   }
   
+  # 5. Quiz ----
   attempts <- 0
   attempt <- "start"
   startat <- startat + 1
@@ -104,7 +109,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
         }
         
         if(hints_i[k]=="description"){
-          message(infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
+          message("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
           # message(infos_biology[[2]])
         }
 
@@ -168,7 +173,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     message("Goodbye")
     return(species_list)
   } else {
-    BotanizeR_quiz(species_list, hints, case_sensitive, startat)
+    BotanizeR_quiz(species_list, hints, case_sensitive, startat, file_location=dir)
   }
 }
 
