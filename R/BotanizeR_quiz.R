@@ -80,6 +80,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   if(is.na(image[1])) { 
     message("No image for ",species, ".\n\n")
     species_list$SCORE[i] <- 0 # Species will have zero probability to appear again
+    startat <- startat - 1
   } else {  
     
     # ecology
@@ -170,7 +171,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   }
   
   if(attempt=="exit"){
-    message("Goodbye")
+    message("Great! You practiced ",startat," species and got ",sum(species_list$COUNT[which(species_list$COUNT>1)]-1)," of them right. \nOn average you used ",round(sum(species_list$SCORE-6)/startat,2)," attempts/hints per species. \nGoodbye...")
     return(species_list)
   } else {
     BotanizeR_quiz(species_list, hints, case_sensitive, startat, file_location=dir)
