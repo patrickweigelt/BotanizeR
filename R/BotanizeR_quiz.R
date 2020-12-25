@@ -32,16 +32,6 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   html_main <- htmlTreeParse(file = file.path(dir,"main.txt"), isURL = F, isHTML=T, useInternalNodes = T)
   infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)
 
-  # ecology
-  download.file(paste("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"ecology.txt"), quiet = T)
-  html_ecology <- htmlTreeParse(file = file.path(dir,"ecology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-  infos_ecology <- xpathApply(html_ecology, "//div[@id='content']//p",xmlValue)
-  
-  # biology
-  # download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
-  # html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-  # infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
-  
   # photo
   image=NA
   image2=NA
@@ -86,6 +76,16 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     message("No image for ",species, ".\n\n")
     species_list$SCORE[i] <- 0 # Species will have zero probability to appear again
   } else {  
+    
+    # ecology
+    download.file(paste("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"ecology.txt"), quiet = T)
+    html_ecology <- htmlTreeParse(file = file.path(dir,"ecology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+    infos_ecology <- xpathApply(html_ecology, "//div[@id='content']//p",xmlValue)
+    
+    # biology
+    # download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
+    # html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+    # infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
     
     while(attempt != species & attempt != "skip" & attempt != "exit" & attempts <= 10){
       
