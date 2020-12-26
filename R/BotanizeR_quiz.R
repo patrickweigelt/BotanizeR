@@ -22,6 +22,8 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     dir <- file_location
   }
 
+  init_count <- init_count
+  init_score <- init_score
     
   # Species i
   i <- sample(1:nrow(species_list), 1, prob = (species_list$SCORE/species_list$COUNT)*species_list$INCLUDE)
@@ -149,9 +151,9 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
           }
           if(species!=attempt & attempt != "skip" & attempt != "exit"){
             if(case_sensitive){
-              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
+              message(adist(attempt, species)," ",ifelse(adist(attempt, species)>1,"characters","character")," different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
             } else {
-              message(adist(attempt, species)," characters different\n",ifelse(strsplit(attempt," ")[[1]][1]==tolower(species_list$GENUS[i]),"Genus correct\n","")) 
+              message(adist(attempt, species)," ",ifelse(adist(attempt, species)>1,"characters","character")," different\n",ifelse(strsplit(attempt," ")[[1]][1]==tolower(species_list$GENUS[i]),"Genus correct\n","")) 
             }
           }
         }
@@ -172,7 +174,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   }
   
   if(attempt=="exit"){
-    message("Great! You practiced ",startat," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",round((sum(species_list$SCORE)-init_score)/startat,2)," attempts/hints per species. \nGoodbye...")
+    message("Great! You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score-attempts)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
     return(species_list)
   } else {
     BotanizeR_quiz(species_list, hints, case_sensitive, file_location = dir, startat = startat, 
