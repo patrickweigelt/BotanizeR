@@ -1,6 +1,7 @@
 ### BotanizeR
 BotanizeR_quiz <- function(species_list, hints = c("description","status","habitat","family","German name"), 
-                           case_sensitive = TRUE, startat = 0, file_location="temporary"){
+                           case_sensitive = TRUE, file_location="temporary", startat = 0, init_count = sum(species_list$COUNT),
+                           init_score = sum(species_list$SCORE)){
   
   # 1. Controls ----
   # Package dependencies
@@ -23,12 +24,8 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
 
     
   # Species i
-  i <- sample(1:nrow(species_list), 1, prob = species_list$SCORE/species_list$COUNT)
+  i <- sample(1:nrow(species_list), 1, prob = (species_list$SCORE/species_list$COUNT)*species_list$INCLUDE)
   species <- species_list$SPECIES[i]
-  
-  if(!case_sensitive){
-    species <- tolower(species)
-  }
   
   # 3. Main infos ----
   # I need this step because of an error in RCURL when getting the url
@@ -72,14 +69,14 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   startat <- startat + 1
   
   if(startat == 1){
-    message("Welcome to BotanizeR quiz!\n\nPlease click into the console to enter the species name.\nIf you have no clou, press enter and the image or next hint will appear. If you want to skip a species enter 'skip'. If you want to cancel the quiz write 'exit'.\nDon't hit Esc if you want to save your progress.\n\n")
+    message("Welcome to BotanizeR quiz!\n\nPlease click into the console to enter the species name.\nIf you have no clou, press enter and the next image or hint will appear. If you want to skip a species enter 'skip'. If you want to cancel the quiz write 'exit'.\nDon't hit Esc if you want to save your progress.\n\n")
   }
   
   message(startat, ". ---------------------------------\n")
   
   if(is.na(image[1])) { 
     message("No image for ",species, ".\n\n")
-    species_list$SCORE[i] <- 0 # Species will have zero probability to appear again
+    species_list$INCLUDE[i] <- 0 # Species will have zero probability to appear again
     startat <- startat - 1
   } else {  
     
@@ -92,6 +89,10 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     # download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_list$NAMNR[i],"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
     # html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
     # infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
+    
+    if(!case_sensitive){
+      species <- tolower(species)
+    }
     
     while(attempt != species & attempt != "skip" & attempt != "exit" & attempts <= 10){
       
@@ -171,10 +172,11 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   }
   
   if(attempt=="exit"){
-    message("Great! You practiced ",startat," species and got ",sum(species_list$COUNT[which(species_list$COUNT>1)]-1)," of them right. \nOn average you used ",round(sum(species_list$SCORE-6)/startat,2)," attempts/hints per species. \nGoodbye...")
+    message("Great! You practiced ",startat," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",round((sum(species_list$SCORE)-init_score)/startat,2)," attempts/hints per species. \nGoodbye...")
     return(species_list)
   } else {
-    BotanizeR_quiz(species_list, hints, case_sensitive, startat, file_location=dir)
+    BotanizeR_quiz(species_list, hints, case_sensitive, file_location = dir, startat = startat, 
+                   init_count = init_count, init_score = init_score)
   }
 }
 
