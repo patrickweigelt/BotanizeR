@@ -174,7 +174,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   }
   
   if(attempt=="exit"){
-    message("Great! You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score-attempts)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
+    message(ifelse(startat>1,"Great! ",""),"You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score-attempts)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
     return(species_list)
   } else {
     BotanizeR_quiz(species_list, hints, case_sensitive, file_location = dir, startat = startat, 
