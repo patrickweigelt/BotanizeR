@@ -98,9 +98,11 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     
     while(attempt != species & attempt != "skip" & attempt != "exit" & attempts <= 10){
       
+      genus <- FALSE
+
       for(k in 1:length(hints_i)){
         
-        attempt <- "start" 
+        attempt <- "start"
         
         if(hints_i[k]=="image"){
           plot(image, axes=FALSE)
@@ -144,11 +146,16 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
 
           if(!case_sensitive){
             attempt <- tolower(attempt)
-          }
-
+          } 
+          
           if(attempt==""){
             next()
+          } else {
+            if(strsplit(attempt," ")[[1]][1]==ifelse(case_sensitive,species_list$GENUS[i],tolower(species_list$GENUS[i]))){
+              genus <- TRUE
+            }
           }
+          
           if(species!=attempt & attempt != "skip" & attempt != "exit"){
             if(case_sensitive){
               message(adist(attempt, species)," ",ifelse(adist(attempt, species)>1,"characters","character")," different\n",ifelse(strsplit(attempt," ")[[1]][1]==species_list$GENUS[i],"Genus correct\n","")) 
@@ -167,9 +174,9 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     
     if(species==attempt){
       species_list$COUNT[i] <- species_list$COUNT[i] + 1
-      message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
+      message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n",infos_main[[6]],"\n\n")
     } else {
-      message("Species not correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n\n")
+      message("Species not ",ifelse(genus,"(but genus) ",""),"correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),infos_main[[4]],"\n",infos_main[[5]],"\n",infos_main[[6]],"\n\n")
     }
   }
   
