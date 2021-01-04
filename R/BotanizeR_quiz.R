@@ -26,7 +26,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   init_score <- init_score
     
   # Species i
-  i <- sample(1:nrow(species_list), 1, prob = (species_list$SCORE/species_list$COUNT)*species_list$INCLUDE)
+  i <- sample(1:nrow(species_list), 1, prob = ((species_list$SCORE+1)/(species_list$COUNT+length(hints)+1))*species_list$INCLUDE)
   species <- species_list$SPECIES[i]
   
   # 3. Main infos ----
@@ -170,7 +170,6 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
       }
     }
     
-    species_list$SCORE[i] <- species_list$SCORE[i] + attempts
     
     if(species==attempt){
       species_list$COUNT[i] <- species_list$COUNT[i] + 1
@@ -181,9 +180,10 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   }
   
   if(attempt=="exit"){
-    message(ifelse(startat>1,"Great! ",""),"You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score-attempts)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
+    message(ifelse(startat>1,"Great! ",""),"You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
     return(species_list)
   } else {
+    species_list$SCORE[i] <- species_list$SCORE[i] + attempts
     BotanizeR_quiz(species_list, hints, case_sensitive, file_location = dir, startat = startat, 
                    init_count = init_count, init_score = init_score)
   }
