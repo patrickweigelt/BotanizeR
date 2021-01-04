@@ -26,7 +26,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
   init_score <- init_score
     
   # Species i
-  i <- sample(1:nrow(species_list), 1, prob = ((species_list$SCORE+1)/(species_list$COUNT+length(hints)+1))*species_list$INCLUDE)
+  i <- sample(1:nrow(species_list), 1, prob = ((species_list$SCORE+length(hints)+1)/(species_list$COUNT+1))*species_list$INCLUDE)
   species <- species_list$SPECIES[i]
   
   # 3. Main infos ----
