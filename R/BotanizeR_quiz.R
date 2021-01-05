@@ -112,7 +112,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
           
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
-          map$AFE_SYMBOLCODE[which(map$map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
+          map$AFE_SYMBOLCODE[which(map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==6)] <- 5
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==8)] <- 6
           map$AFE_SYMBOLCODE <- map$AFE_SYMBOLCODE + 2
@@ -126,7 +126,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
           
           legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), SYMBOL_TEXT=c("absent",
                                     "not assigned","records uncertain","extinct","probably extinct",
-                                    "cultivated, not established alien","established alien","native"),
+                                    "cultivated, not established alien","established alien","native, incl. archaeophytes"),
                                     colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
           
           legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
@@ -186,7 +186,7 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
         
         if(hints_i[k]=="map"){
           if(!is.na(map)[1]){
-            par(oma=c(0,0,0,10))
+            par(oma=c(0,0,0,10.5))
             plot(map["AFE_SYMBOLCODE"], pal = legend_info$colour, key.pos = 4, main="")
           } else {
             next()
