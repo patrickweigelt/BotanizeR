@@ -78,8 +78,8 @@ floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
 
 # Practice
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species_trained,
-                                           hints = c("description","status","habitat",
-                                          "family","German name"), case_sensitive = FALSE)
+                                           hints = c("map","description","status","habitat",
+                                          "family"), case_sensitive = FALSE)
 
 # Save species list
 write.csv(floraweb_species_trained, "floraweb_species_trained.csv", row.names = FALSE)
