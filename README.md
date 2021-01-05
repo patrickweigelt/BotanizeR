@@ -20,6 +20,12 @@ floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species,
                                                      "habitat","family","German name"),
                                                      case_sensitive = FALSE)
 
+# If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit
+floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
+                                           hints = c("map","description","status",
+                                                     "habitat","family","German name"),
+                                                     case_sensitive = FALSE)
+
 # If you want to keep track of your progress, you can save the species list with updated scores locally and load it in the next session
 
 # Initial saving
@@ -30,7 +36,7 @@ floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
 
 # Practice
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species_trained,
-                                           hints = c("description","status","habitat",
+                                           hints = c("map","description","status","habitat",
                                           "family","German name"), case_sensitive = FALSE)
 
 # Save species list
