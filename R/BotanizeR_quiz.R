@@ -59,8 +59,6 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     }
   }
   
-  plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
-  
   if(is.na(image2[1])){
     hints_i <- c("image", hints)
   } else {
@@ -76,6 +74,8 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
     message("Welcome to BotanizeR quiz!\n\nPlease click into the console to enter the species name.\nIf you have no clou, press enter and the next image or hint will appear. If you want to skip a species enter 'skip'. If you want to cancel the quiz write 'exit'.\nDon't hit Esc if you want to save your progress.\n\n")
   }
   
+  # plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
+    
   message(startat, ". ---------------------------------\n")
   
   if(is.na(image[1])) { 
@@ -134,7 +134,6 @@ BotanizeR_quiz <- function(species_list, hints = c("description","status","habit
           levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
       })#, silent = TRUE)
     }
-    
     
     if(!case_sensitive){
       species <- tolower(species)
