@@ -1,6 +1,6 @@
 
 
-### BotanizeR
+### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
                            hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
                            file_location="temporary"){
@@ -43,7 +43,10 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   # 3. Images ----
   # 3.1 Floraweb ----
-  if(image_floraweb & !is.na(species_row$NAMNR) & species_row$NAMNR != "") {
+  
+  if(!is.na(species_row$NAMNR) & species_row$NAMNR != ""){
+    
+    floraweb_image <- FALSE
     
     # Main infos
     # I need this step because of an error in RCURL when getting the url
@@ -51,23 +54,25 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     html_main <- htmlTreeParse(file = file.path(dir,"main.txt"), isURL = F, isHTML=T, useInternalNodes = T)
     infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)
     
-    #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_row$NAMNR[i], sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
-    
-    # Photo
-    if(length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & grepl("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))[1]){
-      download.file(paste("https://www.floraweb.de/pflanzenarten/",grep("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[1]], value = T), sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
-      html_photo <- htmlTreeParse(file = file.path(dir,"photo.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-      infos_photo <- xpathApply(html_photo, "//div[@id='content']//p",xmlValue)
-      # photolink <- xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs)[[1]][3]
-      photolinks <- sapply(xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs), function(x) grep("bilder", x, value=T))
-
-      floraweb_image <- FALSE      
-      if(photolinks[1]!="../bilder/arten/"){
-        try({hints[[1]][[1]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep=""))
-            floraweb_image <- TRUE       
-        },silent = T)
-        if (length(photolinks)>1){
-          try(hints[[1]][[2]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+    if(image_floraweb){
+      
+      #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_row$NAMNR[i], sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
+      
+      # Photo
+      if(length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & grepl("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))[1]){
+        download.file(paste("https://www.floraweb.de/pflanzenarten/",grep("foto\\.xsql",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[1]], value = T), sep=""), destfile = file.path(dir,"photo.txt"), quiet = T)
+        html_photo <- htmlTreeParse(file = file.path(dir,"photo.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+        infos_photo <- xpathApply(html_photo, "//div[@id='content']//p",xmlValue)
+        # photolink <- xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs)[[1]][3]
+        photolinks <- sapply(xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs), function(x) grep("bilder", x, value=T))
+        
+        if(photolinks[1]!="../bilder/arten/"){
+          try({hints[[1]][[1]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep=""))
+          floraweb_image <- TRUE       
+          },silent = T)
+          if (length(photolinks)>1){
+            try(hints[[1]][[2]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+          }
         }
       }
     }
@@ -76,7 +81,9 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # 3.2 Images from own image link ----
   if(!is.null(imagelink_custom)){
     for(i in 1:length(imagelink_custom)){
-      try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+      if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
+        try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+      }
     }
   }
 
@@ -181,7 +188,18 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       names(hints)[i+1] <- hints_floraweb[i]
     }
   }
-    return(hints)
+  
+  # 4.2 Hints from own entries ----
+  if(!is.null(hints_custom)){
+    for(i in 1:length(hints_custom)){
+      if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
+        hints[[length(hints)+1]] <- species_row[,hints_custom[i]]
+        names(hints)[length(hints)] <- hints_custom[i]
+      }
+    }
+  }
+
+  return(hints)
 } 
 
 
