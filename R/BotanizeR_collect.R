@@ -88,8 +88,15 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
 
   # 3.3 Images from image folder ----
-  
-  
+  if(!is.na(image_folder)){
+    image_files <- list.files(image_folder)
+    image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
+    if(length(image_files)>0){
+      for(i in 1:length(imagelink_custom)){
+        try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folder,image_files[i])))
+      }
+    }
+  }
   
   # 4. Other information ----
   
@@ -146,7 +153,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
       
       levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
-      })#, silent = TRUE)
+      }, silent = TRUE)
     }
   }
   
@@ -155,9 +162,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       
       if(hints_floraweb[i]=="description"){
         if(floraweb_image){
-          hints[[i+1]] <- paste("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]], sep="")
+          description <- paste("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]], sep="")
         } else {
-          hints[[i+1]] <- gsub("Morphologie:","Morphologie:\n",infos_biology[[2]])
+          description <- gsub("Morphologie:","Morphologie:\n",infos_biology[[2]])
+        }
+        if(!grepl("keine Angaben",description)){
+          hints[[i+1]] <- description
         }
       }
       
@@ -182,10 +192,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       if(hints_floraweb[i]=="map"){
         if(!is.na(map)[1]){
           hints[[i+1]] <- list(map["AFE_SYMBOLCODE"], legend_info$colour)
-        } else {
         }
       }
-      names(hints)[i+1] <- hints_floraweb[i]
+      
+      if(length(hints)==i+1){
+        names(hints)[i+1] <- hints_floraweb[i]
+      }
     }
   }
   
@@ -198,7 +210,9 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       }
     }
   }
-
+  
+  hints <- hints[which(!sapply(hints, is.null))]
+  
   return(hints)
 } 
 
