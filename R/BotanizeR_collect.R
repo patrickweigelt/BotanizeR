@@ -73,9 +73,13 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     }
   }
   
-  # 3.2 Images from image link ----
-  
-  
+  # 3.2 Images from own image link ----
+  if(!is.null(imagelink_custom)){
+    for(i in 1:length(imagelink_custom)){
+      try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+    }
+  }
+
   # 3.3 Images from image folder ----
   
   
