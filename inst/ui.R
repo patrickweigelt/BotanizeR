@@ -4,6 +4,7 @@ library(shinythemes)
 # library(shinyjs)
 library(BotanizeR)
 library(imager)
+library(XML)
 
 # UI
 navbarPage(title = div(

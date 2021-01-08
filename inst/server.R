@@ -2,6 +2,7 @@
 library(shiny)
 library(BotanizeR)
 library(imager)
+library(XML)
 
 shinyServer(function(input, output) {
     # Text for the different answers
@@ -88,7 +89,7 @@ shinyServer(function(input, output) {
         # 1. Photo of the random species ----
         output$random_sp <- renderPlot({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
-            plot(image, axes = FALSE, ylim = c(height(image_sp[[2]]), 1))
+            plot(image, axes = FALSE) #, ylim = c(height(image_sp[[2]]), 1))
         })
         
         # display text
