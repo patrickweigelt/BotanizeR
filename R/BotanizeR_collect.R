@@ -1,5 +1,3 @@
-
-
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
                            hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
@@ -92,7 +90,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     image_files <- list.files(image_folder)
     image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
     if(length(image_files)>0){
-      for(i in 1:length(imagelink_custom)){
+      for(i in 1:length(image_files)){
         try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folder,image_files[i])))
       }
     }
