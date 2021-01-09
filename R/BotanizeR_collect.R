@@ -100,113 +100,116 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   # 4. Other information ----
   
-  # 4.1 Floraweb ----
-  if(length(hints$images) > 0 & !is.na(species_row$NAMNR) & species_row$NAMNR != "") { 
-
-    # ecology
-    if("habitat" %in% hints_floraweb){
-      download.file(paste("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_row$NAMNR,"&", sep=""), destfile = file.path(dir,"ecology.txt"), quiet = T)
-      html_ecology <- htmlTreeParse(file = file.path(dir,"ecology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-      infos_ecology <- xpathApply(html_ecology, "//div[@id='content']//p",xmlValue)
-    }
-
-    # biology
-    if("description" %in% hints_floraweb & floraweb_image == FALSE){
-      download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_row$NAMNR,"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
-      html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-      infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
+  if(length(hints$images) > 0){
+    
+    # 4.1 Floraweb ----
+    if(!is.na(species_row$NAMNR) & species_row$NAMNR != "") { 
+      
+      # ecology
+      if("habitat" %in% hints_floraweb){
+        download.file(paste("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_row$NAMNR,"&", sep=""), destfile = file.path(dir,"ecology.txt"), quiet = T)
+        html_ecology <- htmlTreeParse(file = file.path(dir,"ecology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+        infos_ecology <- xpathApply(html_ecology, "//div[@id='content']//p",xmlValue)
+      }
+      
+      # biology
+      if("description" %in% hints_floraweb & floraweb_image == FALSE){
+        download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_row$NAMNR,"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
+        html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+        infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
+      }
+      
+      # map
+      map <- NA
+      if("map" %in% hints_floraweb & length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & any(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))){
+        
+        if(!exists("CGRS_Germany")){
+          data(CGRS_Germany)
+        }
+        
+        try({
+          taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=","",grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
+          
+          download.file(paste("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",taxon_ID_map, sep=""), destfile = file.path(dir,"map.csv"), quiet = T)
+          map <- read.csv(file.path(dir,"map.csv"), skip=41)[-1,c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
+          
+          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
+          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
+          map$AFE_SYMBOLCODE[which(map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
+          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==6)] <- 5
+          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==8)] <- 6
+          map$AFE_SYMBOLCODE <- map$AFE_SYMBOLCODE + 2
+          
+          map <- map[order(map$AFE_SYMBOLCODE, decreasing = TRUE),]
+          map <- map[!duplicated(map$CGRSNAME),]
+          
+          map <- merge(CGRS_Germany, map, all.x = TRUE, sort=FALSE)
+          map$AFE_SYMBOLCODE[is.na(map$AFE_SYMBOLCODE)] <- 1
+          map$AFE_SYMBOLCODE <- as.factor(map$AFE_SYMBOLCODE)
+          
+          legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), SYMBOL_TEXT=c("absent",
+                                                                         "not assigned","records uncertain","extinct","probably extinct",
+                                                                         "cultivated, not established alien","established alien","native, incl. archaeophytes"),
+                                    colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
+          
+          legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
+          
+          levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
+        }, silent = TRUE)
+      }
     }
     
-    # map
-    map <- NA
-    if("map" %in% hints_floraweb & length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & any(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))){
-      
-      if(!exists("CGRS_Germany")){
-        data(CGRS_Germany)
-      }
-      
-      try({
-      taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=","",grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
-      
-      download.file(paste("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",taxon_ID_map, sep=""), destfile = file.path(dir,"map.csv"), quiet = T)
-      map <- read.csv(file.path(dir,"map.csv"), skip=41)[-1,c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
-      
-      map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
-      map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
-      map$AFE_SYMBOLCODE[which(map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
-      map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==6)] <- 5
-      map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==8)] <- 6
-      map$AFE_SYMBOLCODE <- map$AFE_SYMBOLCODE + 2
-      
-      map <- map[order(map$AFE_SYMBOLCODE, decreasing = TRUE),]
-      map <- map[!duplicated(map$CGRSNAME),]
-      
-      map <- merge(CGRS_Germany, map, all.x = TRUE, sort=FALSE)
-      map$AFE_SYMBOLCODE[is.na(map$AFE_SYMBOLCODE)] <- 1
-      map$AFE_SYMBOLCODE <- as.factor(map$AFE_SYMBOLCODE)
-      
-      legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), SYMBOL_TEXT=c("absent",
-                                                                     "not assigned","records uncertain","extinct","probably extinct",
-                                                                     "cultivated, not established alien","established alien","native, incl. archaeophytes"),
-                                colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
-      
-      legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
-      
-      levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
-      }, silent = TRUE)
-    }
-  }
-  
-  if(!is.null(hints_floraweb)){
-    for (i in 1:length(hints_floraweb)){
-      
-      if(hints_floraweb[i]=="description"){
-        if(floraweb_image){
-          description <- paste("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]], sep="")
-        } else {
-          description <- gsub("Morphologie:","Morphologie:\n",infos_biology[[2]])
+    if(!is.null(hints_floraweb)){
+      for (i in 1:length(hints_floraweb)){
+        
+        if(hints_floraweb[i]=="description"){
+          if(floraweb_image){
+            description <- paste("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]], sep="")
+          } else {
+            description <- gsub("Morphologie:","Morphologie:\n",infos_biology[[2]])
+          }
+          if(!grepl("keine Angaben",description)){
+            hints[[i+1]] <- description
+          }
         }
-        if(!grepl("keine Angaben",description)){
-          hints[[i+1]] <- description
+        
+        if(hints_floraweb[i]=="status"){
+          hints[[i+1]] <- paste(infos_main[[7]],"\n",infos_main[[8]], sep="")
         }
-      }
-      
-      if(hints_floraweb[i]=="status"){
-        hints[[i+1]] <- paste(infos_main[[7]],"\n",infos_main[[8]], sep="")
-      }
-      
-      if(hints_floraweb[i]=="family"){
-        hints[[i+1]] <- paste(infos_main[[6]])
-      }
-      
-      if(hints_floraweb[i]=="German name"){
-        hints[[i+1]] <- paste(infos_main[[5]])
-      }
-      
-      if(hints_floraweb[i]=="habitat"){
-        if(infos_ecology[[3]] != "Formation: \r\nTaxon keiner Formation zugeordnet "){
-          hints[[i+1]] <- paste(infos_ecology[[3]])
+        
+        if(hints_floraweb[i]=="family"){
+          hints[[i+1]] <- paste(infos_main[[6]])
         }
-      }
-      
-      if(hints_floraweb[i]=="map"){
-        if(!is.na(map)[1]){
-          hints[[i+1]] <- list(map["AFE_SYMBOLCODE"], legend_info$colour)
+        
+        if(hints_floraweb[i]=="German name"){
+          hints[[i+1]] <- paste(infos_main[[5]])
         }
-      }
-      
-      if(length(hints)==i+1){
-        names(hints)[i+1] <- hints_floraweb[i]
+        
+        if(hints_floraweb[i]=="habitat"){
+          if(infos_ecology[[3]] != "Formation: \r\nTaxon keiner Formation zugeordnet "){
+            hints[[i+1]] <- paste(infos_ecology[[3]])
+          }
+        }
+        
+        if(hints_floraweb[i]=="map"){
+          if(!is.na(map)[1]){
+            hints[[i+1]] <- list(map["AFE_SYMBOLCODE"], legend_info$colour)
+          }
+        }
+        
+        if(length(hints)==i+1){
+          names(hints)[i+1] <- hints_floraweb[i]
+        }
       }
     }
-  }
-  
-  # 4.2 Hints from own entries ----
-  if(!is.null(hints_custom)){
-    for(i in 1:length(hints_custom)){
-      if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
-        hints[[length(hints)+1]] <- species_row[,hints_custom[i]]
-        names(hints)[length(hints)] <- hints_custom[i]
+    
+    # 4.2 Hints from own entries ----
+    if(!is.null(hints_custom)){
+      for(i in 1:length(hints_custom)){
+        if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
+          hints[[length(hints)+1]] <- species_row[,hints_custom[i]]
+          names(hints)[length(hints)] <- hints_custom[i]
+        }
       }
     }
   }

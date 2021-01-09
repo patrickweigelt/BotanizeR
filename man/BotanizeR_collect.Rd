@@ -46,7 +46,7 @@ plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main="")
 par(mar=c(0.5,0.5,0.5,0.5),oma=c(0,0,0,0))
 plot(hints$image[[1]], axes=FALSE)
 
-message(hints$description)
+message(hints$habitat)
 
 # only custom image links + floraweb descriptions
 hints <- BotanizeR_collect(species_row, image_floraweb = FALSE, 
