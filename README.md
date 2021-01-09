@@ -16,13 +16,13 @@ floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 | floraweb
 # Type in species name, or press enter for next hint or type "skip" and press 
 # enter for next species or type "exit" to end quiz and save results
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
-                                           hints = c("description","status",
+                                           hints_floraweb = c("description","status",
                                                      "habitat","family","German name"),
                                                      case_sensitive = FALSE)
 
 # If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
-                                           hints = c("map","description","status",
+                                           hints_floraweb = c("map","description","status",
                                                      "habitat","family","German name"),
                                                      case_sensitive = FALSE)
 
@@ -36,11 +36,23 @@ floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
 
 # Practice
 floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species_trained,
-                                           hints = c("map","description","status","habitat",
+                                           hints_floraweb = c("map","description","status","habitat",
                                           "family","German name"), case_sensitive = FALSE)
 
 # Save species list
 write.csv(floraweb_species_trained, "floraweb_species_trained.csv", row.names = FALSE)
+
+
+
+### example for three species with custom hints and images
+custom_species <- floraweb_species[which(floraweb_species$SPECIES %in% c("Acer campestre","Erica carnea","Melampyrum nemorosum")),]
+
+custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_floraweb=TRUE,
+                                         hints_floraweb = NULL,
+                                         hints_custom = c("ownhint_1","ownhint_2"), 
+                                         imagelink_custom = c("imagelink_1","imagelink_2"), 
+                                         image_folder = NA, case_sensitive = FALSE)
+                                    
 ```
 
 Sources  
