@@ -33,11 +33,16 @@ tabPanel(
                h5(textOutput("status2"), style = "font-weight=500; color: #00CC00;"),
                h5(textOutput("status3"), style = "font-weight=500; color: #FF0000;"),
                br(),
+               h5(textOutput("real_answer"), style = "color: green; font-style: bold"),
+               br(),
                actionButton("submit", "Submit"),
+               actionButton("real_answer", "Answer"),
                actionButton("newplant", "New plant")),
         
         # Second part of the page with the picture
-        column(8, plotOutput("random_sp"))),
+        column(8, plotOutput("random_sp"),
+               br(),
+               h5(textOutput("score")))),
     
 )
 

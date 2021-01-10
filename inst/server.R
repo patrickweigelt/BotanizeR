@@ -32,9 +32,8 @@ shinyServer(function(input, output) {
     
     observe({
         input$newplant # hitting the new plant button
-        # Sampling one species ----
+        # Random sp ----
         species <- sample(species_list$SPECIES, 1)
-        
         
         # species <- as.character(input$ex_sp) #species_list$SPECIES[i]
         i <- which(floraweb_species$SPECIES == species)
@@ -86,13 +85,14 @@ shinyServer(function(input, output) {
             }
         }
         
-        # 1. Photo of the random species ----
+        # Photo ----
         output$random_sp <- renderPlot({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
             plot(image, axes = FALSE) #, ylim = c(height(image_sp[[2]]), 1))
         })
         
-        # display text
+        # Answer ----
+        # display text when no answer is provided
         output$status1 <- renderText({
             "Mark your answer and click 'Submit!'"
         })
@@ -103,16 +103,69 @@ shinyServer(function(input, output) {
             ""
         })
         
-    }) # closing observe
-    
-    observe({
-        # Defining & initializing the reactiveValues object
-        counter <- reactiveValues(countervalue = 0) 
-        output$nb_tries <- renderText({"Number of tries: 0"})
-        observeEvent(input$submit, {
-            counter$countervalue <- counter$countervalue + 1
-        output$nb_tries <- renderText({
-            paste0("Number of tries: ", counter$countervalue)})
+        # Providing an answer
+        observe({
+            
+            # Counting the number of tries
+            # Defining & initializing the reactiveValues object
+            counter <- reactiveValues(countervalue = 0) 
+            output$nb_tries <- renderText({"Number of tries: 0"})
+            observeEvent(input$submit, {
+                counter$countervalue <- counter$countervalue + 1
+                output$nb_tries <- renderText({
+                    paste0("Number of tries: ", counter$countervalue)})
+                
+                # Initial score
+                counter <- reactiveValues(score = 0)
+                renderText("Score = 0")
+                # output$score <- 0
+                
+                # If provided answer is correct
+                # observeEvent(input$sp_answer == species, {
+                if (input$sp_answer == species){
+                    output$status1 <- renderText({
+                        ""
+                    })
+                    output$status2 <- renderText({
+                        paste(generateResponse(1))
+                    })
+                    output$status3 <- renderText({
+                        ""
+                    })
+                    
+                    # Updating score
+                    renderText({
+                        counter$score <- counter$score + 1
+                        paste0("Score: ", counter$score)
+                        # output$score <- output$score + 1
+                        # paste0("Score: ", output$score)
+                        })
+                    
+                    # })
+                }
+            })
         })
-    })
+        
+        # Printing real answer ----
+        observe({
+            output$real_answer <- renderText("")
+            observeEvent(input$real_answer, {
+                output$real_answer <- renderText(species)
+            })
+        })
+        
+        # Number of tries ----
+        # observe({
+        #     # Defining & initializing the reactiveValues object
+        #     counter <- reactiveValues(countervalue = 0) 
+        #     output$nb_tries <- renderText({"Number of tries: 0"})
+        #     observeEvent(input$submit, {
+        #         counter$countervalue <- counter$countervalue + 1
+        #         output$nb_tries <- renderText({
+        #             paste0("Number of tries: ", counter$countervalue)})
+        #     })
+        # })
+        
+    }) # closing observe for new plant
+    
 })
