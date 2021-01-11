@@ -1,7 +1,7 @@
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
                            hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
-                           file_location="temporary"){
+                           file_location="temporary", only_links = FALSE){
   
   # Information can come from floraweb and/or from own resources
   
@@ -64,11 +64,20 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         photolinks <- sapply(xpathApply(html_photo, "//div[@id='content']//img",xmlAttrs), function(x) grep("bilder", x, value=T))
         
         if(photolinks[1]!="../bilder/arten/"){
-          try({hints[[1]][[1]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep=""))
-          floraweb_image <- TRUE       
-          },silent = T)
-          if (length(photolinks)>1){
-            try(hints[[1]][[2]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+          if(only_links){
+            hints[[1]][[1]] <- paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep="")
+            floraweb_image <- TRUE  
+          } else {
+            try({hints[[1]][[1]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep=""))
+                 floraweb_image <- TRUE       
+                },silent = T)
+          }
+          if (length(photolinks)>1){ # check for cases with more then two images and put loop here
+            if(only_links){
+              hints[[1]][[2]] <- paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")
+            } else {
+              try(hints[[1]][[2]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",gsub("\\.tmb","",photolinks[2])), sep="")),silent = T)
+            }
           }
         }
       }
@@ -79,18 +88,28 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   if(!is.null(imagelink_custom)){
     for(i in 1:length(imagelink_custom)){
       if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
-        try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+        if(only_links){
+          hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelink_custom[i]]
+        } else {
+          try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+        }
       }
     }
   }
 
   # 3.3 Images from image folder ----
   if(!is.na(image_folder)){
-    image_files <- list.files(image_folder)
+    image_files <- list.files(image_folder, pattern = "\\.jpg|\\.jpeg", recursive = TRUE, full.names = TRUE)
     image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
     if(length(image_files)>0){
-      for(i in 1:length(image_files)){
-        try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folder,image_files[i])))
+      if(only_links){
+        for(i in 1:length(image_files)){
+          hints[[1]][[length(hints[[1]])+1]] <- image_files[i]
+        }
+      } else {
+        for(i in 1:length(image_files)){
+          try(hints[[1]][[length(hints[[1]])+1]] <- load.image(image_files[i]))
+        }
       }
     }
   }
