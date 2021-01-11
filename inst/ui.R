@@ -31,13 +31,22 @@ tabPanel(titlePanel("Species info"),
                                      choices = plant_list,
                                      # selectize = FALSE,
                                      selected = "Acer campestre")),
-                  column(8,
+                  column(4,
                          plotOutput("selected_sp_photo")
                          ),
                   column(4,
                          textOutput("selected_sp_description"),
                          br(),
-                         textOutput("selected_sp_status")))),
+                         textOutput("selected_sp_habitat"),
+                         br(),
+                         textOutput("selected_sp_family"),
+                         br(),
+                         textOutput("selected_sp_status"),
+                         br(),
+                         textOutput("selected_sp_german"),
+                         br(),
+                         plotOutput("selected_sp_map")
+                         ))),
 
 ## Quizz ----------------------------------------------------------------------
 tabPanel(
