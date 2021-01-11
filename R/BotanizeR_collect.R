@@ -38,13 +38,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   hints <- list()
   hints[[1]] <- list()
   names(hints)[1] <- "images"
+  floraweb_image <- FALSE
   
   # 3. Images ----
   # 3.1 Floraweb ----
   
   if(!is.na(species_row$NAMNR) & species_row$NAMNR != ""){
-    
-    floraweb_image <- FALSE
     
     # Main infos
     # I need this step because of an error in RCURL when getting the url
@@ -101,7 +100,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   if(length(hints$images) > 0){
     
     # 4.1 Floraweb ----
-    if(!is.na(species_row$NAMNR) & species_row$NAMNR != "") { 
+    if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & !is.null(hints_floraweb)) { 
       
       # ecology
       if("habitat" %in% hints_floraweb){
@@ -155,9 +154,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
           levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
         }, silent = TRUE)
       }
-    }
-    
-    if(!is.null(hints_floraweb)){
+
       for (i in 1:length(hints_floraweb)){
         
         if(hints_floraweb[i]=="description"){
@@ -200,6 +197,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         }
       }
     }
+    
     
     # 4.2 Hints from own entries ----
     if(!is.null(hints_custom)){
