@@ -32,11 +32,13 @@ tabPanel(titlePanel("Species info"),
                                      # selectize = FALSE,
                                      selected = "Acer campestre")),
                   column(4,
-                         plotOutput("selected_sp_photo")
+                         h4("Picture"),
+                         # plotOutput("selected_sp_photo"),
+                         uiOutput("selected_sp_photo")
                          ),
                   column(4,
-                         textOutput("selected_sp_description"),
-                         br(),
+                         # textOutput("selected_sp_description"),
+                         # br(),
                          textOutput("selected_sp_habitat"),
                          br(),
                          textOutput("selected_sp_family"),
@@ -80,7 +82,7 @@ tabPanel(
                ),
         
         # Second part of the page with the picture
-        column(8, plotOutput("random_sp"),
+        column(8, uiOutput("random_sp"),# plotOutput("random_sp"),
                br(),
                h5(textOutput("score")))),
     
