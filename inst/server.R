@@ -125,12 +125,13 @@ shinyServer(function(input, output) {
                 species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
                 image_floraweb = FALSE, hints_floraweb = NULL, 
                 hints_custom = NULL, imagelink_custom = NULL,
-                image_folder = "www/pictures_Clemens",
+                # image_folder = "~/ShinyApps/BotanizeR/WWW/", # This is needed on server
+                image_folder = "www",
                 file_location = "temporary", only_links = TRUE)
             
             # Taking "www/" out of the path
-            sp_clemens$images <- lapply(sp_clemens$images,
-                                     function(x) substring(x, 5, nchar(x)))
+            # sp_clemens$images <- lapply(sp_clemens$images,
+            #                         function(x) substring(x, 5, nchar(x)))
             
             # print(paste0("HERE: ", sp_clemens$images, "\t", getwd()))
             
