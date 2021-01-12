@@ -4,8 +4,8 @@ library(shiny)
 library(shinythemes)
 # library(shinyjs)
 library(BotanizeR)
-library(imager)
-library(XML)
+#library(imager)
+#library(XML)
 
 # Data
 data(floraweb_species)

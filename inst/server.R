@@ -2,7 +2,7 @@
 # Packages
 library(shiny)
 library(BotanizeR)
-library(imager)
+#library(imager)
 library(XML)
 library(sf)
 
@@ -31,8 +31,8 @@ shinyServer(function(input, output) {
     species_list <- floraweb_species
     plant_list <- floraweb_species$SPECIES
     
-    dir <- tempfile()
-    dir.create(dir)
+    # dir <- tempfile()
+    # dir.create(dir)
     # })
     
     # 1. Selected species ----
