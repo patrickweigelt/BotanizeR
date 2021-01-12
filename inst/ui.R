@@ -34,7 +34,13 @@ tabPanel(titlePanel("Species info"),
                   column(4,
                          h4("Picture"),
                          # plotOutput("selected_sp_photo"),
-                         uiOutput("selected_sp_photo")
+                         uiOutput("selected_sp_photo"),
+                         br(),
+                         # h4("Test Acer"),
+                         # img(src = "pictures_Clemens/Angiospermae/Acer campestre.jpg",
+                         #     height = "50%", width = "50%"),
+                         h4("Clemens"),
+                         uiOutput("selected_sp_clemens")
                          ),
                   column(4,
                          # textOutput("selected_sp_description"),
@@ -47,7 +53,11 @@ tabPanel(titlePanel("Species info"),
                          br(),
                          textOutput("selected_sp_german"),
                          br(),
-                         plotOutput("selected_sp_map")
+                         plotOutput("selected_sp_map"),
+                         br()#,
+                         # uiOutput("selected_sp_chorology"),
+                         # br(),
+                         #uiOutput("selected_sp_clemens")
                          ))),
 
 ## Quizz ----------------------------------------------------------------------

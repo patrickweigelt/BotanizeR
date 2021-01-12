@@ -67,7 +67,7 @@ shinyServer(function(input, output) {
             par(mar = rep(0.5, 4), oma = rep(0, 4))
             tags$img(src = sp_infos$images[[1]])
         })
-
+        
         # Description ----
         # output$selected_sp_description <- renderText({
         #     # Download biological information from FloraWeb
@@ -107,6 +107,38 @@ shinyServer(function(input, output) {
                  key.pos = 4, main = "")
         })
         
+        # Chorology ----
+        output$selected_sp_chorology <- renderUI({
+            par(mar = rep(0.5, 4), oma = rep(0, 4))
+            tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
+                                  species_list$NAMNR[j],
+                                  ".GIF"))
+        })
+        
+        # Clemens ----
+        output$selected_sp_clemens <- renderUI({
+            
+            sp_space <- gsub("_", " ", input$plant_list)
+            # print(paste0("HERE: ", sp_space))
+            
+            sp_clemens <- BotanizeR_collect(
+                species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+                image_floraweb = FALSE, hints_floraweb = NULL, 
+                hints_custom = NULL, imagelink_custom = NULL,
+                image_folder = "www/pictures_Clemens",
+                file_location = "temporary", only_links = TRUE)
+            
+            # Taking "www/" out of the path
+            sp_clemens$images <- lapply(sp_clemens$images,
+                                     function(x) substring(x, 5, nchar(x)))
+            
+            # print(paste0("HERE: ", sp_clemens$images, "\t", getwd()))
+            
+            par(mar = rep(0.5, 4), oma = rep(0, 4))
+            tags$img(src = sp_clemens$images[[1]],
+                     height = "60%", width = "60%")
+        })
+        
     }) # closes observe()
     
     # 2. Quizz ----
@@ -118,14 +150,14 @@ shinyServer(function(input, output) {
         
         # species <- as.character(input$ex_sp) #species_list$SPECIES[i]
         i <- which(floraweb_species$SPECIES == species)
-
+        
         # Download informations with BotanizeR_collect()
         sp_quizz <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
             image_floraweb = TRUE, hints_floraweb = NULL, 
             hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
             file_location = "temporary", only_links = TRUE)
-
+        
         # Photo ----
         # output$random_sp <- renderPlot({
         #     par(mar = rep(0.5, 4), oma = rep(0, 4))
