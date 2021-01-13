@@ -1,7 +1,7 @@
 ### BotanizeR
 BotanizeR_quiz <- function(species_list, image_floraweb=TRUE, 
                            hints_floraweb = c("description","status","habitat","family","German name"), 
-                           hints_custom = NULL, imagelink_custom = NULL, image_folder = NA, 
+                           hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL, 
                            case_sensitive = TRUE, file_location="temporary", startat = 0, init_count = sum(species_list$COUNT),
                            init_score = sum(species_list$SCORE)){
   
@@ -42,7 +42,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   
   # Collect infos for species i
   infos <- BotanizeR_collect(species_list[i,], image_floraweb, hints_floraweb, 
-                                         hints_custom, imagelink_custom, image_folder,
+                                         hints_custom, imagelink_custom, image_folders,
                                          file_location)
 
   
@@ -140,7 +140,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   } else {
     species_list$SCORE[i] <- species_list$SCORE[i] + attempts
     BotanizeR_quiz(species_list, image_floraweb, hints_floraweb, 
-                   hints_custom, imagelink_custom, image_folder,
+                   hints_custom, imagelink_custom, image_folders,
                    case_sensitive, file_location, startat = startat, 
                    init_count = init_count, init_score = init_score)
   }

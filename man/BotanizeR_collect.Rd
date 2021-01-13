@@ -37,7 +37,7 @@ species_row$imagelink_3 <- ""
 # only floraweb image + description + map
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
                            hints_floraweb = c("map","description","status","habitat","family","German name"), 
-                           hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
+                           hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                            file_location="temporary")
 
 par(oma=c(0,0,0,10.5))
@@ -52,26 +52,26 @@ message(hints$habitat)
 hints <- BotanizeR_collect(species_row, image_floraweb = FALSE, 
                            hints_floraweb = c("description","status","habitat","family","German name"), 
                            hints_custom = NULL, imagelink_custom = c("imagelink_1","imagelink_2","imagelink_3"), 
-                           image_folder = NA, file_location="temporary")
+                           image_folders = NULL, file_location="temporary")
 
 # floraweb + custom images + floraweb descriptions
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
                            hints_floraweb = c("description","status","habitat","family","German name"), 
                            hints_custom = NULL, imagelink_custom = c("imagelink_1","imagelink_2","imagelink_3"), 
-                           image_folder = NA, file_location="temporary")
+                           image_folders = NULL, file_location="temporary")
 
 # floraweb + custom images + floraweb descriptions + custom description
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
                            hints_floraweb = c("description","status","habitat","family","German name"), 
                            hints_custom = c("ownhint_1","ownhint_2","ownhint_3"), 
                            imagelink_custom = c("imagelink_1","imagelink_2","imagelink_3"), 
-                           image_folder = NA, file_location="temporary")
+                           image_folders = NULL, file_location="temporary")
 
 # floraweb + custom images + only custom description
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, hints_floraweb = NULL, 
                            hints_custom = c("ownhint_1","ownhint_2","ownhint_3"), 
                            imagelink_custom = c("imagelink_1","imagelink_2","imagelink_3"), 
-                           image_folder = NA, file_location="temporary")
+                           image_folders = NULL, file_location="temporary")
                            
 # To load images from your local computer, specify an image folder with pictures included. File names need to include the species names.
 }

@@ -22,7 +22,7 @@ navbarPage(title = div(
              header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)"))
 ),
 theme = shinytheme("flatly"),
-windowTitle = "Botanic quizz",
+windowTitle = "BotanizeR",
 
 ## Species ---------------------------------------------------------
 tabPanel(titlePanel("Species info"),

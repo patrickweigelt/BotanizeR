@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
             image_floraweb = TRUE,
             hints_floraweb = c("map","description","status", "habitat",
                                "family", "German name"), 
-            hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
+            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
             file_location = "temporary", only_links = TRUE)
         
         # Photo ----
@@ -125,8 +125,9 @@ shinyServer(function(input, output) {
                 species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
                 image_floraweb = FALSE, hints_floraweb = NULL, 
                 hints_custom = NULL, imagelink_custom = NULL,
-                # image_folder = "~/ShinyApps/BotanizeR/WWW/", # This is needed on server
-                image_folder = "www",
+                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
+                # Still needs to be modified to allow for several folders to choose from
+                image_folders = "www/pictures_Clemens",
                 file_location = "temporary", only_links = TRUE)
             
             # Taking "www/" out of the path
@@ -156,7 +157,7 @@ shinyServer(function(input, output) {
         sp_quizz <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
             image_floraweb = TRUE, hints_floraweb = NULL, 
-            hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
+            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
             file_location = "temporary", only_links = TRUE)
         
         # Photo ----
