@@ -1,6 +1,6 @@
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
-                           hints_custom = NULL, imagelink_custom = NULL, image_folder = NA,
+                           hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                            file_location="temporary", only_links = FALSE){
   
   # Information can come from floraweb and/or from own resources
@@ -98,22 +98,27 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
 
   # 3.3 Images from image folder ----
-  if(!is.na(image_folder)){
-    image_files <- list.files(image_folder, pattern = "\\.jpg|\\.jpeg", recursive = TRUE, full.names = FALSE)
-    image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
-    if(length(image_files)>0){
-      if(only_links){
-        for(i in 1:length(image_files)){
-          hints[[1]][[length(hints[[1]])+1]] <- image_files[i]
-        }
-      } else {
-        for(i in 1:length(image_files)){
-          try(hints[[1]][[length(hints[[1]])+1]] <- load.image(image_files[i]))
+  if(!is.null(image_folders)){
+    for(k in 1:length(image_folders)){
+      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg", recursive = TRUE, full.names = FALSE)
+      image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
+      if(length(image_files)>0){
+        if(only_links){
+          # WWW/image_folder in local shiny needs to be image_folder
+          # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to be image_folder
+          for(i in 1:length(image_files)){
+            hints[[1]][[length(hints[[1]])+1]] <- file.path(gsub(".*[wwwWWW]/(.+)$",("\\1"),image_folders[k]),image_files[i])
+          }
+        } else {
+          for(i in 1:length(image_files)){
+            try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folders[k],image_files[i])))
+          }
         }
       }
     }
   }
   
+
   # 4. Other information ----
   
   if(length(hints$images) > 0){
