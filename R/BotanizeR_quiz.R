@@ -3,7 +3,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
                            hints_floraweb = c("description","status","habitat","family","German name"), 
                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL, 
                            case_sensitive = TRUE, file_location="temporary", startat = 0, init_count = sum(species_list$COUNT),
-                           init_score = sum(species_list$SCORE)){
+                           init_score = sum(species_list$SCORE), init_attempts = sum(species_list$ATTEMPTS)){
   
   # 1. Controls ----
   # Package dependencies
@@ -20,7 +20,9 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   # 2. Prep ----
   init_count <- init_count
   init_score <- init_score
-
+  init_attempts <- init_attempts
+  
+  hints <- 0
   attempts <- 0
   attempt <- "start"
   startat <- startat + 1
@@ -31,15 +33,14 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   
   # plot(1,1, type="n", xaxt="n", yaxt="n", xlab="", ylab="", bty="n")
     
-  message(startat, ". ---------------------------------\n")
+  message("Species ", startat, ". ---------------------------------\n")
   
   
   # 3. Quiz ----
   
   # Species i
-  i <- sample(1:nrow(species_list), 1, prob = ((species_list$SCORE+length(hints_floraweb)+length(hints_custom)+1)/(species_list$COUNT+1))*species_list$INCLUDE)
-  species <- species_list$SPECIES[i]
-  
+  i <- sample(1:nrow(species_list), 1, prob = ((species_list$COUNT - species_list$SCORE + 1)/(species_list$SCORE+1))*species_list$INCLUDE) # Account for number of attempts?
+
   # Collect infos for species i
   infos <- BotanizeR_collect(species_list[i,], image_floraweb, hints_floraweb, 
                                          hints_custom, imagelink_custom, image_folders,
@@ -67,8 +68,14 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
       genus <- FALSE
 
       for(k in 1:length(hints_i)){
-        
+
         attempt <- "start"
+        
+        message("\nhint ", k, " of ", length(hints_i), ": ", hints_i[k],"\n")
+        
+        if(hints < length(hints_i)){
+          hints <- hints + 1
+        }   
         
         if(grepl("image",hints_i[k])){
           
@@ -89,7 +96,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
           }
         }
         
-
+    
         while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
           attempts <- attempts + 1
 
@@ -100,6 +107,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
           } 
           
           if(attempt==""){
+            attempts <- attempts - 1
             next()
           } else {
             if(strsplit(attempt," ")[[1]][1]==ifelse(case_sensitive,species_list$GENUS[i],tolower(species_list$GENUS[i]))){
@@ -116,6 +124,9 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
           }
         }
         if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
+          if(attempt == "skip" | attempt == "exit" | attempts > 10){
+            attempts <- attempts - 1
+          }
           break()
         }
       }
@@ -123,26 +134,31 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
     
     
     if(species==attempt){
-      species_list$COUNT[i] <- species_list$COUNT[i] + 1
-      message("Species correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),species_list$TAXONNAME[i],
+      species_list$SCORE[i] <- species_list$SCORE[i] + 1
+      species_list$ATTEMPTS[i] <- species_list$ATTEMPTS[i] + attempts + hints # attempts per correct species
+      
+      message("Species correct after ",hints,ifelse(hints==1," hint"," hints"), " and ",attempts,ifelse(attempts==1," attempt\n\n"," attempts\n\n"),species_list$TAXONNAME[i],
               ifelse("German name" %in% hints_i,paste("\n",infos[["German name"]],sep=""),""),
               ifelse("family" %in% hints_i,paste("\n",infos[["family"]],sep=""),""),"\n\n")
     } else {
-      message("Species not ",ifelse(genus,"(but genus) ",""),"correct after ",attempts,ifelse(attempts==1," attempt\n"," attempts\n"),species_list$TAXONNAME[i],
+      message("Species not ",ifelse(genus,"(but genus) ",""),"correct after ",hints,ifelse(hints==1," hint"," hints"), " and ",attempts,ifelse(attempts==1," attempt\n\n"," attempts\n\n"),species_list$TAXONNAME[i],
               ifelse("German name" %in% hints_i,paste("\n",infos[["German name"]],sep=""),""),
               ifelse("family" %in% hints_i,paste("\n",infos[["family"]],sep=""),""),"\n\n")
     }
   }
   
   if(attempt=="exit"){
-    message(ifelse(startat>1,"Great! ",""),"You practiced ",startat-1," species and got ",sum(species_list$COUNT)-init_count," of them right. \nOn average you used ",ifelse(startat>1,round((sum(species_list$SCORE)-init_score)/(startat-1),2),0)," attempts/hints per species. \nGoodbye...")
+    message(ifelse(startat>1,"Great! ",""),"You practiced ",startat-1," species and got ",sum(species_list$SCORE)-init_score," of them right. \nOn average you used ",
+            ifelse((sum(species_list$SCORE)-init_score)>=1,round((sum(species_list$ATTEMPTS)-init_attempts)/(sum(species_list$SCORE)-init_score),2),0)," attempts+hints per correct species. \nGoodbye...")
     return(species_list)
   } else {
-    species_list$SCORE[i] <- species_list$SCORE[i] + attempts
+    species_list$COUNT[i] <- species_list$COUNT[i] + 1
+
     BotanizeR_quiz(species_list, image_floraweb, hints_floraweb, 
                    hints_custom, imagelink_custom, image_folders,
                    case_sensitive, file_location, startat = startat, 
-                   init_count = init_count, init_score = init_score)
+                   init_count = init_count, init_score = init_score, 
+                   init_attempts = init_attempts)
   }
 }
 
