@@ -2,7 +2,7 @@
 # Packages
 library(shiny)
 library(BotanizeR)
-#library(imager)
+# library(imager)
 library(XML)
 library(sf)
 
@@ -57,7 +57,7 @@ shinyServer(function(input, output) {
     
     # updateSelectizeInput("plant_list", choices = plant_list,
     #                      server = TRUE)
-
+    
     observe({
         # Plant species chosen
         j <- which(species_list$SPECIES == input$plant_list)
@@ -66,15 +66,23 @@ shinyServer(function(input, output) {
         sp_infos <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
             image_floraweb = TRUE,
-            hints_floraweb = c("map","description","status", "habitat",
-                               "family", "German name"), 
-            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+            hints_floraweb = c("description", "status", "habitat", "family",
+                               "German name"), 
+            hints_custom = NULL, imagelink_custom = NULL,
+            image_folders = "www/pictures_Clemens",
+            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
-        # Photo ----
+        # Photos ----
         output$selected_sp_photo <- renderUI({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
-            tags$img(src = sp_infos$images[[1]])
+            photo_list <- lapply(sp_infos$images, function(x){
+                tags$div(
+                    tags$img(src = x, width = "50%", height = "50%"),
+                    tags$script(src = "titlescript.js")
+                )
+            })
+            do.call(tagList, photo_list)
         })
         
         # Description ----
@@ -140,33 +148,6 @@ shinyServer(function(input, output) {
                                   species_list$NAMNR[j],
                                   ".GIF"))
         })
-        
-        # Clemens ----
-        output$selected_sp_clemens <- renderUI({
-            
-            sp_space <- gsub("_", " ", input$plant_list)
-            # print(paste0("HERE: ", sp_space))
-            
-            sp_clemens <- BotanizeR_collect(
-                species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
-                image_floraweb = FALSE, hints_floraweb = NULL, 
-                hints_custom = NULL, imagelink_custom = NULL,
-                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
-                # Still needs to be modified to allow for several folders to choose from
-                image_folders = "www/pictures_Clemens",
-                file_location = "temporary", only_links = TRUE)
-            
-            # Taking "www/" out of the path
-            # sp_clemens$images <- lapply(sp_clemens$images,
-            #                         function(x) substring(x, 5, nchar(x)))
-            
-            # print(paste0("HERE: ", sp_clemens$images, "\t", getwd()))
-            
-            par(mar = rep(0.5, 4), oma = rep(0, 4))
-            tags$img(src = sp_clemens$images[[1]],
-                     height = "60%", width = "60%")
-        })
-        
     }) # closes observe()
     
     # 2. Quizz ----
@@ -183,22 +164,30 @@ shinyServer(function(input, output) {
         sp_quizz <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
             image_floraweb = TRUE,
-            hints_floraweb = c("map"), 
-            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+            hints_floraweb = NULL, 
+            hints_custom = NULL, imagelink_custom = NULL,
+            image_folders = "www/pictures_Clemens",
+            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
-        # Photo ----
+        # Photos ----
         output$random_sp <- renderUI({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
-            tags$img(src = sp_quizz$images[[1]])
+            photo_random <- lapply(sp_quizz$images, function(x){
+                tags$div(
+                    tags$img(src = x, width = "50%", height = "50%"),
+                    tags$script(src = "titlescript.js")
+                )
+            })
+            do.call(tagList, photo_random)
         })
         
         # Map ----
         isolate({
             observe({
                 quizz_options <- pmatch(c("Description", "Status", "Family",
-                                    "Habitat", "German name", "Map"),
-                                  input$quizz_options)
+                                          "Habitat", "German name", "Map"),
+                                        input$quizz_options)
                 output$random_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()

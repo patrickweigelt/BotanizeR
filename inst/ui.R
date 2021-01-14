@@ -5,7 +5,7 @@ library(shinythemes)
 # library(shinysky) # autocomplete menu
 # library(shinyjs)
 library(BotanizeR)
-#library(imager)
+# library(imager)
 #library(XML)
 
 # Data
@@ -21,13 +21,14 @@ navbarPage(title = div(
     # Team logo 
     tags$script(HTML("var header = $('.navbar > .container-fluid');
              header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
+    tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}")),
     tags$style(HTML("#panel2{font-size: 25px}"))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
 
-## Species ---------------------------------------------------------
+## Species list ---------------------------------------------------------------
 tabPanel(h1(id = "panel1", "Species list"),
          fluidRow(column(4,
                          selectInput("plant_list", "Plant list",
@@ -52,14 +53,9 @@ tabPanel(h1(id = "panel1", "Species list"),
                          ),
                   column(4,
                          h4("Picture"),
-                         # plotOutput("selected_sp_photo"),
-                         uiOutput("selected_sp_photo"),
-                         br(),
-                         # h4("Test Acer"),
-                         # img(src = "pictures_Clemens/Angiospermae/Acer campestre.jpg",
-                         #     height = "50%", width = "50%"),
-                         h4("Clemens"),
-                         uiOutput("selected_sp_clemens")
+                         # uiOutput("selected_sp_photo")
+                         splitLayout(cellWidths = c("100%"),
+                                     uiOutput("selected_sp_photo"))
                          ),
                   column(4,
                          # textOutput("selected_sp_description"),
