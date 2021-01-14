@@ -38,7 +38,7 @@ tabPanel(h1(id = "panel1", "Species list"),
                          br(),
                          checkboxGroupInput(inputId = "options",
                                             label = "Show:",
-                                            choices = list("Map"))
+                                            choices = list("Map", "Chorology"))
                          #
                          # trying autocomplete...
                          #
@@ -50,31 +50,29 @@ tabPanel(h1(id = "panel1", "Species list"),
                          #                options = list(placeholder = "Select a plant species",
                          #                               create = FALSE))#,
                          # actionButton("go", "Submit")
-                         ),
-                  column(4,
-                         h4("Picture"),
-                         # uiOutput("selected_sp_photo")
-                         splitLayout(cellWidths = c("100%"),
-                                     uiOutput("selected_sp_photo"))
-                         ),
-                  column(4,
-                         # textOutput("selected_sp_description"),
-                         # br(),
-                         textOutput("selected_sp_habitat"),
-                         br(),
-                         textOutput("selected_sp_family"),
-                         br(),
-                         textOutput("selected_sp_status"),
-                         br(),
-                         textOutput("selected_sp_german"),
-                         br(),
-                         plotOutput("selected_sp_map"),
-                         br()#,
-                         # uiOutput("selected_sp_chorology"),
-                         # br(),
-                         #uiOutput("selected_sp_clemens")
-                         ))
          ),
+         column(4,
+                h4("Picture"),
+                # uiOutput("selected_sp_photo")
+                splitLayout(cellWidths = c("100%"),
+                            uiOutput("selected_sp_photo"))
+         ),
+         column(4,
+                # textOutput("selected_sp_description"),
+                # br(),
+                textOutput("selected_sp_habitat"),
+                br(),
+                textOutput("selected_sp_family"),
+                br(),
+                textOutput("selected_sp_status"),
+                br(),
+                textOutput("selected_sp_german"),
+                br(),
+                plotOutput("selected_sp_map"),
+                br(),
+                uiOutput("selected_sp_chorology")
+         ))
+),
 
 ## Quizz ----------------------------------------------------------------------
 tabPanel(
@@ -86,7 +84,8 @@ tabPanel(
                checkboxGroupInput(inputId = "quizz_options", label = "Show:",
                                   choices = list("Description", "Status",
                                                  "Family", "Habitat",
-                                                 "German name", "Map")),
+                                                 "German name", "Map",
+                                                 "Chorology")),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
                                                   Shiny.onInputChange("lastkeypresscode", e.keyCode);
@@ -104,14 +103,30 @@ tabPanel(
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
                actionButton("newplant", "New plant")
-               ),
+        ),
         
         # Second part of the page with the picture
-        column(8, uiOutput("random_sp"),
+        column(4,
+               uiOutput("random_sp"),
                br(),
                plotOutput("random_map"),
                br(),
-               h5(textOutput("score")))),
+               uiOutput("random_chorology"),
+               br(),
+               h5(textOutput("score"))),
+        
+        # Third part with other indices
+        column(4,
+               # textOutput("random_description"),
+               # br(),
+               textOutput("random_habitat"),
+               br(),
+               textOutput("random_family"),
+               br(),
+               textOutput("random_status"),
+               br(),
+               textOutput("random_german"))
+    )
     
 )
 

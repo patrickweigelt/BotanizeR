@@ -120,11 +120,11 @@ shinyServer(function(input, output) {
         # Map ----
         isolate({
             observe({
-                options <- pmatch("Map", input$options)
+                options <- pmatch(c("Map", "Chorology"), input$options)
                 output$selected_sp_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if(!is.na(options)){
+                    if(!is.na(options[1])){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
                             species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
@@ -142,12 +142,23 @@ shinyServer(function(input, output) {
         })
         
         # Chorology ----
-        output$selected_sp_chorology <- renderUI({
-            par(mar = rep(0.5, 4), oma = rep(0, 4))
-            tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                  species_list$NAMNR[j],
-                                  ".GIF"))
+        isolate({
+            observe({
+                options <- pmatch(c("Map", "Chorology"), input$options)
+                output$selected_sp_chorology <- renderUI({
+                    par(mar = rep(0.5, 4), oma = rep(0, 4))
+                    plot.new()
+                    if(!is.na(options[2])){
+                        par(mar = rep(0.5, 4), oma = rep(0, 4))
+                        tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
+                                              species_list$NAMNR[j],
+                                              ".GIF"),
+                                 width = "400px", height = "300px")
+                    }
+                })
+            })
         })
+        
     }) # closes observe()
     
     # 2. Quizz ----
@@ -164,7 +175,8 @@ shinyServer(function(input, output) {
         sp_quizz <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
             image_floraweb = TRUE,
-            hints_floraweb = NULL, 
+            hints_floraweb = c("description", "status", "habitat", "family",
+                               "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = "www/pictures_Clemens",
             # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
@@ -182,11 +194,72 @@ shinyServer(function(input, output) {
             do.call(tagList, photo_random)
         })
         
+        # Habitat ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_habitat <- renderText({
+                    if(!is.na(quizz_options[4])){
+                        print(sp_quizz$habitat[[1]])
+                    }
+                })
+            })
+        })
+        
+        # Family ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_family <- renderText({
+                    if(!is.na(quizz_options[3])){
+                        print(sp_quizz$family)
+                    }
+                })
+            })
+        })
+        
+        # Status ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_status <- renderText({
+                    if(!is.na(quizz_options[2])){
+                        print(sp_quizz$status)
+                    }
+                })
+            })
+        })
+        
+        # German name ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_german <- renderText({
+                    if(!is.na(quizz_options[5])){
+                        print(sp_quizz$`German name`)
+                    }
+                })
+            })
+        })
+        
         # Map ----
         isolate({
             observe({
                 quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map"),
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
                                         input$quizz_options)
                 output$random_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
@@ -203,6 +276,27 @@ shinyServer(function(input, output) {
                         par(oma = c(0, 0, 0, 10.5))
                         plot(random_map$map[[1]], pal = random_map$map[[2]],
                              key.pos = 4, main = "")
+                    }
+                })
+            })
+        })
+        
+        # Chorology ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_chorology <- renderUI({
+                    par(mar = rep(0.5, 4), oma = rep(0, 4))
+                    plot.new()
+                    if(!is.na(options[7])){
+                        par(mar = rep(0.5, 4), oma = rep(0, 4))
+                        tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
+                                              species_list$NAMNR[j],
+                                              ".GIF"),
+                                 width = "400px", height = "300px")
                     }
                 })
             })
