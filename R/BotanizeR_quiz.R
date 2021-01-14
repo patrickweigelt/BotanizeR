@@ -40,11 +40,12 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   
   # Species i
   i <- sample(1:nrow(species_list), 1, prob = ((species_list$COUNT - species_list$SCORE + 1)/(species_list$SCORE+1))*species_list$INCLUDE) # Account for number of attempts?
-
+  species <- species_list$SPECIES[i]
+  
   # Collect infos for species i
   infos <- BotanizeR_collect(species_list[i,], image_floraweb, hints_floraweb, 
                                          hints_custom, imagelink_custom, image_folders,
-                                         file_location)
+                                         file_location, image_required = TRUE)
 
   
   if(length(infos$images)==0) { 

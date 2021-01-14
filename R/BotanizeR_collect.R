@@ -1,7 +1,7 @@
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                           file_location="temporary", only_links = FALSE){
+                           file_location="temporary", only_links = FALSE, image_required = FALSE){
   
   # Information can come from floraweb and/or from own resources
   
@@ -118,9 +118,13 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     }
   }
   
-
   # 4. Other information ----
-  if(!is.null(hints_floraweb)){
+  if(image_required & length(hints$images) == 0){
+    hints_floraweb <- NULL
+    hints_custom <- NULL
+  }
+  
+  # if(!is.null(hints_floraweb)){
   # if(length(hints$images) > 0){
     
     # 4.1 Floraweb ----
@@ -232,7 +236,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         }
       }
     }
-  }
+  # }
   
   hints <- hints[which(!sapply(hints, is.null))]
   
