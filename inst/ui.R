@@ -2,6 +2,7 @@
 # Packages
 library(shiny)
 library(shinythemes)
+# library(shinysky) # autocomplete menu
 # library(shinyjs)
 library(BotanizeR)
 #library(imager)
@@ -19,18 +20,36 @@ navbarPage(title = div(
     HTML('<span style="font-size:180%;color:white;font-weight:bold;"> BotanizeR</span></a>'),
     # Team logo 
     tags$script(HTML("var header = $('.navbar > .container-fluid');
-             header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)"))
+             header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
+    tags$style(HTML("#panel1{font-size: 25px}")),
+    tags$style(HTML("#panel2{font-size: 25px}"))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
 
 ## Species ---------------------------------------------------------
-tabPanel(titlePanel("Species info"),
+tabPanel(h1(id = "panel1", "Species list"),
          fluidRow(column(4,
                          selectInput("plant_list", "Plant list",
                                      choices = plant_list,
                                      # selectize = FALSE,
-                                     selected = "Acer campestre")),
+                                     selected = "Acer campestre"),
+                         br(),
+                         checkboxGroupInput(inputId = "options",
+                                            label = "Show:",
+                                            choices = list("Map"))
+                         #
+                         # trying autocomplete...
+                         #
+                         # selectizeInput(inputId = "plant_list",
+                         #                label = "Plant list",
+                         #                choices = plant_list,
+                         #                selected = NULL,
+                         #                multiple = FALSE,
+                         #                options = list(placeholder = "Select a plant species",
+                         #                               create = FALSE))#,
+                         # actionButton("go", "Submit")
+                         ),
                   column(4,
                          h4("Picture"),
                          # plotOutput("selected_sp_photo"),
@@ -58,17 +77,17 @@ tabPanel(titlePanel("Species info"),
                          # uiOutput("selected_sp_chorology"),
                          # br(),
                          #uiOutput("selected_sp_clemens")
-                         ))),
+                         ))
+         ),
 
 ## Quizz ----------------------------------------------------------------------
 tabPanel(
-    # Application title
-    titlePanel("Quizz"),
+    h1(id = "panel2", "Quizz"),
     fluidRow(
         column(4,
                h5(textOutput("Score")),
                br(),
-               checkboxGroupInput(inputId = "options", label = "Show:",
+               checkboxGroupInput(inputId = "quizz_options", label = "Show:",
                                   choices = list("Description", "Status",
                                                  "Family", "Habitat",
                                                  "German name", "Map")),
@@ -92,7 +111,9 @@ tabPanel(
                ),
         
         # Second part of the page with the picture
-        column(8, uiOutput("random_sp"),# plotOutput("random_sp"),
+        column(8, uiOutput("random_sp"),
+               br(),
+               plotOutput("random_map"),
                br(),
                h5(textOutput("score")))),
     

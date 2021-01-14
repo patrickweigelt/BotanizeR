@@ -44,6 +44,20 @@ shinyServer(function(input, output) {
         selected_species
     })
     
+    # Tying autocomplete...
+    
+    # selected_species <- reactive({
+    #     if(input$go == 0){return()}
+    #     isolate({
+    #         input$go
+    #         input$plant_list
+    #         selected_species
+    #     })
+    # }) 
+    
+    # updateSelectizeInput("plant_list", choices = plant_list,
+    #                      server = TRUE)
+
     observe({
         # Plant species chosen
         j <- which(species_list$SPECIES == input$plant_list)
@@ -58,11 +72,6 @@ shinyServer(function(input, output) {
             file_location = "temporary", only_links = TRUE)
         
         # Photo ----
-        # output$selected_sp_photo <- renderPlot({
-        #     par(mar = rep(0.5, 4), oma = rep(0, 4))
-        #     plot(sp_infos$image[[1]], axes = FALSE)
-        #     #, ylim = c(height(image_sp[[2]]), 1))
-        # })
         output$selected_sp_photo <- renderUI({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
             tags$img(src = sp_infos$images[[1]])
@@ -101,10 +110,27 @@ shinyServer(function(input, output) {
         })
         
         # Map ----
-        output$selected_sp_map <- renderPlot({
-            par(oma = c(0, 0, 0, 10.5))
-            plot(sp_infos$map[[1]], pal = sp_infos$map[[2]],
-                 key.pos = 4, main = "")
+        isolate({
+            observe({
+                options <- pmatch("Map", input$options)
+                output$selected_sp_map <- renderPlot({
+                    par(oma = c(0, 0, 0, 10.5))
+                    plot.new()
+                    if(!is.na(options)){
+                        # Downloading map only
+                        sp_map <- BotanizeR_collect(
+                            species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+                            image_floraweb = FALSE,
+                            hints_floraweb = c("map"), 
+                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                            file_location = "temporary", only_links = TRUE)
+                        
+                        par(oma = c(0, 0, 0, 10.5))
+                        plot(sp_map$map[[1]], pal = sp_map$map[[2]],
+                             key.pos = 4, main = "")
+                    }
+                })
+            })
         })
         
         # Chorology ----
@@ -156,18 +182,41 @@ shinyServer(function(input, output) {
         # Download informations with BotanizeR_collect()
         sp_quizz <- BotanizeR_collect(
             species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
-            image_floraweb = TRUE, hints_floraweb = NULL, 
+            image_floraweb = TRUE,
+            hints_floraweb = c("map"), 
             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
             file_location = "temporary", only_links = TRUE)
         
         # Photo ----
-        # output$random_sp <- renderPlot({
-        #     par(mar = rep(0.5, 4), oma = rep(0, 4))
-        #     plot(image, axes = FALSE) #, ylim = c(height(image_sp[[2]]), 1))
-        # })
         output$random_sp <- renderUI({
             par(mar = rep(0.5, 4), oma = rep(0, 4))
             tags$img(src = sp_quizz$images[[1]])
+        })
+        
+        # Map ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                    "Habitat", "German name", "Map"),
+                                  input$quizz_options)
+                output$random_map <- renderPlot({
+                    par(oma = c(0, 0, 0, 10.5))
+                    plot.new()
+                    if(!is.na(quizz_options[6])){
+                        # Downloading map only
+                        random_map <- BotanizeR_collect(
+                            species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+                            image_floraweb = FALSE,
+                            hints_floraweb = c("map"), 
+                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                            file_location = "temporary", only_links = TRUE)
+                        
+                        par(oma = c(0, 0, 0, 10.5))
+                        plot(random_map$map[[1]], pal = random_map$map[[2]],
+                             key.pos = 4, main = "")
+                    }
+                })
+            })
         })
         
         # Answer ----

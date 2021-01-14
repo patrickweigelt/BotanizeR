@@ -120,8 +120,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
 
   # 4. Other information ----
-  
-  if(length(hints$images) > 0){
+  if(!is.null(hints_floraweb)){
+  # if(length(hints$images) > 0){
     
     # 4.1 Floraweb ----
     if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & !is.null(hints_floraweb)) { 
