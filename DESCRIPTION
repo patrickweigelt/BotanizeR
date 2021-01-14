@@ -4,7 +4,9 @@ Title: Little quiz game to memorize the plant species of Germany
 Version: 0.1.0
 Authors@R: c(
   person("Patrick", "Weigelt", email = "weigelt.patrick@gmail.com",
-    role = c("aut" , "cre"), comment = c(ORCID = "0000-0002-2485-3708"))
+    role = c("aut" , "cre"), comment = c(ORCID = "0000-0002-2485-3708")),
+  person("Pierre", "Denelle", email = "pierre.denelle@gmail.com",
+    role = c("aut"), comment = c(ORCID = "0000-0001-5037-2281"))
   )
 Description: Navigates through species from floraweb.de (or a defined subset thereof), shows pictures and descriptions and other hints and let's the user guess the species name. Number of tries and attempts are used to calculate scores that will be used to update probabilities for the random sampling of subsequent species.
 Depends:
