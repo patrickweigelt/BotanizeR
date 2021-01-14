@@ -314,52 +314,70 @@ shinyServer(function(input, output) {
             ""
         })
         
-        # Providing an answer
+        # Providing an answer simple version
         observe({
-            
-            # Counting the number of tries
-            # Defining & initializing the reactiveValues object
-            counter <- reactiveValues(countervalue = 0) 
-            output$nb_tries <- renderText({"Number of tries: 0"})
-            # observeEvent(input$submit, {
-            if(!is.null(input$lastkeypresscode)){
-                if(input$lastkeypresscode == 13){ # hitting Enter
-                    counter$countervalue <- counter$countervalue + 1
-                    output$nb_tries <- renderText({
-                        paste0("Number of tries: ", counter$countervalue)})
-                    
-                    # Initial score
-                    counter <- reactiveValues(score = 0)
-                    renderText("Score = 0")
-                    # output$score <- 0
-                    
-                    # If provided answer is correct
-                    # observeEvent(input$sp_answer == species, {
-                    if (input$sp_answer == species){
-                        output$status1 <- renderText({
-                            ""
-                        })
-                        output$status2 <- renderText({
-                            paste(generateResponse(1))
-                        })
-                        output$status3 <- renderText({
-                            ""
-                        })
-                        
-                        # Updating score
-                        renderText({
-                            counter$score <- counter$score + 1
-                            paste0("Score: ", counter$score)
-                            # output$score <- output$score + 1
-                            # paste0("Score: ", output$score)
-                        })
-                        
-                        # })
-                    }
-                } # closes 'Hitting enter'
-            } # closes !is.null lastkeybutton
-            # })
+            input$submit
+            isolate({
+                answer <- as.character(input$sp_answer)
+            })
+            # If provided answer is correct
+            if (answer == species){
+                output$status1 <- renderText({""})
+                output$status2 <- renderText({generateResponse(1)})
+                output$status3 <- renderText({""})
+            } else if(answer != species){
+                output$status1 <- renderText({""})
+                output$status2 <- renderText({""})
+                output$status3 <- renderText({generateResponse(4)})
+            }
         })
+        
+        # Providing an answer
+        # observe({
+        #     
+        #     # Counting the number of tries
+        #     # Defining & initializing the reactiveValues object
+        #     counter <- reactiveValues(countervalue = 0) 
+        #     output$nb_tries <- renderText({"Number of tries: 0"})
+        #     # observeEvent(input$submit, {
+        #     if(!is.null(input$lastkeypresscode)){
+        #         if(input$lastkeypresscode == 13){ # hitting Enter
+        #             counter$countervalue <- counter$countervalue + 1
+        #             output$nb_tries <- renderText({
+        #                 paste0("Number of tries: ", counter$countervalue)})
+        #             
+        #             # Initial score
+        #             counter <- reactiveValues(score = 0)
+        #             renderText("Score = 0")
+        #             # output$score <- 0
+        #             
+        #             # If provided answer is correct
+        #             # observeEvent(input$sp_answer == species, {
+        #             if (input$sp_answer == species){
+        #                 output$status1 <- renderText({
+        #                     ""
+        #                 })
+        #                 output$status2 <- renderText({
+        #                     paste(generateResponse(1))
+        #                 })
+        #                 output$status3 <- renderText({
+        #                     ""
+        #                 })
+        #                 
+        #                 # Updating score
+        #                 renderText({
+        #                     counter$score <- counter$score + 1
+        #                     paste0("Score: ", counter$score)
+        #                     # output$score <- output$score + 1
+        #                     # paste0("Score: ", output$score)
+        #                 })
+        #                 
+        #                 # })
+        #             }
+        #         } # closes 'Hitting enter'
+        #     } # closes !is.null lastkeybutton
+        #     # })
+        # })
         
         # Printing real answer ----
         observe({
