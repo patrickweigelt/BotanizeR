@@ -208,8 +208,6 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
           }
           if(!grepl("keine Angaben", description)){
             hints[[i+1]] <- description
-          } else{
-            hints[[i+1]] <- list(species_row$TAXONNAME, "")
           }
         }
         
