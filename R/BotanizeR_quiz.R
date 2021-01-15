@@ -3,7 +3,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
                            hints_floraweb = c("description","status","habitat","family","German name"), 
                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL, 
                            case_sensitive = TRUE, file_location="temporary", startat = 0, init_count = sum(species_list$COUNT),
-                           init_score = sum(species_list$SCORE), init_attempts = sum(species_list$ATTEMPTS)){
+                           init_score = sum(species_list$SCORE), init_attempts = sum(species_list$ATTEMPTS), max_attempts = 10){
   
   # 1. Controls ----
   # Package dependencies
@@ -64,7 +64,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
       species <- tolower(species)
     }
     
-    while(attempt != species & attempt != "skip" & attempt != "exit" & attempts <= 10){
+    while(attempt != species & attempt != "skip" & attempt != "exit" & attempts < max_attempts){
       
       genus <- FALSE
 
@@ -98,7 +98,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
         }
         
     
-        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts <= 10){
+        while(attempt != species & attempt != "" & attempt != "skip" & attempt != "exit" & attempts < max_attempts){
           attempts <- attempts + 1
 
           attempt <- readline("Species: ")
@@ -124,8 +124,8 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
             }
           }
         }
-        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts > 10){
-          if(attempt == "skip" | attempt == "exit" | attempts > 10){
+        if(species==attempt | attempt == "skip" | attempt == "exit" | attempts >= max_attempts){
+          if(attempt == "skip" | attempt == "exit"){ #  | attempts >= max_attempts
             attempts <- attempts - 1
           }
           break()
