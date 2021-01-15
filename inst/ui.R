@@ -2,11 +2,11 @@
 # Packages
 library(shiny)
 library(shinythemes)
-# library(shinysky) # autocomplete menu
 # library(shinyjs)
 library(BotanizeR)
 # library(imager)
 #library(XML)
+library(slickR)
 
 # Data
 data(floraweb_species)
@@ -39,27 +39,17 @@ tabPanel(h1(id = "panel1", "Species list"),
                          checkboxGroupInput(inputId = "options",
                                             label = "Show:",
                                             choices = list("Map", "Chorology"))
-                         #
-                         # trying autocomplete...
-                         #
-                         # selectizeInput(inputId = "plant_list",
-                         #                label = "Plant list",
-                         #                choices = plant_list,
-                         #                selected = NULL,
-                         #                multiple = FALSE,
-                         #                options = list(placeholder = "Select a plant species",
-                         #                               create = FALSE))#,
-                         # actionButton("go", "Submit")
          ),
          column(4,
-                h4("Picture"),
-                # uiOutput("selected_sp_photo")
-                splitLayout(cellWidths = c("100%"),
-                            uiOutput("selected_sp_photo"))
+                h4("Pictures"),
+                # splitLayout(cellWidths = c("100%"),
+                #             uiOutput("selected_sp_photo")),
+                br(),
+                slickROutput("slickr", width = "95%")
          ),
          column(4,
-                # textOutput("selected_sp_description"),
-                # br(),
+                htmlOutput("selected_sp_description"),
+                br(),
                 textOutput("selected_sp_habitat"),
                 br(),
                 textOutput("selected_sp_family"),
@@ -117,8 +107,8 @@ tabPanel(
         
         # Third part with other indices
         column(4,
-               # textOutput("random_description"),
-               # br(),
+               htmlOutput("random_description"),
+               br(),
                textOutput("random_habitat"),
                br(),
                textOutput("random_family"),

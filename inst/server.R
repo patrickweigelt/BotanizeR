@@ -5,6 +5,7 @@ library(BotanizeR)
 # library(imager)
 library(XML)
 library(sf)
+library(slickR)
 
 shinyServer(function(input, output) {
     # Text for the different answers
@@ -44,20 +45,6 @@ shinyServer(function(input, output) {
         selected_species
     })
     
-    # Tying autocomplete...
-    
-    # selected_species <- reactive({
-    #     if(input$go == 0){return()}
-    #     isolate({
-    #         input$go
-    #         input$plant_list
-    #         selected_species
-    #     })
-    # }) 
-    
-    # updateSelectizeInput("plant_list", choices = plant_list,
-    #                      server = TRUE)
-    
     observe({
         # Plant species chosen
         j <- which(species_list$SPECIES == input$plant_list)
@@ -85,17 +72,24 @@ shinyServer(function(input, output) {
             do.call(tagList, photo_list)
         })
         
+        # trying slickr
+        output$slickr <- renderSlickR({
+            photo_list <- lapply(sp_infos$images, function(x){
+                tags$div(
+                    tags$img(src = x, width = "20%", height = "20%"),
+                    tags$script(src = "titlescript.js")
+                )
+            })
+            
+            imgs <- do.call(tagList, photo_list) # plotsAsSVG
+            slickR(imgs) # slickR(imgs)
+        })
+        
         # Description ----
-        # output$selected_sp_description <- renderText({
-        #     # Download biological information from FloraWeb
-        #     download.file(paste0("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",
-        #                          species_list$NAMNR[j], "&"),
-        #                   destfile = file.path(dir,"biology.txt"), quiet = T)
-        #     html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-        #     infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
-        #     
-        #     print(paste0("Description: ", infos_biology[[2]]))
-        # })
+        output$selected_sp_description <- renderUI({
+            HTML(paste("<b>", sp_infos$description[[1]], "</b>",
+                       sp_infos$description[[2]], sep = '<br/>'))
+        })
         
         # Habitat ----
         output$selected_sp_habitat <- renderText({
@@ -162,6 +156,9 @@ shinyServer(function(input, output) {
     }) # closes observe()
     
     # 2. Quizz ----
+    
+    answered <- FALSE # an indicator for whether question has been answered
+    
     observe({
         input$newplant # hitting the new plant button
         
@@ -192,6 +189,22 @@ shinyServer(function(input, output) {
                 )
             })
             do.call(tagList, photo_random)
+        })
+        
+        # Description ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("Description", "Status", "Family",
+                                          "Habitat", "German name", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                
+                output$random_description <- renderUI({
+                    if(!is.na(quizz_options[1])){
+                        HTML(sp_quizz$description[[2]])
+                    }
+                })
+            })
         })
         
         # Habitat ----

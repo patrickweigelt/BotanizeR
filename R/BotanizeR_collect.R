@@ -100,7 +100,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # 3.3 Images from image folder ----
   if(!is.null(image_folders)){
     for(k in 1:length(image_folders)){
-      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg", recursive = TRUE, full.names = FALSE)
+      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
+                                recursive = TRUE, full.names = FALSE)
       image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
       if(length(image_files)>0){
         if(only_links){
@@ -139,9 +140,13 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       
       # biology
       if("description" %in% hints_floraweb & floraweb_image == FALSE){
-        download.file(paste("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",species_row$NAMNR,"&", sep=""), destfile = file.path(dir,"biology.txt"), quiet = T)
-        html_biology <- htmlTreeParse(file = file.path(dir,"biology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-        infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",xmlValue)
+        download.file(paste0("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=", species_row$NAMNR, "&"),
+                      destfile = file.path(dir, "biology.txt"), quiet = TRUE)
+        html_biology <- htmlTreeParse(file = file.path(dir, "biology.txt"),
+                                      isURL = FALSE, isHTML = TRUE,
+                                      useInternalNodes = TRUE)
+        infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",
+                                    xmlValue)
       }
       
       # map
@@ -153,10 +158,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         }
         
         try({
-          taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=","",grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
+          taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=", "",
+                               grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
           
-          download.file(paste("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",taxon_ID_map, sep=""), destfile = file.path(dir,"map.csv"), quiet = T)
-          map <- read.csv(file.path(dir,"map.csv"), skip=41)[-1,c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
+          download.file(paste0("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=", taxon_ID_map),
+                        destfile = file.path(dir, "map.csv"), quiet = TRUE)
+          map <- read.csv(file.path(dir, "map.csv"), skip=41)[-1, c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
           
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
           map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
@@ -185,14 +192,26 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
 
       for (i in 1:length(hints_floraweb)){
         
-        if(hints_floraweb[i]=="description"){
+        if(hints_floraweb[i] == "description"){
           if(floraweb_image){
-            description <- paste("Bestimmungshilfe/Morphologie:\n",infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]], sep="")
-          } else {
-            description <- gsub("Morphologie:","Morphologie:\n",infos_biology[[2]])
+            description <- list(
+              species_row$TAXONNAME,
+              paste0("Bestimmungshilfe/Morphologie:\n",
+              infos_photo[[which(infos_photo == "Bestimmungshilfe:") + 1]]))
+            
+            # description <- paste0(
+            #   species_row$TAXONNAME, "\n",
+            #   "Bestimmungshilfe/Morphologie:\n",
+            #   infos_photo[[which(infos_photo == "Bestimmungshilfe:") + 1]])
+          } else{
+            description <- list(c(""),
+                                gsub("Morphologie:", "Morphologie:\n",
+                                     infos_biology[[2]]))
           }
-          if(!grepl("keine Angaben",description)){
+          if(!grepl("keine Angaben", description[[2]])){
             hints[[i+1]] <- description
+          } else{
+            hints[[i+1]] <- list(species_row$TAXONNAME, "")
           }
         }
         
