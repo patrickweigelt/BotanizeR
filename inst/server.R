@@ -8,22 +8,7 @@ library(sf)
 library(slickR)
 
 shinyServer(function(input, output) {
-    # Text for the different answers
-    generateResponse <- function(response) {
-        if (response == 1) {
-            print(sample(list("Correct!", "Spot on!", "Got it!"), 1)[[1]])
-        }
-        else if (response == 2) {
-            print(sample(list("Almost.", "Close.", "Just a bit off.."), 1)[[1]])
-        }
-        else if (response == 3) {
-            print(sample(list("Warmer...", "Getting there..."), 1)[[1]])
-        }
-        else if (response == 4) {
-            print(sample(list("Try again.", "Nope!"), 1)[[1]])
-        }
-    }
-    
+
     # List of floraweb species
     # observe({
     data(floraweb_species)
@@ -87,8 +72,10 @@ shinyServer(function(input, output) {
         
         # Description ----
         output$selected_sp_description <- renderUI({
-            HTML(paste("<b>", sp_infos$description[[1]], "</b>",
-                       sp_infos$description[[2]], sep = '<br/>'))
+            HTML(paste("<b>",
+                       floraweb_species[which(floraweb_species$SPECIES == input$plant_list),
+                                        "TAXONNAME"], "</b>",
+                       sp_infos$description, sep = '<br/>'))
         })
         
         # Habitat ----
@@ -198,10 +185,9 @@ shinyServer(function(input, output) {
                                           "Habitat", "German name", "Map",
                                           "Chorology"),
                                         input$quizz_options)
-                
                 output$random_description <- renderUI({
                     if(!is.na(quizz_options[1])){
-                        HTML(sp_quizz$description[[2]])
+                        HTML(sp_quizz$description)
                     }
                 })
             })
@@ -280,7 +266,7 @@ shinyServer(function(input, output) {
                     if(!is.na(quizz_options[6])){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
-                            species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+                            species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
                             image_floraweb = FALSE,
                             hints_floraweb = c("map"), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -317,32 +303,31 @@ shinyServer(function(input, output) {
         
         # Answer ----
         # display text when no answer is provided
-        output$status1 <- renderText({
-            "Mark your answer and click 'Submit!'"
-        })
-        output$status2 <- renderText({
-            ""
-        })
-        output$status3 <- renderText({
-            ""
+        observeEvent(input$newplant, {
+            answered <- FALSE
+            output$answer_status <- renderText({
+                "Mark your answer and click 'Submit!'"
+            })
         })
         
         # Providing an answer simple version
         observe({
-            input$submit
-            isolate({
-                answer <- as.character(input$sp_answer)
+            output$answer_status <- renderUI("Mark your answer and click 'Submit!'")
+            observeEvent(input$submit, {
+                isolate({
+                    answer <- as.character(input$sp_answer)
+                })
+                if (answer == species){
+                    output$answer_status <- renderUI(HTML(paste0(
+                    "<font color=\"#00CC00\">", "Correct", "</font>")))
+                } else if(answer != species){
+                    output$answer_status <- renderUI(HTML(paste0(
+                        "<font color=\"#FF0000\">", "Wrong", "</font>")))
+                }
             })
-            # If provided answer is correct
-            if (answer == species){
-                output$status1 <- renderText({""})
-                output$status2 <- renderText({generateResponse(1)})
-                output$status3 <- renderText({""})
-            } else if(answer != species){
-                output$status1 <- renderText({""})
-                output$status2 <- renderText({""})
-                output$status3 <- renderText({generateResponse(4)})
-            }
+            observeEvent(input$newplant, {
+                output$answer_status <- renderUI("Mark your answer and click 'Submit!'")
+            })
         })
         
         # Providing an answer
@@ -397,6 +382,9 @@ shinyServer(function(input, output) {
             output$real_answer <- renderText("")
             observeEvent(input$real_answer, {
                 output$real_answer <- renderText(species)
+            })
+            observeEvent(input$newplant, {
+                output$real_answer <- renderText("")
             })
         })
         
