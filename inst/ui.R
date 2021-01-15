@@ -15,6 +15,9 @@ floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
 species_list <- floraweb_species
 plant_list <- floraweb_species$SPECIES
 
+# Source text for the "About" panel
+tabPanelAbout = source("About.R")$value
+
 # UI
 navbarPage(title = div(
     HTML('<span style="font-size:180%;color:white;font-weight:bold;"> BotanizeR</span></a>'),
@@ -118,9 +121,9 @@ tabPanel(
                textOutput("random_german"))
     )
     
-)
+),
 
 ## About ----------------------------------------------------------------------
-# tabPanelAbout()
+tabPanelAbout()
 )
 
