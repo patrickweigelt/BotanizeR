@@ -48,7 +48,7 @@ tabPanel(h1(id = "panel1", "Species list"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("slickr", width = "95%")
+                slickROutput("slickr", width = "320")
          ),
          column(4,
                 htmlOutput("selected_sp_description"),

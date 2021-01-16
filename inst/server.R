@@ -41,7 +41,7 @@ shinyServer(function(input, output) {
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
-            image_folders = "www/pictures_Clemens",
+            image_folders = "www/pictures_Clemens/images_320",
             # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
@@ -162,7 +162,7 @@ shinyServer(function(input, output) {
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
-            image_folders = "www/pictures_Clemens",
+            image_folders = "www/pictures_Clemens/images_320",
             # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
