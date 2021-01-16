@@ -1,7 +1,8 @@
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, 
                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                           file_location="temporary", only_links = FALSE, image_required = FALSE){
+                           file_location="temporary", only_links = FALSE, image_required = FALSE, 
+                           image_width = NA){
   
   # Information can come from floraweb and/or from own resources
   
@@ -74,8 +75,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
             floraweb_image <- TRUE  
           } else {
             try({hints[[1]][[1]] <- load.image(paste("https://www.floraweb.de", gsub("\\.\\.","",photolinks[1]), sep=""))
-                 floraweb_image <- TRUE       
-                },silent = T)
+                floraweb_image <- TRUE       
+            },silent = T)
           }
           if (length(photolinks)>1){ # check for cases with more then two images and put loop here
             if(only_links){
@@ -96,7 +97,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         if(only_links){
           hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelink_custom[i]]
         } else {
-          try(hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]]))
+          try({hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]])})
         }
       }
     }
@@ -122,6 +123,18 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         }
       }
     }
+  }
+
+  # 3.4 Image resize ----
+  
+  if(!is.na(image_width) & !is.null(image_width) & length(hints$images) > 0 & only_links == FALSE){
+    hints$images <- lapply(hints$images, function(x) {
+      if(nrow(x) > image_width){
+        resize(x, size_x = image_width, size_y = image_width/nrow(x)*ncol(x))
+      } else {
+        x
+      }
+    })
   }
   
   # 4. Other information ----
