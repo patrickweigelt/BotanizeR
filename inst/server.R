@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
                                "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = "www/pictures_Clemens/images_320",
-            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
+            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
@@ -163,7 +163,7 @@ shinyServer(function(input, output) {
                                "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = "www/pictures_Clemens/images_320",
-            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
+            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
