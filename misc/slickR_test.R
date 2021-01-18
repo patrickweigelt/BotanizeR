@@ -8,7 +8,7 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      slickROutput("slickr", width="500px")
+      slickROutput("slickr", width="500px") # also works with "auto"
     )
   )
 )
