@@ -102,8 +102,6 @@ tabPanel(
                br(),
                plotOutput("random_map"),
                br(),
-               uiOutput("random_chorology"),
-               br(),
                h5(textOutput("score"))),
         
         # Third part with other indices
@@ -116,7 +114,9 @@ tabPanel(
                br(),
                textOutput("random_status"),
                br(),
-               textOutput("random_german"))
+               textOutput("random_german"),
+               br(),
+               uiOutput("random_chorology"),)
     )
     
 ),

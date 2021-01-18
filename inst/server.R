@@ -8,18 +8,16 @@ library(sf)
 library(slickR)
 
 shinyServer(function(input, output) {
-
-    # List of floraweb species
-    # observe({
-    data(floraweb_species)
-    floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                                   floraweb_species$BioDiv2005==1), ]
-    species_list <- floraweb_species
-    plant_list <- floraweb_species$SPECIES
     
-    # dir <- tempfile()
-    # dir.create(dir)
-    # })
+    # List of floraweb species
+    data(floraweb_species)
+    species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
+                                               floraweb_species$BioDiv2005==1), ]
+    # species_list <- floraweb_species
+    plant_list <- species_list$SPECIES
+    
+    # List of species that have a chorology
+    chorology_list <- read.table("NAMNR_chorology.txt")
     
     # 1. Selected species ----
     # Plant list
@@ -36,7 +34,7 @@ shinyServer(function(input, output) {
         
         # Download informations with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
-            species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+            species_row = species_list[which(species_list$SPECIES == input$plant_list), ], 
             image_floraweb = TRUE,
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
@@ -73,8 +71,8 @@ shinyServer(function(input, output) {
         # Description ----
         output$selected_sp_description <- renderUI({
             HTML(paste("<b>",
-                       floraweb_species[which(floraweb_species$SPECIES == input$plant_list),
-                                        "TAXONNAME"], "</b>",
+                       species_list[which(species_list$SPECIES == input$plant_list),
+                                    "TAXONNAME"], "</b>",
                        sp_infos$description, sep = '<br/>'))
         })
         
@@ -108,7 +106,7 @@ shinyServer(function(input, output) {
                     if(!is.na(options[1])){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
-                            species_row = floraweb_species[which(floraweb_species$SPECIES == input$plant_list), ], 
+                            species_row = species_list[which(species_list$SPECIES == input$plant_list), ], 
                             image_floraweb = FALSE,
                             hints_floraweb = c("map"), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -127,14 +125,17 @@ shinyServer(function(input, output) {
             observe({
                 options <- pmatch(c("Map", "Chorology"), input$options)
                 output$selected_sp_chorology <- renderUI({
-                    par(mar = rep(0.5, 4), oma = rep(0, 4))
-                    plot.new()
-                    if(!is.na(options[2])){
+                    if(!is.na(options[2]) &
+                       species_list$NAMNR[j] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
                                               species_list$NAMNR[j],
                                               ".GIF"),
                                  width = "400px", height = "300px")
+                    } else if(!is.na(options[2]) &
+                              !(species_list$NAMNR[j] %in% chorology_list$V1)){
+                        tags$img(src = "no_chorology.png",
+                                 width = "200px", height = "50px")
                     }
                 })
             })
@@ -151,13 +152,13 @@ shinyServer(function(input, output) {
         
         # random species
         species <- sample(species_list$SPECIES, 1)
-        
+
         # species <- as.character(input$ex_sp) #species_list$SPECIES[i]
-        i <- which(floraweb_species$SPECIES == species)
+        i <- which(species_list$SPECIES == species)
         
         # Download informations with BotanizeR_collect()
         sp_quizz <- BotanizeR_collect(
-            species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
+            species_row = species_list[which(species_list$SPECIES == species), ], 
             image_floraweb = TRUE,
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
@@ -266,7 +267,7 @@ shinyServer(function(input, output) {
                     if(!is.na(quizz_options[6])){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
-                            species_row = floraweb_species[which(floraweb_species$SPECIES == species), ], 
+                            species_row = species_list[which(species_list$SPECIES == species), ], 
                             image_floraweb = FALSE,
                             hints_floraweb = c("map"), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -288,14 +289,17 @@ shinyServer(function(input, output) {
                                           "Chorology"),
                                         input$quizz_options)
                 output$random_chorology <- renderUI({
-                    par(mar = rep(0.5, 4), oma = rep(0, 4))
-                    plot.new()
-                    if(!is.na(options[7])){
+                    if(!is.na(quizz_options[7]) &
+                       species_list$NAMNR[i] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                              species_list$NAMNR[j],
+                                              species_list$NAMNR[i],
                                               ".GIF"),
                                  width = "400px", height = "300px")
+                    } else if(!is.na(quizz_options[7]) &
+                              !(species_list$NAMNR[i] %in% chorology_list$V1)){
+                        tags$img(src = "no_chorology.png",
+                                 width = "200px", height = "50px")
                     }
                 })
             })
@@ -319,7 +323,7 @@ shinyServer(function(input, output) {
                 })
                 if (answer == species){
                     output$answer_status <- renderUI(HTML(paste0(
-                    "<font color=\"#00CC00\">", "Correct", "</font>")))
+                        "<font color=\"#00CC00\">", "Correct", "</font>")))
                 } else if(answer != species){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#FF0000\">", "Wrong", "</font>")))
