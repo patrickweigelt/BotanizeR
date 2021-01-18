@@ -44,7 +44,6 @@ tabPanel(h1(id = "panel1", "Species list"),
                                             choices = list("Map", "Chorology"))
          ),
          column(4,
-                h4("Pictures"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
@@ -98,7 +97,8 @@ tabPanel(
         
         # Second part of the page with the picture
         column(4,
-               uiOutput("random_sp"),
+               # uiOutput("random_sp"),
+               slickROutput("random_slickr", width = "320"),
                br(),
                plotOutput("random_map"),
                br(),
@@ -116,7 +116,12 @@ tabPanel(
                br(),
                textOutput("random_german"),
                br(),
-               uiOutput("random_chorology"),)
+               uiOutput("random_chorology"),
+               br(),
+               downloadButton("download","Download your progress")#,
+               # br(),
+               # dataTableOutput("progress")
+               )
     )
     
 ),
