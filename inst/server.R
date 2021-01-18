@@ -18,6 +18,7 @@ shinyServer(function(input, output) {
     
     # List of species that have a chorology
     chorology_list <- read.table("NAMNR_chorology.txt")
+    # chorology_list <- read.table("~/ShinyApps/BotanizeR/NAMNR_chorology.txt")
     
     # 1. Selected species ----
     # Plant list
@@ -39,8 +40,8 @@ shinyServer(function(input, output) {
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
             hints_custom = NULL, imagelink_custom = NULL,
-            image_folders = "www/pictures_Clemens/images_320",
-            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
+            image_folders = "www/pictures_Clemens_400",
+            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", # This is needed on server; 
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
@@ -61,11 +62,11 @@ shinyServer(function(input, output) {
         
         # trying slickr
         output$slickr <- renderSlickR({
-            if(length(sp_infos$images) > 1){
+            if(length(sp_infos$images) >= 1){
                 photo_list <- lapply(sp_infos$images, function(x){
                     tags$div(
-                        tags$img(src = x, width = "20%", height = "20%"),
-                        tags$script(src = "titlescript.js")
+                        tags$img(src = x, width = "20%", height = "20%") #,
+                        # tags$script(src = "titlescript.js")
                     )
                 })
             } else{
@@ -178,8 +179,8 @@ shinyServer(function(input, output) {
                 hints_floraweb = c("description", "status", "habitat", "family",
                                    "German name"), 
                 hints_custom = NULL, imagelink_custom = NULL,
-                image_folders = "www/pictures_Clemens/images_320",
-                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
+                image_folders = "www/pictures_Clemens_400",
+                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", # This is needed on server; 
                 file_location = "temporary", only_links = TRUE)
             
             if(length(sp_quizz$images) != 0){

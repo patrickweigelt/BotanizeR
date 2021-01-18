@@ -48,7 +48,7 @@ tabPanel(h1(id = "panel1", "Species list"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("slickr", width = "320")
+                slickROutput("slickr", width = "400")
          ),
          column(4,
                 htmlOutput("selected_sp_description"),
@@ -101,7 +101,7 @@ tabPanel(
         # Second part of the page with the picture
         column(4,
                # uiOutput("random_sp"),
-               slickROutput("random_slickr", width = "320"),
+               slickROutput("random_slickr", width = "400"),
                br(),
                plotOutput("random_map"),
                br(),
