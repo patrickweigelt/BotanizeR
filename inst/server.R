@@ -45,27 +45,38 @@ shinyServer(function(input, output) {
         
         # Photos ----
         output$selected_sp_photo <- renderUI({
-            par(mar = rep(0.5, 4), oma = rep(0, 4))
-            photo_list <- lapply(sp_infos$images, function(x){
-                tags$div(
-                    tags$img(src = x, width = "50%", height = "50%"),
-                    tags$script(src = "titlescript.js")
-                )
-            })
-            do.call(tagList, photo_list)
+            if(length(sp_infos$images) > 1){
+                par(mar = rep(0.5, 4), oma = rep(0, 4))
+                photo_list <- lapply(sp_infos$images, function(x){
+                    tags$div(
+                        tags$img(src = x, width = "50%", height = "50%"),
+                        tags$script(src = "titlescript.js")
+                    )
+                })
+                do.call(tagList, photo_list)
+            } else{ 
+                # HTML("<strong>No picture available</strong>")
+            }
         })
         
         # trying slickr
         output$slickr <- renderSlickR({
-            photo_list <- lapply(sp_infos$images, function(x){
-                tags$div(
-                    tags$img(src = x, width = "20%", height = "20%"),
+            if(length(sp_infos$images) > 1){
+                photo_list <- lapply(sp_infos$images, function(x){
+                    tags$div(
+                        tags$img(src = x, width = "20%", height = "20%"),
+                        tags$script(src = "titlescript.js")
+                    )
+                })
+            } else{
+                photo_list <- list(tags$div(
+                    tags$img(src = "no_picture.png",
+                             width = "200px", height = "50px"),
                     tags$script(src = "titlescript.js")
-                )
-            })
-            
-            imgs <- do.call(tagList, photo_list) # plotsAsSVG
-            slickR(imgs) # slickR(imgs)
+                ))
+            }
+            imgs <- do.call(tagList, photo_list)
+            slickR(imgs)
         })
         
         # Description ----
@@ -147,36 +158,55 @@ shinyServer(function(input, output) {
     
     answered <- FALSE # an indicator for whether question has been answered
     
+    my_progress <- data.frame(species = NULL)
+    output$progress <- renderDataTable({progress()})
+    
     observe({
         input$newplant # hitting the new plant button
         
-        # random species
-        species <- sample(species_list$SPECIES, 1)
-
-        # species <- as.character(input$ex_sp) #species_list$SPECIES[i]
-        i <- which(species_list$SPECIES == species)
+        sp_picture <- 0
         
-        # Download informations with BotanizeR_collect()
-        sp_quizz <- BotanizeR_collect(
-            species_row = species_list[which(species_list$SPECIES == species), ], 
-            image_floraweb = TRUE,
-            hints_floraweb = c("description", "status", "habitat", "family",
-                               "German name"), 
-            hints_custom = NULL, imagelink_custom = NULL,
-            image_folders = "www/pictures_Clemens/images_320",
-            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
-            file_location = "temporary", only_links = TRUE)
+        while (sp_picture == 0) { # If no picture available => new plant
+            # random species
+            species <- sample(species_list$SPECIES, 1)
+            i <- which(species_list$SPECIES == species)
+            
+            # Download informations with BotanizeR_collect()
+            sp_quizz <- BotanizeR_collect(
+                species_row = species_list[which(species_list$SPECIES == species), ], 
+                image_floraweb = TRUE,
+                hints_floraweb = c("description", "status", "habitat", "family",
+                                   "German name"), 
+                hints_custom = NULL, imagelink_custom = NULL,
+                image_folders = "www/pictures_Clemens/images_320",
+                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens/images_320", # This is needed on server; 
+                file_location = "temporary", only_links = TRUE)
+            
+            if(length(sp_quizz$images) != 0){
+                sp_picture <- 1
+            }
+        }
         
         # Photos ----
-        output$random_sp <- renderUI({
-            par(mar = rep(0.5, 4), oma = rep(0, 4))
-            photo_random <- lapply(sp_quizz$images, function(x){
+        # output$random_sp <- renderUI({
+        #     par(mar = rep(0.5, 4), oma = rep(0, 4))
+        #     photo_random <- lapply(sp_quizz$images, function(x){
+        #         tags$div(
+        #             tags$img(src = x, width = "50%", height = "50%"),
+        #             tags$script(src = "titlescript.js")
+        #         )
+        #     })
+        #     do.call(tagList, photo_random)
+        # })
+        
+        output$random_slickr <- renderSlickR({
+            photo_list <- lapply(sp_quizz$images, function(x){
                 tags$div(
-                    tags$img(src = x, width = "50%", height = "50%"),
-                    tags$script(src = "titlescript.js")
+                    tags$img(src = x, width = "20%", height = "20%")
                 )
             })
-            do.call(tagList, photo_random)
+            imgs <- do.call(tagList, photo_list)
+            slickR(imgs)
         })
         
         # Description ----
@@ -381,7 +411,7 @@ shinyServer(function(input, output) {
         #     # })
         # })
         
-        # Printing real answer ----
+        # Real answer ----
         observe({
             output$real_answer <- renderText("")
             observeEvent(input$real_answer, {
@@ -404,6 +434,21 @@ shinyServer(function(input, output) {
         #     })
         # })
         
+        # Progress ----
+        progress <- eventReactive(input$newplant, {
+            newrow <- data.frame(species = species)
+            
+            my_progress <<- rbind(my_progress, newrow)
+            my_progress
+        }, ignoreNULL = FALSE)
+        
     }) # closing observe for new plant
     
+    # Downloading progress table
+    output$download <- downloadHandler(
+        filename = function(){"practise.csv"}, 
+        content = function(file){
+            write.csv(my_progress, file, row.names = FALSE)
+        }
+    )
 })

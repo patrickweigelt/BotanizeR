@@ -26,7 +26,8 @@ navbarPage(title = div(
              header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
     tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}")),
-    tags$style(HTML("#panel2{font-size: 25px}"))
+    tags$style(HTML("#panel2{font-size: 25px}")),
+    tags$style(HTML("#panel_about{font-size: 25px}"))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
@@ -44,7 +45,6 @@ tabPanel(h1(id = "panel1", "Species list"),
                                             choices = list("Map", "Chorology"))
          ),
          column(4,
-                h4("Pictures"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
@@ -93,12 +93,15 @@ tabPanel(
                br(),
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
+               br(),
+               tags$head(tags$script(src = "enter_button.js")),
                actionButton("newplant", "New plant")
         ),
         
         # Second part of the page with the picture
         column(4,
-               uiOutput("random_sp"),
+               # uiOutput("random_sp"),
+               slickROutput("random_slickr", width = "320"),
                br(),
                plotOutput("random_map"),
                br(),
@@ -116,7 +119,12 @@ tabPanel(
                br(),
                textOutput("random_german"),
                br(),
-               uiOutput("random_chorology"),)
+               uiOutput("random_chorology"),
+               br(),
+               downloadButton("download","Download your progress")#,
+               # br(),
+               # dataTableOutput("progress")
+               )
     )
     
 ),
