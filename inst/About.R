@@ -1,6 +1,6 @@
 
 function(){
-  tabPanel(strong("About"),
+  tabPanel(h1(id = "panel_about", "About"),
            HTML('
       <div style="display:inline;float:right;margin:0px 0px 5px 20px">
       </div>

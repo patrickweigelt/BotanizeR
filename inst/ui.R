@@ -26,7 +26,8 @@ navbarPage(title = div(
              header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
     tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}")),
-    tags$style(HTML("#panel2{font-size: 25px}"))
+    tags$style(HTML("#panel2{font-size: 25px}")),
+    tags$style(HTML("#panel_about{font-size: 25px}"))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
