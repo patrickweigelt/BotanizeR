@@ -94,10 +94,10 @@ tabPanel(
                br(),
                h5(textOutput("real_answer"), style = "color: green; font-style: bold"),
                br(),
+               tags$head(tags$script(src = "enter_button.js")),
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
                br(),
-               tags$head(tags$script(src = "enter_button.js")),
                actionButton("newplant", "New plant")
         ),
         
