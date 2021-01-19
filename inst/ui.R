@@ -13,7 +13,7 @@ data(floraweb_species)
 floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                floraweb_species$BioDiv2005==1), ]
 
-species_list <- species_list[order(species_list$SPECIES),]
+floraweb_species <- floraweb_species[order(floraweb_species$SPECIES),]
 
 species_list <- floraweb_species
 plant_list <- floraweb_species$SPECIES
