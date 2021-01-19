@@ -10,13 +10,13 @@ library(slickR)
 
 # Data
 data(floraweb_species)
-floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
+species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                floraweb_species$BioDiv2005==1), ]
+# species_list <- floraweb_species[which(floraweb_species$WINTER==1), ] # for winter list
 
-floraweb_species <- floraweb_species[order(floraweb_species$SPECIES),]
+species_list <- species_list[order(species_list$SPECIES),]
 
-species_list <- floraweb_species
-plant_list <- floraweb_species$SPECIES
+plant_list <- species_list$SPECIES
 
 # Source text for the "About" panel
 tabPanelAbout = source("About.R")$value
@@ -85,10 +85,10 @@ tabPanel(
                h5(textOutput("Score")),
                br(),
                checkboxGroupInput(inputId = "quizz_options", label = "Show:",
-                                  choices = list("Description", "Status",
-                                                 "Family", "Habitat",
-                                                 "German name", "Map",
-                                                 "Chorology")),
+                                    choices = list("Description", "Status",
+                                                   "Family", "Habitat",
+                                                   "German name", "Map",
+                                                   "Chorology")),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
                                                   Shiny.onInputChange("lastkeypresscode", e.keyCode);

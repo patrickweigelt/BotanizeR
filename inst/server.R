@@ -9,19 +9,37 @@ library(slickR)
 
 shinyServer(function(input, output, session) {
     
-    # List of floraweb species
+    # 0. Config ----
+    # List of species
     data(floraweb_species)
     species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                floraweb_species$BioDiv2005==1), ]
+
+    ## hints and images
+    # floraweb:
+    image_floraweb = TRUE
+    hints_floraweb = c("map","description", "status", "habitat", "family",
+                       "German name")
     
-    species_list <- species_list[order(species_list$SPECIES),]
+    ## Winter
+    # species_list <- floraweb_species[which(floraweb_species$WINTER==1), ] # for winter list
+    # image_floraweb = FALSE # for winter list
+    # hints_floraweb = NULL # for winter list
+
     
-    # species_list <- floraweb_species
-    plant_list <- species_list$SPECIES
+    image_folders = c("www/pictures_Clemens_400","www/drawings_Schulz_400")
+    # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
+    # This is needed on server
     
     # List of species that have a chorology
     chorology_list <- read.table("NAMNR_chorology.txt")
     # chorology_list <- read.table("~/ShinyApps/BotanizeR/NAMNR_chorology.txt")
+    # This is needed on server
+    
+    # Species
+    species_list <- species_list[order(species_list$SPECIES),]
+    plant_list <- species_list$SPECIES
+    
     
     # 1. Selected species ----
     # Plant list
@@ -58,12 +76,10 @@ shinyServer(function(input, output, session) {
         # Download informations with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = species_list[which(species_list$SPECIES == selected_species), ], 
-            image_floraweb = TRUE,
-            hints_floraweb = c("description", "status", "habitat", "family",
-                               "German name"), 
+            image_floraweb,
+            hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
             hints_custom = NULL, imagelink_custom = NULL,
-            image_folders = "www/pictures_Clemens_400",
-            # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", # This is needed on server; 
+            image_folders,
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
@@ -137,12 +153,12 @@ shinyServer(function(input, output, session) {
                 output$selected_sp_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if(!is.na(options[1])){
+                    if(!is.na(options[1]) & !is.null(hints_floraweb)){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
                             species_row = species_list[which(species_list$SPECIES == selected_species), ], 
                             image_floraweb = FALSE,
-                            hints_floraweb = c("map"), 
+                            hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                             file_location = "temporary", only_links = TRUE)
                         
@@ -197,12 +213,10 @@ shinyServer(function(input, output, session) {
             # Download informations with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = species_list[which(species_list$SPECIES == species), ], 
-                image_floraweb = TRUE,
-                hints_floraweb = c("description", "status", "habitat", "family",
-                                   "German name"), 
+                image_floraweb,
+                hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
                 hints_custom = NULL, imagelink_custom = NULL,
-                image_folders = "www/pictures_Clemens_400",
-                # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", # This is needed on server; 
+                image_folders,
                 file_location = "temporary", only_links = TRUE)
             
             if(length(sp_quizz$images) != 0){
@@ -317,12 +331,12 @@ shinyServer(function(input, output, session) {
                 output$random_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if(!is.na(quizz_options[6])){
+                    if(!is.na(quizz_options[6]) & !is.null(hints_floraweb)){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
                             species_row = species_list[which(species_list$SPECIES == species), ], 
                             image_floraweb = FALSE,
-                            hints_floraweb = c("map"), 
+                            hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                             file_location = "temporary", only_links = TRUE)
                         
@@ -363,14 +377,14 @@ shinyServer(function(input, output, session) {
         observeEvent(input$newplant, {
             answered <- FALSE
             output$answer_status <- renderText({
-                "Mark your answer and click 'Submit or hit 'Enter'!"
+                "Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species."
             })
             updateTextInput(session, "sp_answer", "Species name", value = "")
         })
         
         # Providing an answer simple version
         observe({
-            output$answer_status <- renderUI("Mark your answer and click 'Submit!'")
+            output$answer_status <- renderUI("Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species.")
             observeEvent(input$submit, {
                 isolate({
                     answer <- as.character(input$sp_answer)
@@ -384,7 +398,7 @@ shinyServer(function(input, output, session) {
                 }
             })
             observeEvent(input$newplant, {
-                output$answer_status <- renderUI("Mark your answer and click 'Submit!'")
+                output$answer_status <- renderUI("Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species.")
             })
         })
         
