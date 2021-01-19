@@ -7,13 +7,13 @@ library(XML)
 library(sf)
 library(slickR)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
     
     # List of floraweb species
     data(floraweb_species)
     species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                floraweb_species$BioDiv2005==1), ]
-
+    
     species_list <- species_list[order(species_list$SPECIES),]
     
     # species_list <- floraweb_species
@@ -26,19 +26,38 @@ shinyServer(function(input, output) {
     # 1. Selected species ----
     # Plant list
     output$plant_list <- renderPrint({plant_list})
-    
-    selected_species <- reactive({
-        input$plant_list
-        selected_species
-    })
+
+    # output$list_or_random <- renderUI({
+    #     validate(
+    #         need(!is.null(input$radio), "Please select a input type")
+    #     )
+    #     if(input$radio == "plant_list"){
+    #         selectInput("plant_list", "Plant list",
+    #                     choices = plant_list,
+    #                     selected = "Acer campestre")
+    #         # br(),
+    #         checkboxGroupInput(inputId = "options",
+    #                            label = "Show:",
+    #                            choices = list("Map", "Chorology"))
+    #     } else if(input$radio == "random_plant"){
+    #         actionButton("random_plant", "Random plant")
+    #         selected_species <- sample(species_list$SPECIES, 1)
+    #     }
+    # }) # closes output$list_or_random
     
     observe({
+        selected_species <- input$plant_list
+        
+        # observeEvent(input$newplant, {
+        #     selected_species <- sample(species_list$SPECIES, 1)
+        # })
+        
         # Plant species chosen
-        j <- which(species_list$SPECIES == input$plant_list)
+        j <- which(species_list$SPECIES == selected_species)
         
         # Download informations with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
-            species_row = species_list[which(species_list$SPECIES == input$plant_list), ], 
+            species_row = species_list[which(species_list$SPECIES == selected_species), ], 
             image_floraweb = TRUE,
             hints_floraweb = c("description", "status", "habitat", "family",
                                "German name"), 
@@ -80,13 +99,13 @@ shinyServer(function(input, output) {
                 ))
             }
             imgs <- do.call(tagList, photo_list)
-            slickR(imgs)
+            slickR(imgs)# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
         # Description ----
         output$selected_sp_description <- renderUI({
             HTML(paste("<b>",
-                       species_list[which(species_list$SPECIES == input$plant_list),
+                       species_list[which(species_list$SPECIES == selected_species),
                                     "TAXONNAME"], "</b>",
                        sp_infos$description, sep = '<br/>'))
         })
@@ -121,7 +140,7 @@ shinyServer(function(input, output) {
                     if(!is.na(options[1])){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
-                            species_row = species_list[which(species_list$SPECIES == input$plant_list), ], 
+                            species_row = species_list[which(species_list$SPECIES == selected_species), ], 
                             image_floraweb = FALSE,
                             hints_floraweb = c("map"), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -344,8 +363,9 @@ shinyServer(function(input, output) {
         observeEvent(input$newplant, {
             answered <- FALSE
             output$answer_status <- renderText({
-                "Mark your answer and click 'Submit!'"
+                "Mark your answer and click 'Submit or hit 'Enter'!"
             })
+            updateTextInput(session, "sp_answer", "Species name", value = "")
         })
         
         # Providing an answer simple version
