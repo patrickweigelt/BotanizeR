@@ -103,8 +103,10 @@ tabPanel(
                br(),
                tags$head(tags$script(src = "enter_button.js")),
                actionButton("submit", "Submit"),
+               tags$head(tags$script(src = "answer_button.js")),
                actionButton("real_answer", "Answer"),
                br(),
+               tags$head(tags$script(src = "next_button.js")),
                actionButton("newplant", "New plant")
         ),
         
