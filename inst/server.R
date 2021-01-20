@@ -203,10 +203,16 @@ shinyServer(function(input, output, session) {
     observe({
         input$newplant # hitting the new plant button
         
-        # Unchecking the checkboxes
-        # updateCheckboxGroupInput(session,
-        #                          inputId = "quizz_options",
-        #                          choices = c("1","2","3"), selected=NULL)
+        # Unchecking the checkboxes when hitting 'New plant'
+        observeEvent(input$newplant, {
+            updateCheckboxGroupInput(session,
+                                     inputId = "quizz_options",
+                                     choices = list("Description", "Status",
+                                                    "Family", "Habitat",
+                                                    "German name", "Map",
+                                                    "Chorology"),
+                                     selected = NULL)
+        })
         
         sp_picture <- 0
         
