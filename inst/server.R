@@ -13,7 +13,7 @@ shinyServer(function(input, output, session) {
     # List of species
     data(floraweb_species)
     species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                               floraweb_species$BioDiv2005==1), ]
+                                        floraweb_species$BioDiv2005==1), ]
     
     ## hints and images
     # floraweb:
@@ -22,9 +22,9 @@ shinyServer(function(input, output, session) {
                        "German name")
     
     ## Winter
-    # species_list <- floraweb_species[which(floraweb_species$WINTER==1), ] # for winter list
+    # species_list <- read.csv("floraweb_species_winter.csv") # for winter list
     # image_floraweb = FALSE # for winter list
-    # hints_floraweb = NULL # for winter list
+    # hints_floraweb =  c("German name", "family", "status") # for winter list
     
     
     image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
@@ -33,9 +33,7 @@ shinyServer(function(input, output, session) {
     
     # List of species that have a chorology
     chorology_list <- read.table("NAMNR_chorology.txt")
-    # chorology_list <- read.table("~/ShinyApps/BotanizeR/NAMNR_chorology.txt")
-    # This is needed on server
-    
+
     # Species
     species_list <- species_list[order(species_list$SPECIES),]
     plant_list <- species_list$SPECIES
@@ -198,10 +196,10 @@ shinyServer(function(input, output, session) {
         observeEvent(input$newplant, {
             updateCheckboxGroupInput(session,
                                      inputId = "quizz_options",
-                                     choices = list("German name", "Family",
-                                                    "Status", "Description",
-                                                    "Habitat", "Map",
-                                                    "Chorology"),
+                                     choices = list("German name", "Family","Status"
+                                                    , "Description","Habitat", # comment out for winter
+                                                     "Map", "Chorology"        # comment out for winter
+                                                    ),
                                      selected = NULL)
         })
         

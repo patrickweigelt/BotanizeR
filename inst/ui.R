@@ -11,8 +11,8 @@ library(slickR)
 # Data
 data(floraweb_species)
 species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                               floraweb_species$BioDiv2005==1), ]
-# species_list <- floraweb_species[which(floraweb_species$WINTER==1), ] # for winter list
+                                                floraweb_species$BioDiv2005==1), ]
+# species_list <- read.csv("floraweb_species_winter.csv") # for winter list
 
 species_list <- species_list[order(species_list$SPECIES),]
 
@@ -50,9 +50,9 @@ tabPanel(h1(id = "panel1", "Species list"),
                          # br(),
                          # actionButton("random_plant", "Random plant"),
                          br(),
-                         checkboxGroupInput(inputId = "options",
-                                            label = "Show:",
-                                            choices = list("Map", "Chorology"))
+                         checkboxGroupInput(inputId = "options",                # comment out for winter
+                                           label = "Show:",                     # comment out for winter
+                                           choices = list("Map", "Chorology"))  # comment out for winter
          ),
          column(4,
                 # splitLayout(cellWidths = c("100%"),
@@ -85,10 +85,10 @@ tabPanel(
                h5(textOutput("Score")),
                br(),
                checkboxGroupInput(inputId = "quizz_options", label = "Show:",
-                                    choices = list("German name", "Family",
-                                                   "Status", "Description",
-                                                   "Habitat", "Map",
-                                                   "Chorology")),
+                                  choices = list("German name","Family","Status"
+                                                 ,"Description","Habitat","Map",# comment out for winter
+                                                 "Chorology"                    # comment out for winter
+                                                 )),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
                                                   Shiny.onInputChange("lastkeypresscode", e.keyCode);
