@@ -40,7 +40,6 @@ shinyServer(function(input, output, session) {
     species_list <- species_list[order(species_list$SPECIES),]
     plant_list <- species_list$SPECIES
     
-    
     # 1. Selected species ----
     # Plant list
     output$plant_list <- renderPrint({plant_list})
@@ -83,28 +82,11 @@ shinyServer(function(input, output, session) {
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
-        output$selected_sp_photo <- renderUI({
-            if(length(sp_infos$images) > 1){
-                par(mar = rep(0.5, 4), oma = rep(0, 4))
-                photo_list <- lapply(sp_infos$images, function(x){
-                    tags$div(
-                        tags$img(src = x, width = "50%", height = "50%"),
-                        tags$script(src = "titlescript.js")
-                    )
-                })
-                do.call(tagList, photo_list)
-            } else{ 
-                # HTML("<strong>No picture available</strong>")
-            }
-        })
-        
-        # trying slickr
-        output$slickr <- renderSlickR({
+        output$selected_sp_photo <- renderSlickR({
             if(length(sp_infos$images) >= 1){
                 photo_list <- lapply(sp_infos$images, function(x){
                     tags$div(
-                        tags$img(src = x, width = "20%", height = "20%") #,
-                        # tags$script(src = "titlescript.js")
+                        tags$img(src = x, width = "20%", height = "20%")
                     )
                 })
             } else{
@@ -143,8 +125,7 @@ shinyServer(function(input, output, session) {
                 species_list[which(species_list$SPECIES == selected_species), "NAMNR"],
                 "&")
             
-            HTML(paste0("<b>",
-                        sp_infos$description, "</b>",
+            HTML(paste0(sp_infos$description, "</br>",
                         "Source: ",
                         "<a href='",
                         floraweb_link, # https://www.floraweb.de/,
@@ -261,13 +242,13 @@ shinyServer(function(input, output, session) {
         # })
         
         output$random_slickr <- renderSlickR({
-            photo_list <- lapply(sp_quizz$images, function(x){
+            photo_list_quizz <- lapply(sp_quizz$images, function(x){
                 tags$div(
                     tags$img(src = x, width = "20%", height = "20%")
                 )
             })
-            imgs <- do.call(tagList, photo_list)
-            slickR(imgs)
+            imgs_quizz <- do.call(tagList, photo_list_quizz)
+            slickR(imgs_quizz)
         })
         
         # German name ----
@@ -324,8 +305,6 @@ shinyServer(function(input, output, session) {
                                         input$quizz_options)
                 output$random_description <- renderUI({
                     if(!is.na(quizz_options[4])){
-                        # HTML(sp_quizz$description)
-                        
                         floraweb_link_quizz <- paste0(
                             "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
                             species_list[which(species_list$SPECIES == species), "NAMNR"],
