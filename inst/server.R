@@ -203,6 +203,11 @@ shinyServer(function(input, output, session) {
     observe({
         input$newplant # hitting the new plant button
         
+        # Unchecking the checkboxes
+        # updateCheckboxGroupInput(session,
+        #                          inputId = "quizz_options",
+        #                          choices = c("1","2","3"), selected=NULL)
+        
         sp_picture <- 0
         
         while (sp_picture == 0) { # If no picture available => new plant
@@ -376,15 +381,23 @@ shinyServer(function(input, output, session) {
         # display text when no answer is provided
         observeEvent(input$newplant, {
             answered <- FALSE
-            output$answer_status <- renderText({
-                "Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species."
+            output$answer_status <- renderUI({
+                HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
+                            "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
+                            "</br><br>",
+                            "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
             })
             updateTextInput(session, "sp_answer", "Species name", value = "")
         })
         
         # Providing an answer simple version
         observe({
-            output$answer_status <- renderUI("Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species.")
+            output$answer_status <- renderUI({
+                HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
+                            "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
+                            "</br><br>",
+                            "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
+            })
             observeEvent(input$submit, {
                 isolate({
                     answer <- as.character(input$sp_answer)
@@ -414,7 +427,9 @@ shinyServer(function(input, output, session) {
             observeEvent(input$newplant, {
                 output$answer_status <- renderUI({
                     HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                    "<br>", "Hit 'Arrow up' for next species.", "</br>"))
+                                "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
+                                "</br><br>",
+                                "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
                 })
             })
         })
@@ -467,14 +482,11 @@ shinyServer(function(input, output, session) {
         # })
         
         # Real answer ----
-        observe({
-            output$real_answer <- renderText("")
-            observeEvent(input$real_answer, {
-                output$real_answer <- renderText(species)
-            })
-            observeEvent(input$newplant, {
-                output$real_answer <- renderText("")
-            })
+        observeEvent(input$real_answer, {
+            output$real_answer_print <- renderText(species)
+        })
+        observeEvent(input$newplant, {
+            output$real_answer_print <- renderText("")
         })
         
         # Number of tries ----

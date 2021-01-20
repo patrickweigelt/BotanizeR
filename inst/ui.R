@@ -99,14 +99,12 @@ tabPanel(
                br(),
                p(htmlOutput("answer_status"), style = "font-weight=500; color: #000000;"),
                br(),
-               h5(textOutput("real_answer"), style = "color: green; font-style: bold"),
+               h5(textOutput("real_answer_print"), style = "color: green; font-style: bold"),
                br(),
-               tags$head(tags$script(src = "enter_button.js")),
+               tags$head(tags$script(src = "BotanizeR_buttons.js")),
                actionButton("submit", "Submit"),
-               tags$head(tags$script(src = "answer_button.js")),
                actionButton("real_answer", "Answer"),
                br(),
-               tags$head(tags$script(src = "next_button.js")),
                actionButton("newplant", "New plant")
         ),
         
