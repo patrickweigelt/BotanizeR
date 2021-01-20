@@ -27,7 +27,7 @@ shinyServer(function(input, output, session) {
     # hints_floraweb = NULL # for winter list
     
     
-    image_folders = c("www/pictures_Clemens_400","www/drawings_Schulz_400")
+    image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
     # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
     # This is needed on server
     
@@ -135,10 +135,20 @@ shinyServer(function(input, output, session) {
         output$selected_sp_status <- renderText({
             print(sp_infos$status)
         })
-
+        
         # Description ----
-        output$selected_sp_description <- renderText({
-            print(sp_infos$description)
+        output$selected_sp_description <- renderUI({
+            floraweb_link <- paste0(
+                "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+                species_list[which(species_list$SPECIES == selected_species), "NAMNR"],
+                "&")
+            
+            HTML(paste0("<b>",
+                        sp_infos$description, "</b>",
+                        "Source: ",
+                        "<a href='",
+                        floraweb_link, # https://www.floraweb.de/,
+                        "' target=_blank>FloraWeb</a>"))
         })
         
         # Habitat ----
@@ -311,7 +321,19 @@ shinyServer(function(input, output, session) {
                                         input$quizz_options)
                 output$random_description <- renderUI({
                     if(!is.na(quizz_options[4])){
-                        HTML(sp_quizz$description)
+                        # HTML(sp_quizz$description)
+                        
+                        floraweb_link_quizz <- paste0(
+                            "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+                            species_list[which(species_list$SPECIES == species), "NAMNR"],
+                            "&")
+                        
+                        HTML(paste0(sp_quizz$description,
+                                    "</br>",
+                                    "Source: ",
+                                    "<a href='",
+                                    floraweb_link_quizz, # https://www.floraweb.de/,
+                                    "' target=_blank>FloraWeb</a>"))
                     }
                 })
             })
