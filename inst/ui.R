@@ -97,7 +97,7 @@ tabPanel(
                textInput("sp_answer", label = "Species name"),
                h5(textOutput("nb_tries"), style = "font-weight=500; color: #000000;"),
                br(),
-               p(uiOutput("answer_status"), style = "font-weight=500; color: #000000;"),
+               p(htmlOutput("answer_status"), style = "font-weight=500; color: #000000;"),
                br(),
                h5(textOutput("real_answer"), style = "color: green; font-style: bold"),
                br(),

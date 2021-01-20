@@ -14,7 +14,7 @@ shinyServer(function(input, output, session) {
     data(floraweb_species)
     species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                floraweb_species$BioDiv2005==1), ]
-
+    
     ## hints and images
     # floraweb:
     image_floraweb = TRUE
@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
     # species_list <- floraweb_species[which(floraweb_species$WINTER==1), ] # for winter list
     # image_floraweb = FALSE # for winter list
     # hints_floraweb = NULL # for winter list
-
+    
     
     image_folders = c("www/pictures_Clemens_400","www/drawings_Schulz_400")
     # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
@@ -44,7 +44,7 @@ shinyServer(function(input, output, session) {
     # 1. Selected species ----
     # Plant list
     output$plant_list <- renderPrint({plant_list})
-
+    
     # output$list_or_random <- renderUI({
     #     validate(
     #         need(!is.null(input$radio), "Please select a input type")
@@ -392,13 +392,30 @@ shinyServer(function(input, output, session) {
                 if (answer == species){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
-                } else if(answer != species){
+                } else if (answer != species){
+                    char_diff <-
+                        paste0(adist(answer, species),
+                               ifelse(adist(answer, species) > 1,
+                                      "characters","character"),
+                               " different")
+                    
+                    genus <- species_list[which(species_list$SPECIES == species), "GENUS"]
+                    
+                    genus_correct <- paste0(
+                        ifelse(strsplit(answer, " ")[[1]][1] == genus,
+                               "Genus correct", ""))
+                    
                     output$answer_status <- renderUI(HTML(paste0(
-                        "<font color=\"#FF0000\">", "Wrong", "</font>")))
+                        "<font color=\"#FF0000\">", char_diff,
+                        "</font><font color=\"#00CC00\"><br>",
+                        genus_correct, "</font></br>")))
                 }
             })
             observeEvent(input$newplant, {
-                output$answer_status <- renderUI("Mark your answer and click 'Submit' or hit 'Enter'! Hit 'Arrow up' for next species.")
+                output$answer_status <- renderUI({
+                    HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
+                    "<br>", "Hit 'Arrow up' for next species.", "</br>"))
+                })
             })
         })
         
