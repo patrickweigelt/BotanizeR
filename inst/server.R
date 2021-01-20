@@ -118,17 +118,12 @@ shinyServer(function(input, output, session) {
             slickR(imgs)# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
-        # Description ----
-        output$selected_sp_description <- renderUI({
+        # German name ----
+        output$selected_sp_german <- renderUI({
             HTML(paste("<b>",
                        species_list[which(species_list$SPECIES == selected_species),
                                     "TAXONNAME"], "</b>",
-                       sp_infos$description, sep = '<br/>'))
-        })
-        
-        # Habitat ----
-        output$selected_sp_habitat <- renderText({
-            print(sp_infos$habitat[[1]])
+                       sp_infos$`German name`, sep = '<br/>'))
         })
         
         # Family ----
@@ -140,10 +135,15 @@ shinyServer(function(input, output, session) {
         output$selected_sp_status <- renderText({
             print(sp_infos$status)
         })
+
+        # Description ----
+        output$selected_sp_description <- renderText({
+            print(sp_infos$description)
+        })
         
-        # German name ----
-        output$selected_sp_german <- renderText({
-            print(sp_infos$`German name`)
+        # Habitat ----
+        output$selected_sp_habitat <- renderText({
+            print(sp_infos$habitat[[1]])
         })
         
         # Map ----
@@ -207,9 +207,9 @@ shinyServer(function(input, output, session) {
         observeEvent(input$newplant, {
             updateCheckboxGroupInput(session,
                                      inputId = "quizz_options",
-                                     choices = list("Description", "Status",
-                                                    "Family", "Habitat",
-                                                    "German name", "Map",
+                                     choices = list("German name", "Family",
+                                                    "Status", "Description",
+                                                    "Habitat", "Map",
                                                     "Chorology"),
                                      selected = NULL)
         })
@@ -257,31 +257,16 @@ shinyServer(function(input, output, session) {
             slickR(imgs)
         })
         
-        # Description ----
+        # German name ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
-                output$random_description <- renderUI({
+                output$random_german <- renderText({
                     if(!is.na(quizz_options[1])){
-                        HTML(sp_quizz$description)
-                    }
-                })
-            })
-        })
-        
-        # Habitat ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_habitat <- renderText({
-                    if(!is.na(quizz_options[4])){
-                        print(sp_quizz$habitat[[1]])
+                        print(sp_quizz$`German name`)
                     }
                 })
             })
@@ -290,12 +275,12 @@ shinyServer(function(input, output, session) {
         # Family ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
                 output$random_family <- renderText({
-                    if(!is.na(quizz_options[3])){
+                    if(!is.na(quizz_options[2])){
                         print(sp_quizz$family)
                     }
                 })
@@ -305,28 +290,43 @@ shinyServer(function(input, output, session) {
         # Status ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
                 output$random_status <- renderText({
-                    if(!is.na(quizz_options[2])){
+                    if(!is.na(quizz_options[3])){
                         print(sp_quizz$status)
                     }
                 })
             })
         })
         
-        # German name ----
+        # Description ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
-                output$random_german <- renderText({
+                output$random_description <- renderUI({
+                    if(!is.na(quizz_options[4])){
+                        HTML(sp_quizz$description)
+                    }
+                })
+            })
+        })
+        
+        # Habitat ----
+        isolate({
+            observe({
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
+                                          "Chorology"),
+                                        input$quizz_options)
+                output$random_habitat <- renderText({
                     if(!is.na(quizz_options[5])){
-                        print(sp_quizz$`German name`)
+                        print(sp_quizz$habitat[[1]])
                     }
                 })
             })
@@ -335,8 +335,8 @@ shinyServer(function(input, output, session) {
         # Map ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
                 output$random_map <- renderPlot({
@@ -362,8 +362,8 @@ shinyServer(function(input, output, session) {
         # Chorology ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("Description", "Status", "Family",
-                                          "Habitat", "German name", "Map",
+                quizz_options <- pmatch(c("German name", "Family", "Status",
+                                          "Description", "Habitat", "Map",
                                           "Chorology"),
                                         input$quizz_options)
                 output$random_chorology <- renderUI({
