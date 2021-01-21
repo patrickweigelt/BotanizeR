@@ -398,20 +398,20 @@ shinyServer(function(input, output, session) {
                 isolate({
                     answer <- as.character(input$sp_answer)
                 })
-                if (answer == species){
+                if (tolower(answer) == tolower(species)){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
-                } else if (answer != species){
+                } else { # if (answer != species){
                     char_diff <-
-                        paste0(adist(answer, species),
-                               ifelse(adist(answer, species) > 1,
-                                      "characters","character"),
+                        paste0(adist(tolower(answer), tolower(species)),
+                               ifelse(adist(tolower(answer), tolower(species)) > 1,
+                                      " characters"," character"),
                                " different")
                     
                     genus <- species_list[which(species_list$SPECIES == species), "GENUS"]
                     
                     genus_correct <- paste0(
-                        ifelse(strsplit(answer, " ")[[1]][1] == genus,
+                        ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
                                "Genus correct", ""))
                     
                     output$answer_status <- renderUI(HTML(paste0(
