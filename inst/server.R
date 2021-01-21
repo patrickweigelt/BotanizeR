@@ -182,7 +182,7 @@ shinyServer(function(input, output, session) {
         
     }) # closes observe()
     
-    # 2. Quizz ----
+    # 2. Quiz ----
     
     answered <- FALSE # an indicator for whether question has been answered
     
@@ -222,7 +222,7 @@ shinyServer(function(input, output, session) {
             if(length(sp_quizz$images) != 0){
                 sp_picture <- 1
                 
-                # Randomly reordering pictures for the quizz
+                # Randomly reordering pictures for the quiz
                 sp_quizz$images <- sample(sp_quizz$images)
             }
         }
