@@ -48,8 +48,6 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
                                          hints_custom, imagelink_custom, image_folders,
                                          file_location, image_required = TRUE, image_width = image_width)
 
-  # random image order
-  infos$images <- sample(infos$images)
   
   if(length(infos$images)==0) { 
     message("No image for ",species, ".\nConsider adding your own image or image link\n\n")
@@ -57,6 +55,9 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
     startat <- startat - 1
   } else {  
 
+    # random image order
+    infos$images <- sample(infos$images)
+    
     if(length(infos)>1){
       hints_i <- c(paste("image",c(1:length(infos$images))),names(infos)[2:length(infos)])
     } else {
