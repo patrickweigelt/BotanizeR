@@ -8,7 +8,7 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      slickROutput("slickr", width="500px") # also works with "auto"
+      slickROutput("slickr", width="500") # also works with "auto"
     )
   )
 )
@@ -18,7 +18,7 @@ server <- function(input, output) {
   output$slickr <- renderSlickR({
     # imgs <- list.files("inst/www/pictures_Clemens/", pattern="Acer platanoides", recursive=TRUE, full.names = TRUE)
     imgs <- list.files("inst/www/pictures_Clemens/", pattern="\\.png", recursive=TRUE, full.names = TRUE)
-    # imgs <- slick_list(slick_div(imgs, css = htmltools::css(width = "500px"),type = "img",links = NULL))
+    imgs <- slick_list(slick_div(imgs, css = htmltools::css(width = "95%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
     slickR(imgs) # + settings(variableWidth = TRUE)
   })
 }

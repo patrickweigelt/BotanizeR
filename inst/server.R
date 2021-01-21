@@ -6,6 +6,7 @@ library(BotanizeR)
 library(XML)
 library(sf)
 library(slickR)
+library(htmltools)
 
 shinyServer(function(input, output, session) {
     
