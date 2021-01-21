@@ -81,20 +81,10 @@ shinyServer(function(input, output, session) {
         
         # Photos ----
         output$selected_sp_photo <- renderSlickR({
-            if(length(sp_infos$images) >= 1){
-                photo_list <- lapply(sp_infos$images, function(x){
-                    tags$div(
-                        tags$img(src = x, width = "20%", height = "20%")
-                    )
-                })
-            } else{
-                photo_list <- list(tags$div(
-                    tags$img(src = "no_picture.png",
-                             width = "200px", height = "50px"),
-                    tags$script(src = "titlescript.js")
-                ))
+            if(length(sp_infos$images) == 0){
+                sp_infos$images = "no_picture.png"
             }
-            imgs <- do.call(tagList, photo_list)
+            imgs <- slick_list(slick_div(sp_infos$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
             slickR(imgs)# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
@@ -239,15 +229,12 @@ shinyServer(function(input, output, session) {
         #     do.call(tagList, photo_random)
         # })
         
+
         output$random_slickr <- renderSlickR({
-            photo_list_quizz <- lapply(sp_quizz$images, function(x){
-                tags$div(
-                    tags$img(src = x, width = "20%", height = "20%")
-                )
-            })
-            imgs_quizz <- do.call(tagList, photo_list_quizz)
-            slickR(imgs_quizz)
+            imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
+            slickR(imgs_quizz)# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
+        
         
         # German name ----
         isolate({
