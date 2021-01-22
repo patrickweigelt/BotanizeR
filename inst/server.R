@@ -184,6 +184,10 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
+    observeEvent(input$file, {
+        species_list_reactive$df_data <- read.csv(input$file$datapath)
+    })
+    
     observe({
         input$newplant # hitting the new plant button
         
@@ -202,7 +206,13 @@ shinyServer(function(input, output, session) {
         
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
-            species <- sample(species_list$SPECIES, 1, prob = ((species_list$COUNT - species_list$SCORE + 1)/(species_list$SCORE+1))*species_list$INCLUDE)
+            temp1 <- isolate(species_list_reactive$df_data)
+            species <- sample(species_list$SPECIES, 1, 
+                          prob = ((temp1$COUNT - temp1$SCORE + 1)/
+                                      (temp1$SCORE+1))*temp1$INCLUDE)
+            # species <- sample(species_list$SPECIES, 1, 
+              #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
+                #                        (species_list$SCORE+1))*species_list$INCLUDE)
             i <- which(species_list$SPECIES == species)
             
             # Download information with BotanizeR_collect()

@@ -132,6 +132,8 @@ tabPanel(
                br(),
                uiOutput("random_chorology"),
                br(),
+               fileInput("file", "Upload file"),
+               br(),
                downloadButton("download","Download your progress")#,
                # br(),
                # dataTableOutput("progress")
