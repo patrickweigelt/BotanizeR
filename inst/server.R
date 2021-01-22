@@ -86,7 +86,7 @@ shinyServer(function(input, output, session) {
                 sp_infos$images = "no_picture.png"
             }
             imgs <- slick_list(slick_div(sp_infos$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
-            slickR(imgs)# + settings(centerMode = TRUE, slidesToShow = 1, )
+            slickR(imgs, slideId = "slide_species")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
         # German name ----
@@ -238,7 +238,7 @@ shinyServer(function(input, output, session) {
 
         output$random_slickr <- renderSlickR({
             imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
-            slickR(imgs_quizz)# + settings(centerMode = TRUE, slidesToShow = 1, )
+            slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
         
