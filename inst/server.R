@@ -246,7 +246,7 @@ shinyServer(function(input, output, session) {
         # temp <- values$df_data[-1, ]
         #values$df_data <- temp
         
-        observeEvent(input$newplant, {
+        observeEvent(input$newplant, once = TRUE, {
             # temp <- values$df_data[-i, ]
             temp <- species_list_reactive$df_data
             temp$COUNT[i] <- temp$COUNT[i] + 1
