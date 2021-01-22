@@ -58,7 +58,7 @@ tabPanel(h1(id = "panel1", "Species"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "400")
+                slickROutput("selected_sp_photo", width = "400px", height = "500px")
          ),
          column(4,
                 htmlOutput("selected_sp_german"),
@@ -105,13 +105,14 @@ tabPanel(
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
                br(),
-               actionButton("newplant", "New plant")
+               actionButton("newplant", "New plant"),
+               div(style = "height:20px")
         ),
         
         # Second part of the page with the picture
         column(4,
                # uiOutput("random_sp"),
-               slickROutput("random_slickr", width = "400"),
+               slickROutput("random_slickr", width = "400px", height = "500px"),
                br(),
                plotOutput("random_map"),
                br(),
