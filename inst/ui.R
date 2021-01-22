@@ -14,7 +14,7 @@ species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                                 floraweb_species$BioDiv2005==1), ]
 # species_list <- read.csv("floraweb_species_winter.csv") # for winter list
 
-species_list <- species_list[order(species_list$SPECIES),]
+species_list <- species_list[order(species_list$SPECIES),c(1:14)]
 
 plant_list <- species_list$SPECIES
 

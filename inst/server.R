@@ -36,7 +36,7 @@ shinyServer(function(input, output, session) {
     chorology_list <- read.table("NAMNR_chorology.txt")
 
     # Species
-    species_list <- species_list[order(species_list$SPECIES),]
+    species_list <- species_list[order(species_list$SPECIES),c(1:14)]
     plant_list <- species_list$SPECIES
     
     # 1. Selected species ----
