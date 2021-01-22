@@ -104,7 +104,7 @@ tabPanel(
                tags$head(tags$script(src = "BotanizeR_buttons.js")),
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
-               br(),
+               # br(),
                actionButton("newplant", "New plant"),
                div(style = "height:20px")
         ),
