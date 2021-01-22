@@ -71,7 +71,7 @@ shinyServer(function(input, output, session) {
         # Plant species chosen
         j <- which(species_list$SPECIES == selected_species)
         
-        # Download informations with BotanizeR_collect()
+        # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = species_list[which(species_list$SPECIES == selected_species), ], 
             image_floraweb,
@@ -175,10 +175,12 @@ shinyServer(function(input, output, session) {
     
     # 2. Quiz ----
     
-    answered <- FALSE # an indicator for whether question has been answered
+    # answered <- FALSE # an indicator for whether question has been answered
     
-    my_progress <- data.frame(species = NULL)
-    output$progress <- renderDataTable({progress()})
+    # my_progress <- data.frame(species = NULL)
+    # output$progress <- renderDataTable({progress()})
+
+    my_progress <- reactiveValues(species_list_progress = species_list)
     
     observe({
         input$newplant # hitting the new plant button
@@ -198,10 +200,10 @@ shinyServer(function(input, output, session) {
         
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
-            species <- sample(species_list$SPECIES, 1)
+            species <- sample(species_list$SPECIES, 1, prob = ((species_list$COUNT - species_list$SCORE + 1)/(species_list$SCORE+1))*species_list$INCLUDE)
             i <- which(species_list$SPECIES == species)
             
-            # Download informations with BotanizeR_collect()
+            # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = species_list[which(species_list$SPECIES == species), ], 
                 image_floraweb,
@@ -218,6 +220,9 @@ shinyServer(function(input, output, session) {
             }
         }
         
+        # Try to update reactive value
+        # my_progress$species_list_progress[i,"COUNT"] <- my_progress$species_list_progress[i,"COUNT"] + 1
+                                      
         # Photos ----
         # output$random_sp <- renderUI({
         #     par(mar = rep(0.5, 4), oma = rep(0, 4))
@@ -376,7 +381,7 @@ shinyServer(function(input, output, session) {
         # Answer ----
         # display text when no answer is provided
         observeEvent(input$newplant, {
-            answered <- FALSE
+            # answered <- FALSE
             output$answer_status <- renderUI({
                 HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
                             "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
@@ -401,6 +406,9 @@ shinyServer(function(input, output, session) {
                 if (tolower(answer) == tolower(species)){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
+
+                    # species_list$SCORE[i] <- species_list$SCORE[i] + 1
+                    
                 } else { # if (answer != species){
                     char_diff <-
                         paste0(adist(tolower(answer), tolower(species)),
@@ -498,20 +506,28 @@ shinyServer(function(input, output, session) {
         # })
         
         # Progress ----
-        progress <- eventReactive(input$newplant, {
-            newrow <- data.frame(species = species)
-            
-            my_progress <<- rbind(my_progress, newrow)
-            my_progress
-        }, ignoreNULL = FALSE)
+        # progress <- eventReactive(input$newplant, {
+        #     newrow <- data.frame(species = species)
+        #     
+        #     my_progress <<- rbind(my_progress, newrow)
+        #     my_progress
+        # }, ignoreNULL = FALSE)
+
+        #progress <- eventReactive(input$newplant, {
+        #    species_list$COUNT[i] <- species_list$COUNT[i] + 1
+        #    species_list
+        #}, ignoreNULL = FALSE)
+        
         
     }) # closing observe for new plant
+
+    # output$progress <- renderDataTable(my_progress$species_list_progress)
     
+    #output$download <- downloadHandler(
+    #    filename = function(){"BotanizeR_practised.csv"}, 
+    #    content = function(file){
+    #        write.csv(my_progress, file, row.names = FALSE)
+    #    }
+    #)
     # Downloading progress table
-    output$download <- downloadHandler(
-        filename = function(){"practise.csv"}, 
-        content = function(file){
-            write.csv(my_progress, file, row.names = FALSE)
-        }
-    )
 })
