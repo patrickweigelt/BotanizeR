@@ -135,6 +135,7 @@ tabPanel(
                downloadButton("download","Download your progress")#,
                # br(),
                # dataTableOutput("progress")
+               #, tableOutput("df_data_out")
                )
     )
     

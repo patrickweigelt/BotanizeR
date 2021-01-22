@@ -180,7 +180,9 @@ shinyServer(function(input, output, session) {
     # my_progress <- data.frame(species = NULL)
     # output$progress <- renderDataTable({progress()})
 
-    my_progress <- reactiveValues(species_list_progress = species_list)
+    # my_progress <- reactiveValues(species_list_progress = species_list)
+    species_list_reactive <- reactiveValues(df_data = NULL)
+    species_list_reactive$df_data <- species_list
     
     observe({
         input$newplant # hitting the new plant button
@@ -239,6 +241,16 @@ shinyServer(function(input, output, session) {
         output$random_slickr <- renderSlickR({
             imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
+        })
+        
+        # temp <- values$df_data[-1, ]
+        #values$df_data <- temp
+        
+        observeEvent(input$newplant, {
+            # temp <- values$df_data[-i, ]
+            temp <- species_list_reactive$df_data
+            temp$COUNT[i] <- temp$COUNT[i] + 1
+            species_list_reactive$df_data <- temp
         })
         
         
@@ -408,6 +420,10 @@ shinyServer(function(input, output, session) {
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
 
                     # species_list$SCORE[i] <- species_list$SCORE[i] + 1
+                    temp <- species_list_reactive$df_data
+                    temp$SCORE[i] <- temp$SCORE[i] + 1
+                    species_list_reactive$df_data <- temp
+                    
                     
                 } else { # if (answer != species){
                     char_diff <-
@@ -521,13 +537,14 @@ shinyServer(function(input, output, session) {
         
     }) # closing observe for new plant
 
+    output$df_data_out <- renderTable(species_list_reactive$df_data)
     # output$progress <- renderDataTable(my_progress$species_list_progress)
     
-    #output$download <- downloadHandler(
-    #    filename = function(){"BotanizeR_practised.csv"}, 
-    #    content = function(file){
-    #        write.csv(my_progress, file, row.names = FALSE)
-    #    }
-    #)
+    output$download <- downloadHandler(
+        filename = function(){"BotanizeR_practised.csv"}, 
+        content = function(file){
+            write.csv(species_list_reactive$df_data, file, row.names = FALSE)
+        }
+    )
     # Downloading progress table
 })
