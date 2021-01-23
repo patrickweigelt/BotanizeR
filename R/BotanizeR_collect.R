@@ -44,7 +44,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # 3. Images ----
   # 3.1 Floraweb ----
   
-  if(!is.na(species_row$NAMNR) & species_row$NAMNR != ""){
+  if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & (!is.null(hints_floraweb) | image_floraweb)){
     
     # Main infos
     # I need this step because of an error in RCURL when getting the url
