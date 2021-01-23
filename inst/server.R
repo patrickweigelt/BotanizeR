@@ -35,13 +35,35 @@ shinyServer(function(input, output, session) {
     # List of species that have a chorology
     chorology_list <- read.table("NAMNR_chorology.txt")
 
-    # Species
+    # Sort species list alphabetically
     species_list <- species_list[order(species_list$SPECIES),c(1:14)]
-    plant_list <- species_list$SPECIES
+
+    # Make species a reactive object and allow for upload
+    species_list_reactive <- reactiveValues(df_data = NULL)
+    species_list_reactive$df_data <- species_list
+    
+    observeEvent(input$file, {
+        species_list_uploaded <- read.csv(input$file$datapath)
+        species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
+    })
+    
+
+    # Species
+
+    # Dynamic dropdown
+    choice_plants <- reactive({
+        species_list_reactive$df_data$SPECIES
+    })
+    
+    output$select_plant <- renderUI({
+        selectInput("plant_list", "Plant list dyn",
+                    choices = choice_plants(),
+                    selected = choice_plants()[1])
+    })
     
     # 1. Selected species ----
     # Plant list
-    output$plant_list <- renderPrint({plant_list})
+    # output$plant_list <- renderPrint({plant_list})
     
     # output$list_or_random <- renderUI({
     #     validate(
@@ -62,18 +84,23 @@ shinyServer(function(input, output, session) {
     # }) # closes output$list_or_random
     
     observe({
-        selected_species <- input$plant_list
+        
+        selected_species <- input$plant
+
+        if(length(selected_species)==0){
+            selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
+        }
         
         # observeEvent(input$newplant, {
         #     selected_species <- sample(species_list$SPECIES, 1)
         # })
         
         # Plant species chosen
-        j <- which(species_list$SPECIES == selected_species)
+        j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
         
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
-            species_row = species_list[which(species_list$SPECIES == selected_species), ], 
+            species_row = isolate(species_list_reactive$df_data)[j, ], 
             image_floraweb,
             hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
             hints_custom = NULL, imagelink_custom = NULL,
@@ -92,7 +119,7 @@ shinyServer(function(input, output, session) {
         # German name ----
         output$selected_sp_german <- renderUI({
             HTML(paste("<b>",
-                       species_list[which(species_list$SPECIES == selected_species),
+                       isolate(species_list_reactive$df_data)[j,
                                     "TAXONNAME"], "</b>",
                        sp_infos$`German name`, sep = '<br/>'))
         })
@@ -111,7 +138,7 @@ shinyServer(function(input, output, session) {
         output$selected_sp_description <- renderUI({
             floraweb_link <- paste0(
                 "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                species_list[which(species_list$SPECIES == selected_species), "NAMNR"],
+                isolate(species_list_reactive$df_data)[j, "NAMNR"],
                 "&")
             
             HTML(paste0(sp_infos$description, "</br>",
@@ -136,7 +163,7 @@ shinyServer(function(input, output, session) {
                     if(!is.na(options[1]) & !is.null(hints_floraweb)){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
-                            species_row = species_list[which(species_list$SPECIES == selected_species), ], 
+                            species_row = isolate(species_list_reactive$df_data)[j, ], 
                             image_floraweb = FALSE,
                             hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -156,14 +183,14 @@ shinyServer(function(input, output, session) {
                 options <- pmatch(c("Map", "Chorology"), input$options)
                 output$selected_sp_chorology <- renderUI({
                     if(!is.na(options[2]) &
-                       species_list$NAMNR[j] %in% chorology_list$V1){
+                       isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                              species_list$NAMNR[j],
+                                              isolate(species_list_reactive$df_data)$NAMNR[j],
                                               ".GIF"),
                                  width = "400px", height = "300px")
                     } else if(!is.na(options[2]) &
-                              !(species_list$NAMNR[j] %in% chorology_list$V1)){
+                              !(isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1)){
                         tags$img(src = "no_chorology.png",
                                  width = "200px", height = "50px")
                     }
@@ -173,6 +200,7 @@ shinyServer(function(input, output, session) {
         
     }) # closes observe()
     
+    
     # 2. Quiz ----
     
     # answered <- FALSE # an indicator for whether question has been answered
@@ -180,14 +208,6 @@ shinyServer(function(input, output, session) {
     # my_progress <- data.frame(species = NULL)
     # output$progress <- renderDataTable({progress()})
 
-    # my_progress <- reactiveValues(species_list_progress = species_list)
-    species_list_reactive <- reactiveValues(df_data = NULL)
-    species_list_reactive$df_data <- species_list
-    
-    observeEvent(input$file, {
-        species_list_reactive$df_data <- read.csv(input$file$datapath)
-    })
-    
     observe({
         input$newplant # hitting the new plant button
         
@@ -207,17 +227,17 @@ shinyServer(function(input, output, session) {
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
             temp1 <- isolate(species_list_reactive$df_data)
-            species <- sample(species_list$SPECIES, 1, 
+            species <- sample(temp1$SPECIES, 1, 
                           prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                       (temp1$SCORE+1))*temp1$INCLUDE)
             # species <- sample(species_list$SPECIES, 1, 
               #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
                 #                        (species_list$SCORE+1))*species_list$INCLUDE)
-            i <- which(species_list$SPECIES == species)
+            i <- which(temp1$SPECIES == species)
             
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
-                species_row = species_list[which(species_list$SPECIES == species), ], 
+                species_row = temp1[i, ], 
                 image_floraweb,
                 hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
                 hints_custom = NULL, imagelink_custom = NULL,
@@ -232,9 +252,6 @@ shinyServer(function(input, output, session) {
             }
         }
         
-        # Try to update reactive value
-        # my_progress$species_list_progress[i,"COUNT"] <- my_progress$species_list_progress[i,"COUNT"] + 1
-                                      
         # Photos ----
         # output$random_sp <- renderUI({
         #     par(mar = rep(0.5, 4), oma = rep(0, 4))
@@ -247,20 +264,16 @@ shinyServer(function(input, output, session) {
         #     do.call(tagList, photo_random)
         # })
         
-
         output$random_slickr <- renderSlickR({
             imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
-        # temp <- values$df_data[-1, ]
-        #values$df_data <- temp
-        
         observeEvent(input$newplant, once = TRUE, {
-            # temp <- values$df_data[-i, ]
-            temp <- species_list_reactive$df_data
-            temp$COUNT[i] <- temp$COUNT[i] + 1
-            species_list_reactive$df_data <- temp
+            # temp <- species_list_reactive$df_data
+            # temp$COUNT[i] <- temp$COUNT[i] + 1
+            # species_list_reactive$df_data <- temp
+            species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
         })
         
         
@@ -320,7 +333,7 @@ shinyServer(function(input, output, session) {
                     if(!is.na(quizz_options[4])){
                         floraweb_link_quizz <- paste0(
                             "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                            species_list[which(species_list$SPECIES == species), "NAMNR"],
+                            temp1[i, "NAMNR"],
                             "&")
                         
                         HTML(paste0(sp_quizz$description,
@@ -362,7 +375,7 @@ shinyServer(function(input, output, session) {
                     if(!is.na(quizz_options[6]) & !is.null(hints_floraweb)){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
-                            species_row = species_list[which(species_list$SPECIES == species), ], 
+                            species_row = temp1[i, ], 
                             image_floraweb = FALSE,
                             hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -385,14 +398,14 @@ shinyServer(function(input, output, session) {
                                         input$quizz_options)
                 output$random_chorology <- renderUI({
                     if(!is.na(quizz_options[7]) &
-                       species_list$NAMNR[i] %in% chorology_list$V1){
+                       temp1$NAMNR[i] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                              species_list$NAMNR[i],
+                                              temp1$NAMNR[i],
                                               ".GIF"),
                                  width = "400px", height = "300px")
                     } else if(!is.na(quizz_options[7]) &
-                              !(species_list$NAMNR[i] %in% chorology_list$V1)){
+                              !(temp1$NAMNR[i] %in% chorology_list$V1)){
                         tags$img(src = "no_chorology.png",
                                  width = "200px", height = "50px")
                     }
@@ -429,10 +442,10 @@ shinyServer(function(input, output, session) {
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
 
-                    # species_list$SCORE[i] <- species_list$SCORE[i] + 1
-                    temp <- species_list_reactive$df_data
-                    temp$SCORE[i] <- temp$SCORE[i] + 1
-                    species_list_reactive$df_data <- temp
+                    #temp <- species_list_reactive$df_data
+                    #temp$SCORE[i] <- temp$SCORE[i] + 1
+                    #species_list_reactive$df_data <- temp
+                    species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + 1
                     
                     
                 } else { # if (answer != species){
@@ -442,7 +455,7 @@ shinyServer(function(input, output, session) {
                                       " characters"," character"),
                                " different")
                     
-                    genus <- species_list[which(species_list$SPECIES == species), "GENUS"]
+                    genus <- temp1[i, "GENUS"]
                     
                     genus_correct <- paste0(
                         ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
