@@ -85,7 +85,7 @@ shinyServer(function(input, output, session) {
     
     observe({
         
-        selected_species <- input$plant
+        selected_species <- input$plant_list
 
         if(length(selected_species)==0){
             selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
