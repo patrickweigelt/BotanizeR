@@ -59,7 +59,7 @@ shinyServer(function(input, output, session) {
     }
     
     hints_quiz <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
-    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map","Chorology")
+    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map","Chorology", hints_custom) # Change order when hints_custom used
     
     checkboxes_quiz <- reactive({
         hints_quiz_ordered[which(hints_quiz_ordered %in% hints_quiz)]
