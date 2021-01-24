@@ -51,9 +51,7 @@ tabPanel(h1(id = "panel1", "Species"),
                          # br(),
                          # actionButton("random_plant", "Random plant"),
                          br(),
-                         checkboxGroupInput(inputId = "options",                # comment out for winter
-                                           label = "Show:",                     # comment out for winter
-                                           choices = list("Map", "Chorology"))  # comment out for winter
+                         uiOutput(outputId = "options")
          ),
          column(4,
                 # splitLayout(cellWidths = c("100%"),
@@ -85,11 +83,7 @@ tabPanel(
         column(4,
                h5(textOutput("Score")),
                br(),
-               checkboxGroupInput(inputId = "quizz_options", label = "Show:",
-                                  choices = list("German name","Family","Status"
-                                                 ,"Description","Habitat","Map",# comment out for winter
-                                                 "Chorology"                    # comment out for winter
-                                                 )),
+               uiOutput(outputId = "quizz_options"),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
                                                   Shiny.onInputChange("lastkeypresscode", e.keyCode);

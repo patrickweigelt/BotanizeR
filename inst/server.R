@@ -21,24 +21,28 @@ shinyServer(function(input, output, session) {
     image_floraweb = TRUE
     hints_floraweb = c("map","description", "status", "habitat", "family",
                        "German name")
+    hints_custom = NULL
+    chorology = "Chorology"
     
     ## Winter
     # species_list <- read.csv("floraweb_species_winter.csv") # for winter list
     # image_floraweb = FALSE # for winter list
     # hints_floraweb =  c("German name", "family", "status") # for winter list
+    # hints_floraweb =  NULL # for winter list
     
     
     image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
     # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
     # This is needed on server
     
-    # List of species that have a chorology
+    # List of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
 
     # Sort species list alphabetically
     species_list <- species_list[order(species_list$SPECIES),c(1:14)]
-
-    # Make species a reactive object and allow for upload
+    
+    
+    # Make species list a reactive object and allow for upload
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
@@ -47,8 +51,43 @@ shinyServer(function(input, output, session) {
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
     })
     
+    
+    # Render dynamic quiz checkboxes
+    firstup <- function(x) {
+        substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+        x
+    }
+    
+    hints_quiz <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
+    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map","Chorology")
+    
+    checkboxes_quiz <- reactive({
+        hints_quiz_ordered[which(hints_quiz_ordered %in% hints_quiz)]
+    })
+    
+    output$quizz_options <- renderUI({
+        checkboxGroupInput(inputId = "quizz_options", label = "Show:",
+                           choices = checkboxes_quiz())
+    })
 
-    # Species
+    
+    # Render dynamic species list checkboxes
+    hints_species <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
+    hints_species_ordered <- c("Map","Chorology")
+    
+    checkboxes_species <- reactive({
+        hints_species_ordered[which(hints_species_ordered %in% hints_species)]
+    })
+    
+    output$options <- renderUI({
+        checkboxGroupInput(inputId = "options", label = "Show:",
+                           choices = checkboxes_species())
+    })
+    
+    
+    
+    
+    # 1. Selected species ----
 
     # Dynamic dropdown
     choice_plants <- reactive({
@@ -61,7 +100,6 @@ shinyServer(function(input, output, session) {
                     selected = choice_plants()[1])
     })
     
-    # 1. Selected species ----
     # Plant list
     # output$plant_list <- renderPrint({plant_list})
     
@@ -215,10 +253,7 @@ shinyServer(function(input, output, session) {
         observeEvent(input$newplant, {
             updateCheckboxGroupInput(session,
                                      inputId = "quizz_options",
-                                     choices = list("German name", "Family","Status"
-                                                    , "Description","Habitat", # comment out for winter
-                                                     "Map", "Chorology"        # comment out for winter
-                                                    ),
+                                     choices = checkboxes_quiz(),
                                      selected = NULL)
         })
         
