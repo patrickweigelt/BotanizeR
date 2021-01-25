@@ -46,6 +46,15 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
+    # Uploading progress
+    observeEvent(input$upload_note, {
+        showModal(modalDialog(
+            title = "Note",
+            "If you ran the quiz in a previous session, you can upload your current score as a .csv file. This file must contain the following columns: 'SPECIES', 'SCORE', 'COUNT'.",
+            easyClose = TRUE
+        ))
+    })
+    
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
@@ -615,5 +624,11 @@ shinyServer(function(input, output, session) {
             write.csv(species_list_reactive$df_data, file, row.names = FALSE)
         }
     )
+    
+    output$download_note <- renderUI({
+        HTML(paste0("<br></br>",
+                    "Note: clicking allows you to save the species you saw and the ones you correctly identified as a .csv file ."))
+    })
+    
     # Downloading progress table
 })

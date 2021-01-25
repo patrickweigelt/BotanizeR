@@ -127,10 +127,12 @@ tabPanel(
                br(),
                uiOutput("random_chorology"),
                br(),
-               fileInput("file", "Upload file"),
+               actionButton("upload_note", "Upload file"),
+               fileInput("file", ""),
                br(),
-               downloadButton("download","Download your progress")#,
-               # br(),
+               downloadButton("download","Download your progress"),
+               br(),
+               htmlOutput("download_note")#,
                # dataTableOutput("progress")
                #, tableOutput("df_data_out")
                )
