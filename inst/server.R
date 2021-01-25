@@ -248,9 +248,11 @@ shinyServer(function(input, output, session) {
     }) # closes observe()
     
     
-    # 2. Quiz ----
-    
+
+    answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
     # answered <- FALSE # an indicator for whether question has been answered
+
+    # 2. Quiz ----
     
     # my_progress <- data.frame(species = NULL)
     # output$progress <- renderDataTable({progress()})
@@ -266,12 +268,17 @@ shinyServer(function(input, output, session) {
                                      selected = NULL)
         })
         
-        # Increasing count
+        # Increasing counts
         observeEvent(input$newplant, once = TRUE, {
             # temp <- species_list_reactive$df_data
             # temp$COUNT[i] <- temp$COUNT[i] + 1
             # species_list_reactive$df_data <- temp
             species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
+            #if(!answered_reactive$cheated){ # not working! no idea why
+                species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + answered_reactive$answered
+            #}
+            answered_reactive$cheated <- FALSE
+            answered_reactive$answered <- FALSE
         })
         
         sp_picture <- 0
@@ -489,19 +496,23 @@ shinyServer(function(input, output, session) {
                     #temp <- species_list_reactive$df_data
                     #temp$SCORE[i] <- temp$SCORE[i] + 1
                     #species_list_reactive$df_data <- temp
-                    species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + 1
+                    #species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + 1
+                    answered_reactive$answered = TRUE
                     
                     # Control for the Count of the first species (so it's not 0)
-                    if(species_list_reactive$df_data$SCORE[i] > 0 &
-                       species_list_reactive$df_data$COUNT[i] == 0){
-                        species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
-                    }
+                    #if(species_list_reactive$df_data$SCORE[i] > 0 &
+                    #   species_list_reactive$df_data$COUNT[i] == 0){
+                    #    species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
+                    #} # Is this really necessary? 1 is added when new plant is clicked, i.e. on finishing the last plant
+                    # As is it wouldn't work when old scores are loaded, i.e. COUNT != 0
+                    # We could add 1 when saving the csv
                     
                     # Control to avoid negative probabilities: score <= count
-                    if(species_list_reactive$df_data$SCORE[i] >
-                       species_list_reactive$df_data$COUNT[i]){
-                        species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$COUNT[i]
-                    }
+                    #if(species_list_reactive$df_data$SCORE[i] >
+                    #   species_list_reactive$df_data$COUNT[i]){
+                    #    species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$COUNT[i]
+                    #} # As is this does not help in case of old scores are loaded or the quiz has been played for a while
+                    # At the moment it is also possible to still get the species right after the correct name was requested.
                     
                 } else { # if (answer != species){
                     char_diff <-
@@ -582,6 +593,7 @@ shinyServer(function(input, output, session) {
         # Real answer ----
         observeEvent(input$real_answer, {
             output$real_answer_print <- renderText(species)
+            answered_reactive$cheated <- TRUE # Check
         })
         observeEvent(input$newplant, {
             output$real_answer_print <- renderText("")
@@ -612,18 +624,23 @@ shinyServer(function(input, output, session) {
         #    species_list
         #}, ignoreNULL = FALSE)
         
+        output$download <- downloadHandler(
+            filename = function(){"BotanizeR_practised.csv"}, 
+            content = function(file){
+                species_list_save <- species_list_reactive$df_data
+                # species_list_save$COUNT[i] <- species_list_save$COUNT[i] + 1 doesn't seem nessecary
+                #if(!answered_reactive$cheated){
+                    species_list_save$SCORE[i] <- species_list_save$SCORE[i] + answered_reactive$answered
+                #}
+                write.csv(species_list_save, file, row.names = FALSE)
+            }
+        )
         
     }) # closing observe for new plant
     
-    output$df_data_out <- renderTable(species_list_reactive$df_data)
+    # output$df_data_out <- renderTable(species_list_reactive$df_data)
     # output$progress <- renderDataTable(my_progress$species_list_progress)
     
-    output$download <- downloadHandler(
-        filename = function(){"BotanizeR_practised.csv"}, 
-        content = function(file){
-            write.csv(species_list_reactive$df_data, file, row.names = FALSE)
-        }
-    )
     
     output$download_note <- renderUI({
         HTML(paste0("<br></br>",
