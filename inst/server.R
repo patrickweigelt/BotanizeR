@@ -14,7 +14,7 @@ shinyServer(function(input, output, session) {
     # List of species
     data(floraweb_species)
     species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                        floraweb_species$BioDiv2005==1), ]
+                                               floraweb_species$BioDiv2005==1), ]
     
     ## hints and images
     # floraweb:
@@ -37,7 +37,7 @@ shinyServer(function(input, output, session) {
     
     # List of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
-
+    
     # Sort species list alphabetically
     species_list <- species_list[order(species_list$SPECIES),c(1:14)]
     
@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
         checkboxGroupInput(inputId = "quizz_options", label = "Show:",
                            choices = checkboxes_quiz())
     })
-
+    
     
     # Render dynamic species list checkboxes
     hints_species <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
@@ -88,7 +88,7 @@ shinyServer(function(input, output, session) {
     
     
     # 1. Selected species ----
-
+    
     # Dynamic dropdown
     choice_plants <- reactive({
         species_list_reactive$df_data$SPECIES
@@ -124,7 +124,7 @@ shinyServer(function(input, output, session) {
     observe({
         
         selected_species <- input$plant_list
-
+        
         if(length(selected_species)==0){
             selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
         }
@@ -158,7 +158,7 @@ shinyServer(function(input, output, session) {
         output$selected_sp_german <- renderUI({
             HTML(paste("<b>",
                        isolate(species_list_reactive$df_data)[j,
-                                    "TAXONNAME"], "</b>",
+                                                              "TAXONNAME"], "</b>",
                        sp_infos$`German name`, sep = '<br/>'))
         })
         
@@ -245,7 +245,7 @@ shinyServer(function(input, output, session) {
     
     # my_progress <- data.frame(species = NULL)
     # output$progress <- renderDataTable({progress()})
-
+    
     observe({
         input$newplant # hitting the new plant button
         
@@ -257,17 +257,25 @@ shinyServer(function(input, output, session) {
                                      selected = NULL)
         })
         
+        # Increasing count
+        observeEvent(input$newplant, once = TRUE, {
+            # temp <- species_list_reactive$df_data
+            # temp$COUNT[i] <- temp$COUNT[i] + 1
+            # species_list_reactive$df_data <- temp
+            species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
+        })
+        
         sp_picture <- 0
         
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
             temp1 <- isolate(species_list_reactive$df_data)
             species <- sample(temp1$SPECIES, 1, 
-                          prob = ((temp1$COUNT - temp1$SCORE + 1)/
-                                      (temp1$SCORE+1))*temp1$INCLUDE)
+                              prob = ((temp1$COUNT - temp1$SCORE + 1)/
+                                          (temp1$SCORE+1))*temp1$INCLUDE)
             # species <- sample(species_list$SPECIES, 1, 
-              #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
-                #                        (species_list$SCORE+1))*species_list$INCLUDE)
+            #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
+            #                        (species_list$SCORE+1))*species_list$INCLUDE)
             i <- which(temp1$SPECIES == species)
             
             # Download information with BotanizeR_collect()
@@ -303,14 +311,6 @@ shinyServer(function(input, output, session) {
             imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
-        
-        observeEvent(input$newplant, once = TRUE, {
-            # temp <- species_list_reactive$df_data
-            # temp$COUNT[i] <- temp$COUNT[i] + 1
-            # species_list_reactive$df_data <- temp
-            species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
-        })
-        
         
         # German name ----
         isolate({
@@ -476,12 +476,23 @@ shinyServer(function(input, output, session) {
                 if (tolower(answer) == tolower(species)){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
-
+                    
                     #temp <- species_list_reactive$df_data
                     #temp$SCORE[i] <- temp$SCORE[i] + 1
                     #species_list_reactive$df_data <- temp
                     species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + 1
                     
+                    # Control for the Count of the first species (so it's not 0)
+                    if(species_list_reactive$df_data$SCORE[i] > 0 &
+                       species_list_reactive$df_data$COUNT[i] == 0){
+                        species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
+                    }
+                    
+                    # Control to avoid negative probabilities: score <= count
+                    if(species_list_reactive$df_data$SCORE[i] >
+                       species_list_reactive$df_data$COUNT[i]){
+                        species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$COUNT[i]
+                    }
                     
                 } else { # if (answer != species){
                     char_diff <-
@@ -586,7 +597,7 @@ shinyServer(function(input, output, session) {
         #     my_progress <<- rbind(my_progress, newrow)
         #     my_progress
         # }, ignoreNULL = FALSE)
-
+        
         #progress <- eventReactive(input$newplant, {
         #    species_list$COUNT[i] <- species_list$COUNT[i] + 1
         #    species_list
@@ -594,7 +605,7 @@ shinyServer(function(input, output, session) {
         
         
     }) # closing observe for new plant
-
+    
     output$df_data_out <- renderTable(species_list_reactive$df_data)
     # output$progress <- renderDataTable(my_progress$species_list_progress)
     
