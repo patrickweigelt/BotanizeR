@@ -4,15 +4,15 @@ TODO list
 
 1. Functionality
 * design starting site from which to choose the desired version from (winter, summer, other)
-* record successes, attempts and failures to include them in the progress download
 * allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)
+* record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download
 * remove checkboxes if content is not available
-* Make trivial name and family name independent of floraweb
+* make trivial name and family name independent of floraweb
 * allow practicing trivial name
-* Count number of times species shown
-* Score number of times correct (account for retrieved answer)
 * seems to load map each time a box is unchecked (takes long)
 * error finite ylim value needed... if no map available?
+* previous and next species button in species list tab
+* don't do adist when "" submitted
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
@@ -38,4 +38,6 @@ TODO list
 * write documentation (for package and for "About" page)
 * contact floraweb for permission to have a public version
 * write a little software note?
+* publish on CRAN?
+* prepare more picture folders and species lists (algae, bark pictures); agree on columns needed
 
