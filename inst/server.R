@@ -249,54 +249,31 @@ shinyServer(function(input, output, session) {
     
     
 
-    answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
-    # answered <- FALSE # an indicator for whether question has been answered
 
     # 2. Quiz ----
-    
-    # my_progress <- data.frame(species = NULL)
-    # output$progress <- renderDataTable({progress()})
-    
-    observe({
-        input$newplant # hitting the new plant button
-        
-        # Unchecking the checkboxes when hitting 'New plant'
-        observeEvent(input$newplant, {
-            updateCheckboxGroupInput(session,
-                                     inputId = "quizz_options",
-                                     choices = checkboxes_quiz(),
-                                     selected = NULL)
-        })
-        
-        # Increasing counts
-        observeEvent(input$newplant, once = TRUE, {
-            # temp <- species_list_reactive$df_data
-            # temp$COUNT[i] <- temp$COUNT[i] + 1
-            # species_list_reactive$df_data <- temp
-            species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
-            #if(!answered_reactive$cheated){ # not working! no idea why
-                species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + answered_reactive$answered
-            #}
-            answered_reactive$cheated <- FALSE
-            answered_reactive$answered <- FALSE
-        })
-        
+
+    # Setup reactive values 
+    answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
+    i <- reactiveValues(i=NA)
+    reactive_species <- reactiveValues(species=NA)
+
+    observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
         
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
-            temp1 <- isolate(species_list_reactive$df_data)
-            species <- sample(temp1$SPECIES, 1, 
+            temp1 <- species_list_reactive$df_data
+            reactive_species$species <- sample(temp1$SPECIES, 1, 
                               prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                           (temp1$SCORE+1))*temp1$INCLUDE)
             # species <- sample(species_list$SPECIES, 1, 
             #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
             #                        (species_list$SCORE+1))*species_list$INCLUDE)
-            i <- which(temp1$SPECIES == species)
-            
+            i$i <- which(temp1$SPECIES == reactive_species$species)
+            print(i$i)
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
-                species_row = temp1[i, ], 
+                species_row = temp1[i$i, ], 
                 image_floraweb,
                 hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
                 hints_custom = NULL, imagelink_custom = NULL,
@@ -311,18 +288,37 @@ shinyServer(function(input, output, session) {
             }
         }
         
-        # Photos ----
-        # output$random_sp <- renderUI({
-        #     par(mar = rep(0.5, 4), oma = rep(0, 4))
-        #     photo_random <- lapply(sp_quizz$images, function(x){
-        #         tags$div(
-        #             tags$img(src = x, width = "50%", height = "50%"),
-        #             tags$script(src = "titlescript.js")
-        #         )
-        #     })
-        #     do.call(tagList, photo_random)
-        # })
         
+        # answered <- FALSE
+        output$answer_status <- renderUI({
+            HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
+                        "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
+                        "</br><br>",
+                        "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
+        })
+        updateTextInput(session, "sp_answer", "Species name", value = "")
+        
+        # setting back answer text
+        output$real_answer_print <- renderText("")
+        
+        # counting
+        species_list_reactive$df_data$COUNT[i$i] <- species_list_reactive$df_data$COUNT[i$i] + 1
+        if(!answered_reactive$cheated){ # not working! no idea why
+            species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
+        }
+        answered_reactive$cheated <- FALSE
+        print(paste("put cheat FALSE ", answered_reactive$cheated))
+        answered_reactive$answered <- FALSE
+        
+        # setting back checkboxes
+        updateCheckboxGroupInput(session,
+                                 inputId = "quizz_options",
+                                 choices = checkboxes_quiz(),
+                                 selected = NULL)
+
+    
+        # Photos ----
+
         output$random_slickr <- renderSlickR({
             imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
@@ -384,7 +380,7 @@ shinyServer(function(input, output, session) {
                     if(!is.na(quizz_options[4])){
                         floraweb_link_quizz <- paste0(
                             "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                            temp1[i, "NAMNR"],
+                            species_list_reactive$df_data[i$i, "NAMNR"],
                             "&")
                         
                         HTML(paste0(sp_quizz$description,
@@ -426,7 +422,7 @@ shinyServer(function(input, output, session) {
                     if(!is.na(quizz_options[6]) & !is.null(hints_floraweb)){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
-                            species_row = temp1[i, ], 
+                            species_row = species_list_reactive$df_data[i$i, ], 
                             image_floraweb = FALSE,
                             hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
@@ -449,34 +445,24 @@ shinyServer(function(input, output, session) {
                                         input$quizz_options)
                 output$random_chorology <- renderUI({
                     if(!is.na(quizz_options[7]) &
-                       temp1$NAMNR[i] %in% chorology_list$V1){
+                       species_list_reactive$df_data$NAMNR[i$i] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                              temp1$NAMNR[i],
+                                              species_list_reactive$df_data$NAMNR[i$i],
                                               ".GIF"),
                                  width = "400px", height = "300px")
                     } else if(!is.na(quizz_options[7]) &
-                              !(temp1$NAMNR[i] %in% chorology_list$V1)){
+                              !(species_list_reactive$df_data$NAMNR[i$i] %in% chorology_list$V1)){
                         tags$img(src = "no_chorology.png",
                                  width = "200px", height = "50px")
                     }
                 })
             })
         })
-        
+    })
         # Answer ----
         # display text when no answer is provided
-        observeEvent(input$newplant, {
-            # answered <- FALSE
-            output$answer_status <- renderUI({
-                HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                            "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
-                            "</br><br>",
-                            "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
-            })
-            updateTextInput(session, "sp_answer", "Species name", value = "")
-        })
-        
+    
         # Providing an answer simple version
         observe({
             output$answer_status <- renderUI({
@@ -489,39 +475,21 @@ shinyServer(function(input, output, session) {
                 isolate({
                     answer <- as.character(input$sp_answer)
                 })
-                if (tolower(answer) == tolower(species)){
+                if (tolower(answer) == tolower(reactive_species$species)){
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#00CC00\">", "Correct", "</font>")))
-                    
-                    #temp <- species_list_reactive$df_data
-                    #temp$SCORE[i] <- temp$SCORE[i] + 1
-                    #species_list_reactive$df_data <- temp
-                    #species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$SCORE[i] + 1
+
+                    # Setting answered
                     answered_reactive$answered = TRUE
-                    
-                    # Control for the Count of the first species (so it's not 0)
-                    #if(species_list_reactive$df_data$SCORE[i] > 0 &
-                    #   species_list_reactive$df_data$COUNT[i] == 0){
-                    #    species_list_reactive$df_data$COUNT[i] <- species_list_reactive$df_data$COUNT[i] + 1
-                    #} # Is this really necessary? 1 is added when new plant is clicked, i.e. on finishing the last plant
-                    # As is it wouldn't work when old scores are loaded, i.e. COUNT != 0
-                    # We could add 1 when saving the csv
-                    
-                    # Control to avoid negative probabilities: score <= count
-                    #if(species_list_reactive$df_data$SCORE[i] >
-                    #   species_list_reactive$df_data$COUNT[i]){
-                    #    species_list_reactive$df_data$SCORE[i] <- species_list_reactive$df_data$COUNT[i]
-                    #} # As is this does not help in case of old scores are loaded or the quiz has been played for a while
-                    # At the moment it is also possible to still get the species right after the correct name was requested.
-                    
-                } else { # if (answer != species){
+
+                } else { 
                     char_diff <-
-                        paste0(adist(tolower(answer), tolower(species)),
-                               ifelse(adist(tolower(answer), tolower(species)) > 1,
+                        paste0(adist(tolower(answer), tolower(reactive_species$species)),
+                               ifelse(adist(tolower(answer), tolower(reactive_species$species)) > 1,
                                       " characters"," character"),
                                " different")
                     
-                    genus <- temp1[i, "GENUS"]
+                    genus <- species_list_reactive$df_data[i$i, "GENUS"]
                     
                     genus_correct <- paste0(
                         ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
@@ -533,114 +501,37 @@ shinyServer(function(input, output, session) {
                         genus_correct, "</font></br>")))
                 }
             })
-            observeEvent(input$newplant, {
-                output$answer_status <- renderUI({
-                    HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                                "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
-                                "</br><br>",
-                                "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
-                })
-            })
         })
         
-        # Providing an answer
-        # observe({
-        #     
-        #     # Counting the number of tries
-        #     # Defining & initializing the reactiveValues object
-        #     counter <- reactiveValues(countervalue = 0) 
-        #     output$nb_tries <- renderText({"Number of tries: 0"})
-        #     # observeEvent(input$submit, {
-        #     if(!is.null(input$lastkeypresscode)){
-        #         if(input$lastkeypresscode == 13){ # hitting Enter
-        #             counter$countervalue <- counter$countervalue + 1
-        #             output$nb_tries <- renderText({
-        #                 paste0("Number of tries: ", counter$countervalue)})
-        #             
-        #             # Initial score
-        #             counter <- reactiveValues(score = 0)
-        #             renderText("Score = 0")
-        #             # output$score <- 0
-        #             
-        #             # If provided answer is correct
-        #             # observeEvent(input$sp_answer == species, {
-        #             if (input$sp_answer == species){
-        #                 output$status1 <- renderText({
-        #                     ""
-        #                 })
-        #                 output$status2 <- renderText({
-        #                     paste(generateResponse(1))
-        #                 })
-        #                 output$status3 <- renderText({
-        #                     ""
-        #                 })
-        #                 
-        #                 # Updating score
-        #                 renderText({
-        #                     counter$score <- counter$score + 1
-        #                     paste0("Score: ", counter$score)
-        #                     # output$score <- output$score + 1
-        #                     # paste0("Score: ", output$score)
-        #                 })
-        #                 
-        #                 # })
-        #             }
-        #         } # closes 'Hitting enter'
-        #     } # closes !is.null lastkeybutton
-        #     # })
-        # })
+
         
         # Real answer ----
         observeEvent(input$real_answer, {
-            output$real_answer_print <- renderText(species)
-            answered_reactive$cheated <- TRUE # Check
+            output$real_answer_print <- renderText(reactive_species$species)
+            if(!answered_reactive$answered){
+                answered_reactive$cheated <- TRUE # Check
+                print(paste("put cheat TRUE ", answered_reactive$cheated))
+            }
         })
-        observeEvent(input$newplant, {
-            output$real_answer_print <- renderText("")
-        })
         
-        # Number of tries ----
-        # observe({
-        #     # Defining & initializing the reactiveValues object
-        #     counter <- reactiveValues(countervalue = 0) 
-        #     output$nb_tries <- renderText({"Number of tries: 0"})
-        #     observeEvent(input$submit, {
-        #         counter$countervalue <- counter$countervalue + 1
-        #         output$nb_tries <- renderText({
-        #             paste0("Number of tries: ", counter$countervalue)})
-        #     })
-        # })
+        #observeEvent(input$newplant, {
+        #    output$real_answer_print <- renderText("")
+        #})
         
-        # Progress ----
-        # progress <- eventReactive(input$newplant, {
-        #     newrow <- data.frame(species = species)
-        #     
-        #     my_progress <<- rbind(my_progress, newrow)
-        #     my_progress
-        # }, ignoreNULL = FALSE)
-        
-        #progress <- eventReactive(input$newplant, {
-        #    species_list$COUNT[i] <- species_list$COUNT[i] + 1
-        #    species_list
-        #}, ignoreNULL = FALSE)
-        
+
         output$download <- downloadHandler(
             filename = function(){"BotanizeR_practised.csv"}, 
             content = function(file){
                 species_list_save <- species_list_reactive$df_data
-                # species_list_save$COUNT[i] <- species_list_save$COUNT[i] + 1 doesn't seem nessecary
-                #if(!answered_reactive$cheated){
-                    species_list_save$SCORE[i] <- species_list_save$SCORE[i] + answered_reactive$answered
-                #}
+                species_list_save$COUNT[i$i] <- species_list_save$COUNT[i$i] + 1 # doesn't seem nessecary
+                if(!answered_reactive$cheated){
+                    species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
+                }
                 write.csv(species_list_save, file, row.names = FALSE)
             }
         )
         
-    }) # closing observe for new plant
-    
-    # output$df_data_out <- renderTable(species_list_reactive$df_data)
-    # output$progress <- renderDataTable(my_progress$species_list_progress)
-    
+   # }) # closing observe for new plant
     
     output$download_note <- renderUI({
         HTML(paste0("<br></br>",
