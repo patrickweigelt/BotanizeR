@@ -56,7 +56,8 @@ shinyServer(function(input, output, session) {
     # image folder
     shinyDirChoose(input, 'image_folder', roots=c(wd='.'), filetypes=c('', 'txt'), allowDirCreate=FALSE)
     
-    observe({
+
+    observeEvent(input$image_folder, {
         output$img_folders <-  renderText(paste(unlist(input$image_folder["path"]), collapse="/"))
         #print(str(input$image_folder))
         #print(unlist(input$image_folder["path"]))
