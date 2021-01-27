@@ -7,6 +7,8 @@ TODO list
 * design starting site from which to choose the desired version from (winter, summer, other)
   - making the app as flexible as possible. Users choose their own list and criteria
 * allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)
+  - fix counting bug
+  - fix cheating bug
 * record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download
 * remove checkboxes if content is not available
 * make trivial name and family name independent of floraweb
