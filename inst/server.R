@@ -7,6 +7,7 @@ library(XML)
 library(sf)
 library(slickR)
 library(htmltools)
+library(shinyFiles)
 
 shinyServer(function(input, output, session) {
     
@@ -46,6 +47,32 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
+    
+    
+    
+    # 1. Setup ----
+    
+    
+    # image folder
+    shinyDirChoose(input, 'image_folder', roots=c(wd='.'), filetypes=c('', 'txt'), allowDirCreate=FALSE)
+    
+    observe({
+        output$img_folders <-  renderText(paste(unlist(input$image_folder["path"]), collapse="/"))
+        #print(str(input$image_folder))
+        #print(unlist(input$image_folder["path"]))
+        #print(typeof(input$image_folder["path"]))
+    })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     # Uploading progress
     observeEvent(input$upload_note, {
         showModal(modalDialog(
@@ -59,6 +86,15 @@ shinyServer(function(input, output, session) {
         species_list_uploaded <- read.csv(input$file$datapath)
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
     })
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     # Render dynamic quiz checkboxes
@@ -94,9 +130,9 @@ shinyServer(function(input, output, session) {
     })
     
     
+
     
-    
-    # 1. Selected species ----
+    # 2. Selected species ----
     
     # Dynamic dropdown
     choice_plants <- reactive({
@@ -250,7 +286,7 @@ shinyServer(function(input, output, session) {
     }) # closes observe()
     
     
-    # 2. Quiz ----
+    # 3. Quiz ----
 
     # Setup reactive values 
     answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)

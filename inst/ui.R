@@ -7,6 +7,7 @@ library(BotanizeR)
 # library(imager)
 #library(XML)
 library(slickR)
+library(shinyFiles)
 
 # Data
 # data(floraweb_species)
@@ -30,6 +31,7 @@ navbarPage(title = div(
     tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}")),
     tags$style(HTML("#panel2{font-size: 25px}")),
+    tags$style(HTML("#panel3{font-size: 25px}")),
     tags$style(HTML("#panel_about{font-size: 25px}"))
 ),
 theme = shinytheme("flatly"),
@@ -136,6 +138,28 @@ tabPanel(
                )
     )
     
+),
+
+## Setup ----------------------------------------------------------------------
+tabPanel(
+    h1(id = "panel3", "Setup"),
+    fluidRow(
+        column(4,
+               h4("Hints"),
+               checkboxGroupInput(inputId = "floraweb_hints", label = "Floraweb",
+                                  choices = c("German name","Family","Status","Description","Habitat","Map")),
+               checkboxGroupInput(inputId = "own_hints", label = "Own hints",
+                                  choices = "yes")
+        ),
+        column(4,
+               h4("Images"),
+              checkboxGroupInput(inputId = "floraweb_images", label = "Floraweb",
+                                  choices = "yes"),
+              shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
+              textOutput("img_folders")
+        )
+        
+)
 ),
 
 ## About ----------------------------------------------------------------------
