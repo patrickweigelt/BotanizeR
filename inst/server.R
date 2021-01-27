@@ -11,48 +11,26 @@ library(shinyFiles)
 
 shinyServer(function(input, output, session) {
     
-    # 0. Config ----
-    # List of species
-    data(floraweb_species)
-    species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                               floraweb_species$BioDiv2005==1), ]
+    # 0. Preparation ----
     
-    ## hints and images
-    # floraweb:
-    image_floraweb = TRUE
-    hints_floraweb = c("map","description", "status", "habitat", "family",
-                       "German name")
-    hints_custom = NULL
-    chorology = "Chorology"
-    
-    ## Winter
-    species_list <- read.csv("floraweb_species_winter.csv") # for winter list
-    # image_floraweb = FALSE # for winter list
-    # hints_floraweb =  c("German name", "family", "status") # for winter list
-    # hints_floraweb =  NULL # for winter list
-    
-    
-    image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
-    # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
-    # This is needed on server
+    # Load starting config
+    source("config.R")
     
     # List of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
     
     # Sort species list alphabetically
     species_list <- species_list[order(species_list$SPECIES),c(1:14)]
-    
-    
+ 
     # Make species list a reactive object and allow for upload
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
-    
+
     
     
     # 1. Setup ----
-    
-    
+
     # image folder
     shinyDirChoose(input, 'image_folder', roots=c(wd='.'), filetypes=c('', 'txt'), allowDirCreate=FALSE)
     
@@ -64,24 +42,24 @@ shinyServer(function(input, output, session) {
         #print(typeof(input$image_folder["path"]))
     })
     
-    
-    
-    
-    
-    
-    
-    
+
     
     
     
     # Uploading progress
-    observeEvent(input$upload_note, {
-        showModal(modalDialog(
-            title = "Note",
-            "If you ran the quiz in a previous session, you can upload your current score as a .csv file. This file must contain the following columns: 'SPECIES', 'SCORE', 'COUNT'.",
-            easyClose = TRUE
-        ))
+    output$upload_note <- renderUI({
+        HTML(paste0("<br>",
+                    "If you ran the quiz in a previous session and you saved your progress, 
+                    you can upload your current score as a .csv file here. You can also upload 
+                    a modified species list with another set of species or your own hints."))
     })
+    # observeEvent(input$upload_note, {
+    #     showModal(modalDialog(
+    #         title = "Note",
+    #         "If you ran the quiz in a previous session and you saved your progress, you can upload your current score as a .csv file here.",
+    #         easyClose = TRUE
+    #     ))
+    # })
     
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
@@ -533,7 +511,7 @@ shinyServer(function(input, output, session) {
         observeEvent(input$real_answer, {
             output$real_answer_print <- renderText(reactive_species$species)
             if(!answered_reactive$answered){
-                answered_reactive$cheated <- TRUE # Check
+                answered_reactive$cheated <- TRUE 
                 print(paste("cheated ", answered_reactive$cheated))
             }
         })
@@ -550,11 +528,14 @@ shinyServer(function(input, output, session) {
             }
         )
         
-   # }) # closing observe for new plant
-    
+
     output$download_note <- renderUI({
-        HTML(paste0("<br></br>",
-                    "Note: clicking allows you to save the species you saw and the ones you correctly identified as a .csv file ."))
+        HTML(paste0("<br>",
+                    "Downloading the current species list allows you to save the progress 
+                    you made during the quiz and load it the next time you practice to get 
+                    species you are not yet familiar with shown more frequently.",
+                    "<br>",
+                    "You can also download the species list to modify it according to your needs."))
     })
     
     # Downloading progress table

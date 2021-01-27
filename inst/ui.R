@@ -127,12 +127,13 @@ tabPanel(
                br(),
                textOutput("random_habitat"),
                br(),
-               actionButton("upload_note", "Upload file"),
+               # actionButton("upload_note", "Upload file"),
+               htmlOutput("upload_note"),
                fileInput("file", ""),
                br(),
-               downloadButton("download","Download your progress"),
+               htmlOutput("download_note"),
                br(),
-               htmlOutput("download_note")#,
+               downloadButton("download","Download your progress")
                # dataTableOutput("progress")
                #, tableOutput("df_data_out")
                )
@@ -157,9 +158,17 @@ tabPanel(
                                   choices = "yes"),
               shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
               textOutput("img_folders")
+        ),
+        column(4,
+               h4("Species list"),
+               #htmlOutput("upload_note"),
+               fileInput("file", ""),
+               br(),
+               #htmlOutput("download_note"),
+               #br(),
+               #downloadButton("download","Download your progress")
         )
-        
-)
+    )
 ),
 
 ## About ----------------------------------------------------------------------
