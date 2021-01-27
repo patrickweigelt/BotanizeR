@@ -126,11 +126,11 @@ tabPanel(
                htmlOutput("random_description"),
                br(),
                textOutput("random_habitat"),
-               br(),
+               br(),br(),
+               h5("Load and save:"),
                # actionButton("upload_note", "Upload file"),
                htmlOutput("upload_note"),
                fileInput("file", ""),
-               br(),
                htmlOutput("download_note"),
                br(),
                downloadButton("download","Download your progress")

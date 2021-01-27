@@ -55,8 +55,10 @@ shinyServer(function(input, output, session) {
     })
     # observeEvent(input$upload_note, {
     #     showModal(modalDialog(
-    #         title = "Note",
-    #         "If you ran the quiz in a previous session and you saved your progress, you can upload your current score as a .csv file here.",
+    #         title = "Info",
+    #         "If you ran the quiz in a previous session and you saved your progress, 
+    #          you can upload your current score as a .csv file here. You can also upload 
+    #          a modified species list with another set of species or your own hints.",
     #         easyClose = TRUE
     #     ))
     # })
