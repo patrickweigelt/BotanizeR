@@ -53,7 +53,7 @@ tabPanel(h1(id = "panel1", "Species"),
                          br(),
                          uiOutput(outputId = "options")
          ),
-         column(4,
+         column(4, style="min-width: 440px", 
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
@@ -105,7 +105,7 @@ tabPanel(
         ),
         
         # Second part of the page with the picture
-        column(4,
+        column(4, style="min-width: 440px", 
                # uiOutput("random_sp"),
                slickROutput("random_slickr", width = "400px", height = "500px"),
                br(),
@@ -124,8 +124,6 @@ tabPanel(
                htmlOutput("random_description"),
                br(),
                textOutput("random_habitat"),
-               br(),
-               uiOutput("random_chorology"),
                br(),
                actionButton("upload_note", "Upload file"),
                fileInput("file", ""),

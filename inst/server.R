@@ -25,7 +25,7 @@ shinyServer(function(input, output, session) {
     chorology = "Chorology"
     
     ## Winter
-    # species_list <- read.csv("floraweb_species_winter.csv") # for winter list
+    species_list <- read.csv("floraweb_species_winter.csv") # for winter list
     # image_floraweb = FALSE # for winter list
     # hints_floraweb =  c("German name", "family", "status") # for winter list
     # hints_floraweb =  NULL # for winter list
@@ -68,7 +68,7 @@ shinyServer(function(input, output, session) {
     }
     
     hints_quiz <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
-    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map","Chorology", hints_custom) # Change order when hints_custom used
+    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map", hints_custom) # Change order when hints_custom used
     
     checkboxes_quiz <- reactive({
         hints_quiz_ordered[which(hints_quiz_ordered %in% hints_quiz)]
@@ -217,8 +217,10 @@ shinyServer(function(input, output, session) {
                             file_location = "temporary", only_links = TRUE)
                         
                         par(oma = c(0, 0, 0, 10.5))
-                        plot(sp_map$map[[1]], pal = sp_map$map[[2]],
-                             key.pos = 4, main = "")
+                        if(length(sp_map$map)>0){
+                            plot(sp_map$map[[1]], pal = sp_map$map[[2]],
+                                 key.pos = 4, main = "")
+                        }
                     }
                 })
             })
@@ -430,32 +432,10 @@ shinyServer(function(input, output, session) {
                             file_location = "temporary", only_links = TRUE)
                         
                         par(oma = c(0, 0, 0, 10.5))
-                        plot(random_map$map[[1]], pal = random_map$map[[2]],
-                             key.pos = 4, main = "")
-                    }
-                })
-            })
-        })
-        
-        # Chorology ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_chorology <- renderUI({
-                    if(!is.na(quizz_options[7]) &
-                       species_list_reactive$df_data$NAMNR[i$i] %in% chorology_list$V1){
-                        par(mar = rep(0.5, 4), oma = rep(0, 4))
-                        tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
-                                              species_list_reactive$df_data$NAMNR[i$i],
-                                              ".GIF"),
-                                 width = "400px", height = "300px")
-                    } else if(!is.na(quizz_options[7]) &
-                              !(species_list_reactive$df_data$NAMNR[i$i] %in% chorology_list$V1)){
-                        tags$img(src = "no_chorology.png",
-                                 width = "200px", height = "50px")
+                        if(length(random_map$map)>0){
+                            plot(random_map$map[[1]], pal = random_map$map[[2]],
+                                 key.pos = 4, main = "")
+                        }
                     }
                 })
             })
@@ -494,9 +474,13 @@ shinyServer(function(input, output, session) {
                     
                     genus <- species_list_reactive$df_data[i$i, "GENUS"]
                     
-                    genus_correct <- paste0(
-                        ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
+                    if(nchar(answer)>0){
+                        genus_correct <- paste0(
+                            ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
                                "Genus correct", ""))
+                    } else {
+                        genus_correct <- "" 
+                    }
                     
                     output$answer_status <- renderUI(HTML(paste0(
                         "<font color=\"#FF0000\">", char_diff,
