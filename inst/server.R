@@ -43,31 +43,42 @@ shinyServer(function(input, output, session) {
     })
     
 
-    
-    
-    
     # Uploading progress
     output$upload_note <- renderUI({
         HTML(paste0("<br>",
                     "If you ran the quiz in a previous session and you saved your progress, 
-                    you can upload your current score as a .csv file here. You can also upload 
+                    you can upload your current scores as a .csv file here. You can also upload 
                     a modified species list with another set of species or your own hints."))
     })
-    # observeEvent(input$upload_note, {
-    #     showModal(modalDialog(
-    #         title = "Info",
-    #         "If you ran the quiz in a previous session and you saved your progress, 
-    #          you can upload your current score as a .csv file here. You can also upload 
-    #          a modified species list with another set of species or your own hints.",
-    #         easyClose = TRUE
-    #     ))
-    # })
+    
     
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
     })
     
+    
+    # Downloading progress 
+    output$download <- downloadHandler(
+        filename = function(){"BotanizeR_practised.csv"}, 
+        content = function(file){
+            species_list_save <- species_list_reactive$df_data
+            if(!answered_reactive$cheated){
+                species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
+            }
+            write.csv(species_list_save, file, row.names = FALSE)
+        }
+    )
+    
+    
+    output$download_note <- renderUI({
+        HTML(paste0("<br>",
+                    "Downloading the current species list allows you to save the progress 
+                    you made during the quiz and load it the next time you practice to get 
+                    species you are not yet familiar with shown more frequently.",
+                    "<br>",
+                    "You can also download the species list to modify it according to your needs."))
+    })
     
     
     
@@ -121,7 +132,7 @@ shinyServer(function(input, output, session) {
     })
     
     output$select_plant <- renderUI({
-        selectInput("plant_list", "Plant list dyn",
+        selectInput("plant_list", "Plant list",
                     choices = choice_plants(),
                     selected = choice_plants()[1])
     })
@@ -518,27 +529,21 @@ shinyServer(function(input, output, session) {
             }
         })
         
-
-        output$download <- downloadHandler(
-            filename = function(){"BotanizeR_practised.csv"}, 
-            content = function(file){
-                species_list_save <- species_list_reactive$df_data
-                if(!answered_reactive$cheated){
-                    species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
-                }
-                write.csv(species_list_save, file, row.names = FALSE)
-            }
-        )
-        
-
-    output$download_note <- renderUI({
-        HTML(paste0("<br>",
-                    "Downloading the current species list allows you to save the progress 
-                    you made during the quiz and load it the next time you practice to get 
-                    species you are not yet familiar with shown more frequently.",
-                    "<br>",
-                    "You can also download the species list to modify it according to your needs."))
+    observeEvent(input$upanddown_button, {
+        showModal(modalDialog(
+            title = "Up and Download",
+            HTML(paste0("Please naviagte to the 'setup' tab to up or download your progress.",
+                        "<br>","<br>",
+                        "If you ran the quiz in a previous session and you saved your progress, 
+                          you can upload your current scores as a .csv file there. You can also 
+                          upload a modified species list with another set of species or your own hints.",
+                        "<br>","<br>",
+                        "Downloading the current species list allows you to save the progress 
+                          you made during the quiz and load it the next time you practice to get 
+                          species you are not yet familiar with shown more frequently. 
+                          You can also modify the downloaded species list according to your needs.")),
+            easyClose = TRUE
+        ))
     })
     
-    # Downloading progress table
 })

@@ -127,13 +127,7 @@ tabPanel(
                br(),
                textOutput("random_habitat"),
                br(),br(),
-               h5("Load and save:"),
-               # actionButton("upload_note", "Upload file"),
-               htmlOutput("upload_note"),
-               fileInput("file", ""),
-               htmlOutput("download_note"),
-               br(),
-               downloadButton("download","Download your progress")
+               actionButton("upanddown_button", "Upload/Download progress"),
                # dataTableOutput("progress")
                #, tableOutput("df_data_out")
                )
@@ -147,6 +141,7 @@ tabPanel(
     fluidRow(
         column(4,
                h4("Hints"),
+               br(),
                checkboxGroupInput(inputId = "floraweb_hints", label = "Floraweb",
                                   choices = c("German name","Family","Status","Description","Habitat","Map")),
                checkboxGroupInput(inputId = "own_hints", label = "Own hints",
@@ -154,19 +149,21 @@ tabPanel(
         ),
         column(4,
                h4("Images"),
+               br(),
               checkboxGroupInput(inputId = "floraweb_images", label = "Floraweb",
                                   choices = "yes"),
+              br(),
+              h5("Image folders"),
               shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
               textOutput("img_folders")
         ),
         column(4,
                h4("Species list"),
-               #htmlOutput("upload_note"),
+               htmlOutput("upload_note"),
                fileInput("file", ""),
+               htmlOutput("download_note"),
                br(),
-               #htmlOutput("download_note"),
-               #br(),
-               #downloadButton("download","Download your progress")
+               downloadButton("download","Download your progress")
         )
     )
 ),
