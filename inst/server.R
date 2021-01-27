@@ -248,8 +248,6 @@ shinyServer(function(input, output, session) {
     }) # closes observe()
     
     
-
-
     # 2. Quiz ----
 
     # Setup reactive values 
@@ -260,17 +258,20 @@ shinyServer(function(input, output, session) {
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
         
+        if(!is.na(i$i) & !answered_reactive$cheated){
+            species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
+        }
+        print(paste("SCORE = ",sum(species_list_reactive$df_data$SCORE)))
+        
         while (sp_picture == 0) { # If no picture available => new plant
             # random species
             temp1 <- species_list_reactive$df_data
             reactive_species$species <- sample(temp1$SPECIES, 1, 
                               prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                           (temp1$SCORE+1))*temp1$INCLUDE)
-            # species <- sample(species_list$SPECIES, 1, 
-            #              prob = ((species_list$COUNT - species_list$SCORE + 1)/
-            #                        (species_list$SCORE+1))*species_list$INCLUDE)
             i$i <- which(temp1$SPECIES == reactive_species$species)
             print(i$i)
+
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = temp1[i$i, ], 
@@ -303,12 +304,12 @@ shinyServer(function(input, output, session) {
         
         # counting
         species_list_reactive$df_data$COUNT[i$i] <- species_list_reactive$df_data$COUNT[i$i] + 1
-        if(!answered_reactive$cheated){ # not working! no idea why
-            species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
-        }
+        print(paste("COUNT = ",sum(species_list_reactive$df_data$COUNT)))
         answered_reactive$cheated <- FALSE
-        print(paste("put cheat FALSE ", answered_reactive$cheated))
+        print(paste("cheated = ", answered_reactive$cheated))
         answered_reactive$answered <- FALSE
+        print(paste("answered = ", answered_reactive$answered))
+        
         
         # setting back checkboxes
         updateCheckboxGroupInput(session,
@@ -481,6 +482,8 @@ shinyServer(function(input, output, session) {
 
                     # Setting answered
                     answered_reactive$answered = TRUE
+                    print(paste("answered = ", answered_reactive$answered))
+                    
 
                 } else { 
                     char_diff <-
@@ -510,20 +513,15 @@ shinyServer(function(input, output, session) {
             output$real_answer_print <- renderText(reactive_species$species)
             if(!answered_reactive$answered){
                 answered_reactive$cheated <- TRUE # Check
-                print(paste("put cheat TRUE ", answered_reactive$cheated))
+                print(paste("cheated ", answered_reactive$cheated))
             }
         })
-        
-        #observeEvent(input$newplant, {
-        #    output$real_answer_print <- renderText("")
-        #})
         
 
         output$download <- downloadHandler(
             filename = function(){"BotanizeR_practised.csv"}, 
             content = function(file){
                 species_list_save <- species_list_reactive$df_data
-                species_list_save$COUNT[i$i] <- species_list_save$COUNT[i$i] + 1 # doesn't seem nessecary
                 if(!answered_reactive$cheated){
                     species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
                 }
