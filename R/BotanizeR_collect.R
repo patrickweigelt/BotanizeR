@@ -53,7 +53,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     html_main <- htmlTreeParse(file = file.path(dir,"main.txt"), isURL = F, isHTML=T, useInternalNodes = T)
     infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)})
     
-    if(image_floraweb & !is.null(infos_main)){
+    if(image_floraweb & exists("html_main")){
       
       #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_row$NAMNR[i], sep=""),
       #                    destfile = file.path(dir,"photo.txt"), quiet = T)
@@ -172,46 +172,48 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       
       # map
       map <- NA
-      if("map" %in% hints_floraweb & length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & 
-         any(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))){
-        
-        if(!exists("CGRS_Germany")){
-          data(CGRS_Germany)
+      if("map" %in% hints_floraweb & exists("html_main")){
+        if(length(xpathApply(html_main, "//a[@class='imglink']",xmlAttrs))>0 & 
+           any(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))){
+          
+          if(!exists("CGRS_Germany")){
+            data(CGRS_Germany)
+          }
+          
+          try({
+            taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=", "",
+                                 grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
+            
+            download.file(paste0("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=", taxon_ID_map),
+                          destfile = file.path(dir, "map.csv"), quiet = TRUE)
+            map <- read.csv(file.path(dir, "map.csv"), skip=41)[-1, c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
+            
+            map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
+            map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
+            map$AFE_SYMBOLCODE[which(map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
+            map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==6)] <- 5
+            map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==8)] <- 6
+            map$AFE_SYMBOLCODE <- map$AFE_SYMBOLCODE + 2
+            
+            map <- map[order(map$AFE_SYMBOLCODE, decreasing = TRUE),]
+            map <- map[!duplicated(map$CGRSNAME),]
+            
+            map <- merge(CGRS_Germany, map, all.x = TRUE, sort=FALSE)
+            map$AFE_SYMBOLCODE[is.na(map$AFE_SYMBOLCODE)] <- 1
+            map$AFE_SYMBOLCODE <- as.factor(map$AFE_SYMBOLCODE)
+            
+            legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), 
+                                      SYMBOL_TEXT=c("absent","not assigned","records uncertain","extinct","probably extinct",
+                                                    "cultivated, not established alien","established alien","native, incl. archaeophytes"),
+                                      colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
+            
+            legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
+            
+            levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
+          }, silent = TRUE)
         }
-        
-        try({
-          taxon_ID_map <- gsub("/webkarten/karte.html\\?taxnr=", "",
-                               grep("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)[[which(grepl("webkarten",xpathApply(html_main, "//a[@class='imglink']",xmlAttrs)))]], value = T))
-          
-          download.file(paste0("https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=", taxon_ID_map),
-                        destfile = file.path(dir, "map.csv"), quiet = TRUE)
-          map <- read.csv(file.path(dir, "map.csv"), skip=41)[-1, c("CGRSNAME","AFE_SYMBOLCODE","AFESYMBOL_TEXT")]
-          
-          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==4)] <- 2
-          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==5)] <- 3
-          map$AFE_SYMBOLCODE[which(map$AFESYMBOL_TEXT=="cultivated, synanthrope, not established aliens)")] <- 4
-          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==6)] <- 5
-          map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE==8)] <- 6
-          map$AFE_SYMBOLCODE <- map$AFE_SYMBOLCODE + 2
-          
-          map <- map[order(map$AFE_SYMBOLCODE, decreasing = TRUE),]
-          map <- map[!duplicated(map$CGRSNAME),]
-          
-          map <- merge(CGRS_Germany, map, all.x = TRUE, sort=FALSE)
-          map$AFE_SYMBOLCODE[is.na(map$AFE_SYMBOLCODE)] <- 1
-          map$AFE_SYMBOLCODE <- as.factor(map$AFE_SYMBOLCODE)
-          
-          legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), 
-                                    SYMBOL_TEXT=c("absent","not assigned","records uncertain","extinct","probably extinct",
-                                                  "cultivated, not established alien","established alien","native, incl. archaeophytes"),
-                                    colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
-          
-          legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
-          
-          levels(map$AFE_SYMBOLCODE) <- legend_info$SYMBOL_TEXT
-        }, silent = TRUE)
       }
-
+      
       for (i in 1:length(hints_floraweb)){
         
         if(hints_floraweb[i] == "description" & (exists("infos_photo") | exists("infos_biology"))){
@@ -269,7 +271,6 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # }
   
   hints <- hints[which(!sapply(hints, is.null))]
-  
   return(hints)
 } 
 
