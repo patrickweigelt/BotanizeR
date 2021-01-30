@@ -48,12 +48,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     
     # Main infos
     # I need this step because of an error in RCURL when getting the url
-    download.file(paste("https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",species_row$NAMNR,"&", sep=""), 
+    try({download.file(paste("https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",species_row$NAMNR,"&", sep=""), 
                   destfile = file.path(dir,"main.txt"), quiet = T)
     html_main <- htmlTreeParse(file = file.path(dir,"main.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-    infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)
+    infos_main <- xpathApply(html_main, "//div[@id='content']//p",xmlValue)})
     
-    if(image_floraweb){
+    if(image_floraweb & !is.null(infos_main)){
       
       #download.file(paste("https://www.floraweb.de/pflanzenarten/foto.xsql?suchnr=",species_row$NAMNR[i], sep=""),
       #                    destfile = file.path(dir,"photo.txt"), quiet = T)
@@ -151,21 +151,23 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       
       # ecology
       if("habitat" %in% hints_floraweb){
-        download.file(paste0("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_row$NAMNR,"&"), 
+        try({download.file(paste0("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",species_row$NAMNR,"&"), 
                       destfile = file.path(dir,"ecology.txt"), quiet = T)
         html_ecology <- htmlTreeParse(file = file.path(dir,"ecology.txt"), isURL = F, isHTML=T, useInternalNodes = T)
         infos_ecology <- xpathApply(html_ecology, "//div[@id='content']//p",xmlValue)
+        })
       }
       
       # biology
       if("description" %in% hints_floraweb & floraweb_image == FALSE){
-        download.file(paste0("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=", species_row$NAMNR, "&"),
+        try({download.file(paste0("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=", species_row$NAMNR, "&"),
                       destfile = file.path(dir, "biology.txt"), quiet = TRUE)
         html_biology <- htmlTreeParse(file = file.path(dir, "biology.txt"),
                                       isURL = FALSE, isHTML = TRUE,
                                       useInternalNodes = TRUE)
         infos_biology <- xpathApply(html_biology, "//div[@id='content']//p",
                                     xmlValue)
+        })
       }
       
       # map
@@ -212,7 +214,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
 
       for (i in 1:length(hints_floraweb)){
         
-        if(hints_floraweb[i] == "description"){
+        if(hints_floraweb[i] == "description" & (exists("infos_photo") | exists("infos_biology"))){
           if(floraweb_image){
             description <- paste0("Bestimmungshilfe/Morphologie:\n",
                                   infos_photo[[which(infos_photo == "Bestimmungshilfe:")+1]])
@@ -224,19 +226,19 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
           }
         }
         
-        if(hints_floraweb[i]=="status"){
+        if(hints_floraweb[i]=="status" & exists("infos_main")){
           hints[[i+1]] <- paste(infos_main[[7]],"\n",infos_main[[8]], sep="")
         }
         
-        if(hints_floraweb[i]=="family"){
+        if(hints_floraweb[i]=="family" & exists("infos_main")){
           hints[[i+1]] <- paste(infos_main[[6]])
         }
         
-        if(hints_floraweb[i]=="German name"){
+        if(hints_floraweb[i]=="German name" & exists("infos_main")){
           hints[[i+1]] <- paste(infos_main[[5]])
         }
         
-        if(hints_floraweb[i]=="habitat"){
+        if(hints_floraweb[i]=="habitat" & exists("infos_ecology")){
           if(infos_ecology[[3]] != "Formation: \r\nTaxon keiner Formation zugeordnet "){
             hints[[i+1]] <- paste(infos_ecology[[3]])
           }
