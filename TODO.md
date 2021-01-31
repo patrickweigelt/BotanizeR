@@ -6,13 +6,16 @@ TODO list
 * ~~fix the mismatch bug~~
 * design settings tab from which to choose the desired version from (winter, summer, other)
   - making the app as flexible as possible. Users choose their own list and criteria
-* config file for default values: config.R
+  - filtering via column in df
+  - summary stats about species list: number of species
+  - save initial scores as reactive values when new list loaded
+* ~~config file for default values: config.R~~
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
 * ~~make sure score is counted if answer is retrieved accidentally after getting the name right~~
 * ~~remove checkboxes if content is not available~~
-* make trivial name and family name independent of floraweb
-  - add them to species list table?
+* make common name and family name independent of floraweb
+  - add them to species list table, but not obligatory (too big a hurdle)
 * allow practicing common name
 * seems to load map each time a box is unchecked (takes long)
 * ~~error finite ylim value needed... if no map available?~~
@@ -20,9 +23,12 @@ TODO list
 * previous and next species button in species list tab
 * ~~don't do adist when "" submitted~~
 * chorology?
-  - add to BotanizeR_collect?
-  - show as one of the images
+  - add to BotanizeR_collect
+  - Use Halle chorology site directly
+  - show as one of the images?
   - ~~remove from quiz due to species name in map~~
+* Summary statistics
+  - number of species practiced, number correct as bar plot?
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
@@ -31,7 +37,9 @@ TODO list
 * loading bar for map
 * add synonyms
 * species list Göttingen
-* image folder path in local shiny app
+* check image folder path in local shiny app
+* make error messages in case floraweb is not available
+* define columns needed for species list
 
 3. Layout
 * ~~center smaller images in slider~~
@@ -41,18 +49,20 @@ TODO list
 * return between the two status elements
 * ~~adjust height of panel columns~~
 * move items
-  - download button
+  - ~~download button~~
 
 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
-* secure shiny behind nginx remote proxy
-* embed in stud-ip
+* secure shiny behind nginx or apache remote proxy
+* embed in stud-ip (why not working?)
 
 5. Other
 * write documentation (for package and for "About" page)
 * contact floraweb for permission to have a public version
 * write a little software note?
+  - check potential journals
 * write function documentation
 * publish on CRAN?
-* prepare more picture folders and species lists (algae, bark pictures); agree on columns needed
+  - Is the quiz function which needs user input a problem?
+* prepare more picture folders and species lists (algae, bark pictures)
 
