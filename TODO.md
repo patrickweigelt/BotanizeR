@@ -29,6 +29,9 @@ TODO list
   - ~~remove from quiz due to species name in map~~
 * Summary statistics
   - number of species practiced, number correct as bar plot?
+* Make some of the elements in the about page dependent on the resources used
+  - If floraweb used: Floraweb credits
+  - If own imagaes used load file with image credits
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
