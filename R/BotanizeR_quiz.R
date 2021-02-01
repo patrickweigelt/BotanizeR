@@ -1,6 +1,7 @@
 ### BotanizeR
 BotanizeR_quiz <- function(species_list, image_floraweb=TRUE, 
-                           hints_floraweb = c("description","status","habitat","family","German name"), 
+                           hints_floraweb = c("description","status","habitat","family","German name"),
+                           image_ukplantatlas=FALSE, hints_ukplantatlas = NULL,
                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL, 
                            case_sensitive = TRUE, file_location="temporary", startat = 0, init_count = sum(species_list$COUNT),
                            init_score = sum(species_list$SCORE), init_attempts = sum(species_list$ATTEMPTS), max_attempts = 10,
@@ -12,6 +13,9 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   require(XML)
   if("map" %in% hints_floraweb){
     require(sf)
+  }
+  if("mapuk" %in% hints_ukplantatlas){
+    require(magick)
   }
   
   # Arguments
@@ -44,7 +48,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   species <- species_list$SPECIES[i]
   
   # Collect infos for species i
-  infos <- BotanizeR_collect(species_list[i,], image_floraweb, hints_floraweb, 
+  infos <- BotanizeR_collect(species_list[i,], image_floraweb, hints_floraweb, image_ukplantatlas, hints_ukplantatlas,
                                          hints_custom, imagelink_custom, image_folders,
                                          file_location, image_required = TRUE, image_width = image_width)
 
@@ -96,8 +100,16 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
             
           } else {
             
-            message(infos[[hints_i[k]]])
-            
+            if(hints_i[k]=="mapuk"){
+              
+              par(mar=c(0.5,0.5,0.5,0.5),oma=c(0,0,0,0))
+              plot(infos$mapuk)
+              
+            } else {
+
+              message(infos[[hints_i[k]]])
+              
+            }
           }
         }
         
@@ -159,7 +171,8 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
   } else {
     species_list$COUNT[i] <- species_list$COUNT[i] + 1
 
-    BotanizeR_quiz(species_list, image_floraweb, hints_floraweb, 
+    BotanizeR_quiz(species_list, image_floraweb, hints_floraweb,
+                   image_ukplantatlas, hints_ukplantatlas,
                    hints_custom, imagelink_custom, image_folders,
                    case_sensitive, file_location, startat = startat, 
                    init_count = init_count, init_score = init_score, 
