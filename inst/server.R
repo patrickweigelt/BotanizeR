@@ -21,20 +21,20 @@ shinyServer(function(input, output, session) {
     
     # Sort species list alphabetically
     species_list <- species_list[order(species_list$SPECIES),c(1:14)]
- 
+    
     # Make species list a reactive object and allow for upload
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
-
+    
     
     
     # 1. Setup ----
-
+    
     # image folder
     shinyDirChoose(input, 'image_folder', roots=c(wd='.'), filetypes=c('', 'txt'), allowDirCreate=FALSE)
     
-
+    
     observeEvent(input$image_folder, {
         output$img_folders <-  renderText(paste(unlist(input$image_folder["path"]), collapse="/"))
         #print(str(input$image_folder))
@@ -42,7 +42,7 @@ shinyServer(function(input, output, session) {
         #print(typeof(input$image_folder["path"]))
     })
     
-
+    
     # Uploading progress
     output$upload_note <- renderUI({
         HTML(paste0("<br>",
@@ -122,7 +122,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-
+    
     
     # 2. Selected species ----
     
@@ -166,10 +166,6 @@ shinyServer(function(input, output, session) {
             selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
         }
         
-        # observeEvent(input$newplant, {
-        #     selected_species <- sample(species_list$SPECIES, 1)
-        # })
-        
         # Plant species chosen
         j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
         
@@ -187,7 +183,11 @@ shinyServer(function(input, output, session) {
             if(length(sp_infos$images) == 0){
                 sp_infos$images = "no_picture.png"
             }
-            imgs <- slick_list(slick_div(sp_infos$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
+            imgs <- slick_list(slick_div(sp_infos$images, 
+                                         css = htmltools::css(width = "100%", 
+                                                              margin.left = "auto", margin.right = "auto",
+                                                              margin.bottom = "auto", margin.top = "auto"),
+                                         type = "img",links = NULL))
             slickR(imgs, slideId = "slide_species")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
@@ -279,12 +279,12 @@ shinyServer(function(input, output, session) {
     
     
     # 3. Quiz ----
-
+    
     # Setup reactive values 
     answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
     i <- reactiveValues(i=NA)
     reactive_species <- reactiveValues(species=NA)
-
+    
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
         
@@ -297,11 +297,11 @@ shinyServer(function(input, output, session) {
             # random species
             temp1 <- species_list_reactive$df_data
             reactive_species$species <- sample(temp1$SPECIES, 1, 
-                              prob = ((temp1$COUNT - temp1$SCORE + 1)/
-                                          (temp1$SCORE+1))*temp1$INCLUDE)
+                                               prob = ((temp1$COUNT - temp1$SCORE + 1)/
+                                                           (temp1$SCORE+1))*temp1$INCLUDE)
             i$i <- which(temp1$SPECIES == reactive_species$species)
             print(i$i)
-
+            
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = temp1[i$i, ], 
@@ -346,12 +346,15 @@ shinyServer(function(input, output, session) {
                                  inputId = "quizz_options",
                                  choices = checkboxes_quiz(),
                                  selected = NULL)
-
-    
+        
+        
         # Photos ----
-
+        
         output$random_slickr <- renderSlickR({
-            imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", margin.left = "auto", margin.right = "auto"),type = "img",links = NULL))
+            imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", 
+                                                                                     margin.left = "auto", margin.right = "auto",
+                                                                                     margin.bottom = "auto", margin.top = "auto"),
+                                               type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
@@ -469,66 +472,67 @@ shinyServer(function(input, output, session) {
             })
         })
     })
-        # Answer ----
-        # display text when no answer is provided
     
-        # Providing an answer simple version
-        observe({
-            output$answer_status <- renderUI({
-                HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                            "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
-                            "</br><br>",
-                            "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
-            })
-            observeEvent(input$submit, {
-                isolate({
-                    answer <- as.character(input$sp_answer)
-                })
-                if (tolower(answer) == tolower(reactive_species$species)){
-                    output$answer_status <- renderUI(HTML(paste0(
-                        "<font color=\"#00CC00\">", "Correct", "</font>")))
-
-                    # Setting answered
-                    answered_reactive$answered = TRUE
-                    print(paste("answered = ", answered_reactive$answered))
-                    
-
-                } else { 
-                    char_diff <-
-                        paste0(adist(tolower(answer), tolower(reactive_species$species)),
-                               ifelse(adist(tolower(answer), tolower(reactive_species$species)) > 1,
-                                      " characters"," character"),
-                               " different")
-                    
-                    genus <- species_list_reactive$df_data[i$i, "GENUS"]
-                    
-                    if(nchar(answer)>0){
-                        genus_correct <- paste0(
-                            ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
-                               "Genus correct", ""))
-                    } else {
-                        genus_correct <- "" 
-                    }
-                    
-                    output$answer_status <- renderUI(HTML(paste0(
-                        "<font color=\"#FF0000\">", char_diff,
-                        "</font><font color=\"#00CC00\"><br>",
-                        genus_correct, "</font></br>")))
-                }
-            })
+    # Answer ----
+    # display text when no answer is provided
+    
+    # Providing an answer simple version
+    observe({
+        output$answer_status <- renderUI({
+            HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
+                        "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
+                        "</br><br>",
+                        "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
         })
-        
-
-        
-        # Real answer ----
-        observeEvent(input$real_answer, {
-            output$real_answer_print <- renderText(reactive_species$species)
-            if(!answered_reactive$answered){
-                answered_reactive$cheated <- TRUE 
-                print(paste("cheated ", answered_reactive$cheated))
+        observeEvent(input$submit, {
+            isolate({
+                answer <- as.character(input$sp_answer)
+            })
+            if (tolower(answer) == tolower(reactive_species$species)){
+                output$answer_status <- renderUI(HTML(paste0(
+                    "<font color=\"#00CC00\">", "Correct", "</font>")))
+                
+                # Setting answered
+                answered_reactive$answered = TRUE
+                print(paste("answered = ", answered_reactive$answered))
+                
+                
+            } else { 
+                char_diff <-
+                    paste0(adist(tolower(answer), tolower(reactive_species$species)),
+                           ifelse(adist(tolower(answer), tolower(reactive_species$species)) > 1,
+                                  " characters"," character"),
+                           " different")
+                
+                genus <- species_list_reactive$df_data[i$i, "GENUS"]
+                
+                if(nchar(answer)>0){
+                    genus_correct <- paste0(
+                        ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
+                               "Genus correct", ""))
+                } else {
+                    genus_correct <- "" 
+                }
+                
+                output$answer_status <- renderUI(HTML(paste0(
+                    "<font color=\"#FF0000\">", char_diff,
+                    "</font><font color=\"#00CC00\"><br>",
+                    genus_correct, "</font></br>")))
             }
         })
-        
+    })
+    
+    
+    
+    # Real answer ----
+    observeEvent(input$real_answer, {
+        output$real_answer_print <- renderText(reactive_species$species)
+        if(!answered_reactive$answered){
+            answered_reactive$cheated <- TRUE 
+            print(paste("cheated ", answered_reactive$cheated))
+        }
+    })
+    
     observeEvent(input$upanddown_button, {
         showModal(modalDialog(
             title = "Up and Download",
