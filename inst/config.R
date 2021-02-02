@@ -6,11 +6,19 @@ library(BotanizeR)
 data(floraweb_species)
 species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
                                          floraweb_species$BioDiv2005==1), ]
+# data(ukplantatlas_species)
+# species_list <- ukplantatlas_species
+
 ## hints and images
 # floraweb:
 image_floraweb = TRUE
 hints_floraweb = c("map","description", "status", "habitat", "family",
                    "German name")
+image_ukplantatlas = FALSE
+# hints_ukplantatlas = c("mapuk","family","ecology","status","trends",
+#                        "perennation","lifeform","woodiness","clonality")
+hints_ukplantatlas = NULL
+
 image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
 # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", 
 # "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")

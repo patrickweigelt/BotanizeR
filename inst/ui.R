@@ -146,22 +146,23 @@ tabPanel(
     h1(id = "panel3", "Setup"),
     fluidRow(
         column(4,
-               h4("Hints"),
+               h4("Online resources"),
                br(),
-               checkboxGroupInput(inputId = "floraweb_hints", label = "Floraweb",
-                                  choices = c("German name","Family","Status","Description","Habitat","Map")),
-               checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                                  choices = "yes")
+               uiOutput(outputId = "floraweb_images"),
+               uiOutput(outputId = "floraweb_hints"),
+               uiOutput(outputId = "ukplantatlas_images"),
+               uiOutput(outputId = "ukplantatlas_hints")
         ),
         column(4,
-               h4("Images"),
+               h4("Custom material"),
                br(),
-              checkboxGroupInput(inputId = "floraweb_images", label = "Floraweb",
+               checkboxGroupInput(inputId = "own_hints", label = "Own hints",
                                   choices = "yes"),
-              br(),
-              h5("Image folders"),
-              shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
-              textOutput("img_folders")
+               br(),
+               h5("Image folders"),
+               shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
+               textOutput("img_folders")
+               # Add button to remove image folders consecutively
         ),
         column(4,
                h4("Species list"),

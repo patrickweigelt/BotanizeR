@@ -26,10 +26,52 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
-    
+    # Make hints a reactive object
+    hints_reactive <- reactiveValues(image_floraweb = image_floraweb,
+                                     hints_floraweb = hints_floraweb,
+                                     image_ukplantatlas = image_ukplantatlas,
+                                     hints_ukplantatlas = hints_ukplantatlas,
+                                     image_folders = image_folders,
+                                     hints_custom = hints_custom,
+                                     chorology = chorology)
     
     
     # 1. Setup ----
+    
+    # Online resources
+    
+    # Checkboxes floraweb
+    
+    output$floraweb_images <- renderUI({
+        checkboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
+                           choices = c("Images"),
+                           selected = c("Images")[image_floraweb])
+    })
+    output$floraweb_hints <- renderUI({
+        checkboxGroupInput(inputId = "floraweb_hints", label = NULL,
+                           choices = c("German name","Family","Status","Description","Habitat","Map"),
+                           selected = c("German name","Family","Status","Description","Habitat","Map")[which(
+                               c("German name","family","status","description","habitat","map") %in% hints_floraweb)])
+    })
+
+    # Checkboxes UK Plant Atlas
+    output$ukplantatlas_images <- renderUI({
+        checkboxGroupInput(inputId = "ukplantatlas_images", label = "UK & Ireland Plant Atlas",
+                           choices = c("Images"),
+                           selected = c("Images")[image_ukplantatlas])
+    })
+    output$ukplantatlas_hints <- renderUI({
+        checkboxGroupInput(inputId = "ukplantatlas_hints", label = NULL,
+                           choices = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
+                           selected = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map")[which(
+                               c("family","status","ecology","trends","perennation","lifeform","woodiness","clonality","mapuk") %in% hints_ukplantatlas)])
+    })
+    
+    
+    
+
+    
+    
     
     # image folder
     shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
@@ -79,6 +121,10 @@ shinyServer(function(input, output, session) {
                     "<br>",
                     "You can also download the species list to modify it according to your needs."))
     })
+    
+    
+    
+    
     
     # Render dynamic quiz checkboxes
     firstup <- function(x) { # function to turn first letter in capital letter
