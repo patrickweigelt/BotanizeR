@@ -13,7 +13,7 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
   # 3. Scan image folders and resize images ----
   if(!is.null(image_folders)){
     for(k in 1:length(image_folders)){
-      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg|\\.png",
+      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg|\\.png|\\.JPG|\\.JPEG|\\.PNG",
                                 recursive = TRUE, full.names = FALSE)
       
 
@@ -39,7 +39,8 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
           if(grepl("/",image_files[i]) & !dir.exists(file.path(paste(image_folders[k],image_width,  sep="_"), gsub("(^.*/)([^/]*)$","\\1",image_files[i])))){
             dir.create(file.path(paste(image_folders[k],image_width,  sep="_"), gsub("(^.*/)([^/]*)$","\\1",image_files[i])))
           }
-          imager::save.image(image_i, file.path(paste(image_folders[k],image_width,  sep="_"),image_files[i]), quality = quality)
+          imager::save.image(image_i, file.path(paste(image_folders[k],image_width,  sep="_"),
+                                                gsub("\\.PNG$","\\.png",gsub("\\.JPEG$","\\.jpg",gsub("\\.JPG$","\\.jpg",image_files[i])))), quality = quality)
         }
       }
     }
@@ -47,3 +48,4 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
   message("completed")
 }
 
+"\\.jpg|\\.jpeg|\\.png|\\.JPG|\\.JPEG|\\.PNG"
