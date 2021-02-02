@@ -29,10 +29,11 @@ navbarPage(title = div(
     tags$script(HTML("var header = $('.navbar > .container-fluid');
              header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
     tags$style(style = 'position:absolute; right:42px;'),
-    tags$style(HTML("#panel1{font-size: 25px}")),
-    tags$style(HTML("#panel2{font-size: 25px}")),
-    tags$style(HTML("#panel3{font-size: 25px}")),
-    tags$style(HTML("#panel_about{font-size: 25px}"))
+    tags$style(HTML("#panel1{font-size: 25px}",
+                    "#panel2{font-size: 25px}",
+                    "#panel3{font-size: 25px}",
+                    "#panel_about{font-size: 25px}"))
+    
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
@@ -46,7 +47,7 @@ tabPanel(h1(id = "panel1", "Species"),
                          #              selected = 1),
                          # uiOutput("list_or_random"),
                          # br(),
-                         uiOutput("select_plant"),
+                         em(uiOutput("select_plant")),
                          # selectInput("plant_list", "Plant list",
                          #            choices = plant_list,
                          #            selected = plant_list[1]),
@@ -59,7 +60,12 @@ tabPanel(h1(id = "panel1", "Species"),
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "400px", height = "500px")
+                slickROutput("selected_sp_photo", width = "400px", height = "500px")#,
+                # tags$style('div#selected_sp_photo:hover {
+                #  transform: scale(1.5);
+                #  transform-origin: top left;
+                # }'
+                #            )
          ),
          column(4,
                 htmlOutput("selected_sp_german"),
@@ -96,7 +102,7 @@ tabPanel(
                br(),
                p(htmlOutput("answer_status"), style = "font-weight=500; color: #000000;"),
                br(),
-               h5(textOutput("real_answer_print"), style = "color: green; font-style: bold"),
+               h5(em(textOutput("real_answer_print"), style = "color: green; font-style: bold")),
                br(),
                tags$head(tags$script(src = "BotanizeR_buttons.js")),
                actionButton("submit", "Submit"),

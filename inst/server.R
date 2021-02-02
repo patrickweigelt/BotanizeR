@@ -32,7 +32,8 @@ shinyServer(function(input, output, session) {
     # 1. Setup ----
     
     # image folder
-    shinyDirChoose(input, 'image_folder', roots=c(wd='.'), filetypes=c('', 'txt'), allowDirCreate=FALSE)
+    shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
+                   filetypes = c('', 'txt'), allowDirCreate = FALSE)
     
     
     observeEvent(input$image_folder, {
@@ -41,7 +42,6 @@ shinyServer(function(input, output, session) {
         #print(unlist(input$image_folder["path"]))
         #print(typeof(input$image_folder["path"]))
     })
-    
     
     # Uploading progress
     output$upload_note <- renderUI({
@@ -80,23 +80,15 @@ shinyServer(function(input, output, session) {
                     "You can also download the species list to modify it according to your needs."))
     })
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     # Render dynamic quiz checkboxes
-    firstup <- function(x) {
+    firstup <- function(x) { # function to turn first letter in capital letter
         substr(x, 1, 1) <- toupper(substr(x, 1, 1))
-        x
+        return(x)
     }
     
-    hints_quiz <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
-    hints_quiz_ordered <- c("German name","Family","Status","Description","Habitat","Map", hints_custom) # Change order when hints_custom used
+    hints_quiz <- sapply(c(hints_floraweb, hints_custom, chorology), firstup)
+    hints_quiz_ordered <- c("German name", "Family", "Status", "Description",
+                            "Habitat","Map", hints_custom) # Change order when hints_custom used
     
     checkboxes_quiz <- reactive({
         hints_quiz_ordered[which(hints_quiz_ordered %in% hints_quiz)]
@@ -109,8 +101,8 @@ shinyServer(function(input, output, session) {
     
     
     # Render dynamic species list checkboxes
-    hints_species <- sapply(c(hints_floraweb,hints_custom,chorology),firstup)
-    hints_species_ordered <- c("Map","Chorology")
+    hints_species <- sapply(c(hints_floraweb, hints_custom, chorology), firstup)
+    hints_species_ordered <- c("Map", "Chorology")
     
     checkboxes_species <- reactive({
         hints_species_ordered[which(hints_species_ordered %in% hints_species)]
