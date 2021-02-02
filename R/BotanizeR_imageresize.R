@@ -28,11 +28,11 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
       if(length(image_files)>0){
         for(i in 1:length(image_files)){
           image_i <- load.image(file.path(image_folders[k],image_files[i]))
-          # resize
-          image_i <- resize(image_i, size_x = image_width, size_y = image_width/nrow(image_i)*ncol(image_i))
           
-          if(!is.na(max_height) & ncol(image_i) > max_height){
+          if(!is.na(max_height) & (image_width/nrow(image_i)*ncol(image_i)) > max_height){
             image_i <- resize(image_i, size_x = max_height/ncol(image_i)*nrow(image_i), size_y = max_height)
+          } else {
+            image_i <- resize(image_i, size_x = image_width, size_y = image_width/nrow(image_i)*ncol(image_i))
           }
           
           # save image
