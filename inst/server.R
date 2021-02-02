@@ -172,10 +172,10 @@ shinyServer(function(input, output, session) {
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
-            image_floraweb,
+            image_floraweb = image_floraweb,
             hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
             hints_custom = NULL, imagelink_custom = NULL,
-            image_folders,
+            image_folders = image_folders,
             file_location = "temporary", only_links = TRUE)
         
         # Photos ----
@@ -305,10 +305,10 @@ shinyServer(function(input, output, session) {
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = temp1[i$i, ], 
-                image_floraweb,
+                image_floraweb = image_floraweb,
                 hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
                 hints_custom = NULL, imagelink_custom = NULL,
-                image_folders,
+                image_folders = image_folders,
                 file_location = "temporary", only_links = TRUE)
             
             if(length(sp_quizz$images) != 0){
