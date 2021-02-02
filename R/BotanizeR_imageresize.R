@@ -1,5 +1,5 @@
 ### BotanizeR_collect
-BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_height = NA, quality = 1){
+BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_height = NA, int_type = 6, quality = 1){
   
   # 1. Controls ----
   # Package dependencies
@@ -30,9 +30,9 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
           image_i <- load.image(file.path(image_folders[k],image_files[i]))
           
           if(!is.na(max_height) & (image_width/nrow(image_i)*ncol(image_i)) > max_height){
-            image_i <- resize(image_i, size_x = max_height/ncol(image_i)*nrow(image_i), size_y = max_height)
+            image_i <- resize(image_i, size_x = max_height/ncol(image_i)*nrow(image_i), size_y = max_height, interpolation_type = int_type)
           } else {
-            image_i <- resize(image_i, size_x = image_width, size_y = image_width/nrow(image_i)*ncol(image_i))
+            image_i <- resize(image_i, size_x = image_width, size_y = image_width/nrow(image_i)*ncol(image_i), interpolation_type = int_type)
           }
           
           # save image
@@ -40,7 +40,7 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
             dir.create(file.path(paste(image_folders[k],image_width,  sep="_"), gsub("(^.*/)([^/]*)$","\\1",image_files[i])))
           }
           imager::save.image(image_i, file.path(paste(image_folders[k],image_width,  sep="_"),
-                                                gsub("\\.PNG$","\\.png",gsub("\\.JPEG$","\\.jpg",gsub("\\.JPG$","\\.jpg",image_files[i])))), quality = quality)
+                                                gsub("\\.JPG$|\\.JPEG$|\\.PNG$","\\.jpg",image_files[i])), quality = quality)
         }
       }
     }
