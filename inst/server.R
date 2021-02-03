@@ -26,7 +26,7 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
-    reactive_counts <- reactiveValues(init_count = 0,
+    counts_reactive <- reactiveValues(init_count = 0,
                                       init_score = 0,
                                       init_count_species = 0,
                                       init_score_species = 0)
@@ -150,10 +150,10 @@ shinyServer(function(input, output, session) {
         species_list_uploaded <- read.csv(input$file$datapath)
         # write control for right coluns in dataframe
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
-        reactive_counts$init_count <- sum(species_list_uploaded$COUNT)
-        reactive_counts$init_score <- sum(species_list_uploaded$SCORE)
-        reactive_counts$init_count_species <- sum(species_list_uploaded$COUNT > 0)
-        reactive_counts$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+        counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
+        counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
+        counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
+        counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
     })
     
     
@@ -276,7 +276,7 @@ shinyServer(function(input, output, session) {
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
-            image_floraweb = image_floraweb,
+            image_floraweb = hints_reactive$image_floraweb,
             hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = image_folders,
