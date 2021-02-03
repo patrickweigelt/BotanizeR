@@ -26,7 +26,10 @@ shinyServer(function(input, output, session) {
     species_list_reactive <- reactiveValues(df_data = NULL)
     species_list_reactive$df_data <- species_list
     
-    
+    reactive_counts <- reactiveValues(init_count = 0,
+                                      init_score = 0,
+                                      init_species = 0)
+
     hints_floraweb_lookup <- data.frame(variable = c("German name","family","status","description","habitat","map"),
                                         show = c("German name","Family","Status","Description","Habitat","Map"),
                                         stringsAsFactors = FALSE
@@ -90,15 +93,35 @@ shinyServer(function(input, output, session) {
     
     
     # Change content of reactive hints ----
-    observeEvent(input$floraweb_hints ,{
-        # print(paste("before:",paste(hints_reactive$hints_floraweb, collapse = ", ")))
-        print(paste("input:" , input$floraweb_hints))
-        temp_variables <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$floraweb_hints)]
-        #print(paste("temp:",temp_variables))
-        hints_reactive$hints_floraweb <- hints_floraweb[which(hints_floraweb %in% temp_variables)]
-        #print(paste("after:",paste(hints_reactive$hints_floraweb, collapse = ", ")))
+    observeEvent(input$floraweb_images ,{
+        print(paste("input:" , input$floraweb_images))
+        hints_reactive$image_floraweb <- input$floraweb_images
     })
 
+    observeEvent(input$floraweb_hints ,{
+        print(paste("input:" , input$floraweb_hints))
+        temp_variables <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$floraweb_hints)]
+        hints_reactive$hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$variable %in% temp_variables)]
+    })
+
+    observeEvent(input$ukplantatlas_images ,{
+        print(paste("input:" , input$ukplantatlas_images))
+        hints_reactive$image_ukplantatlas <- input$ukplantatlas_images
+    })
+    
+    observeEvent(input$ukplantatlas_hints ,{
+        
+        print(paste("before:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
+        print(paste("input:" , input$ukplantatlas_hints))
+        
+        temp_variables <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
+        print(paste("temp:",temp_variables))
+        hints_reactive$hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$variable %in% temp_variables)]
+
+        print(paste("after:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
+    })
+    
+    
     
 
     # image folder
