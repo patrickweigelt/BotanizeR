@@ -98,42 +98,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     }
   }
   
-  # 3.2 Images from own image link ----
-  if(length(imagelink_custom)>0){
-    for(i in 1:length(imagelink_custom)){
-      if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
-        if(only_links){
-          hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelink_custom[i]]
-        } else {
-          try({hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]])})
-        }
-      }
-    }
-  }
-
-  # 3.3 Images from image folder ----
-  if(length(image_folders)>0){
-    for(k in 1:length(image_folders)){
-      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
-                                recursive = TRUE, full.names = FALSE)
-      image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
-      if(length(image_files)>0){
-        if(only_links){
-          # WWW/image_folder in local shiny needs to be image_folder
-          # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to be image_folder
-          for(i in 1:length(image_files)){
-            hints[[1]][[length(hints[[1]])+1]] <- file.path(gsub(".*[wwwWWW]/(.+)$",("\\1"),image_folders[k]),image_files[i])
-          }
-        } else {
-          for(i in 1:length(image_files)){
-            try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folders[k],image_files[i])))
-          }
-        }
-      }
-    }
-  }
-
-  # 3.4 Images from ukplantatlas ----
+  # 3.2 Images from ukplantatlas ----
   
   if((length(hints_ukplantatlas)>0) | image_ukplantatlas){
     try({download.file(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""),
@@ -161,6 +126,43 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       }
     }
   }
+  
+  
+  # 3.3 Images from own image link ----
+  if(length(imagelink_custom)>0){
+    for(i in 1:length(imagelink_custom)){
+      if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
+        if(only_links){
+          hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelink_custom[i]]
+        } else {
+          try({hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]])})
+        }
+      }
+    }
+  }
+
+  # 3.4 Images from image folder ----
+  if(length(image_folders)>0){
+    for(k in 1:length(image_folders)){
+      image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
+                                recursive = TRUE, full.names = FALSE)
+      image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
+      if(length(image_files)>0){
+        if(only_links){
+          # WWW/image_folder in local shiny needs to be image_folder
+          # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to be image_folder
+          for(i in 1:length(image_files)){
+            hints[[1]][[length(hints[[1]])+1]] <- file.path(gsub(".*[wwwWWW]/(.+)$",("\\1"),image_folders[k]),image_files[i])
+          }
+        } else {
+          for(i in 1:length(image_files)){
+            try(hints[[1]][[length(hints[[1]])+1]] <- load.image(file.path(image_folders[k],image_files[i])))
+          }
+        }
+      }
+    }
+  }
+
   
   # 3.5 Image resize ----
   
@@ -314,43 +316,48 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     for (i in 1:length(hints_ukplantatlas)){
       
       if(hints_ukplantatlas[i]=="status"){
-        hints[[i+1]] <- paste("Status:",infos[[3]])
+        hints[[length(hints)+1]] <- paste("Status:",infos[[3]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="family"){
-        hints[[i+1]] <- paste("Family:", gsub("(.*›)(.*ceae)(›.*)","\\2", infos[[1]]))
+        hints[[length(hints)+1]] <- paste("Family:", gsub("(.*›)(.*ceae)(›.*)","\\2", infos[[1]]))
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="ecology"){
-        hints[[i+1]] <- paste("Ecology:",infos[[2]])
+        hints[[length(hints)+1]] <- paste("Ecology:",infos[[2]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
 
       if(hints_ukplantatlas[i]=="trends"){
-        hints[[i+1]] <- paste("Trends:",infos[[4]])
+        hints[[length(hints)+1]] <- paste("Trends:",infos[[4]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
 
       if(hints_ukplantatlas[i]=="perennation" & length(infos)>=21){
-        hints[[i+1]] <- paste("Perennation:",infos[[21]])
+        hints[[length(hints)+1]] <- paste("Perennation:",infos[[21]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="fifeform" & length(infos)>=22){
-        hints[[i+1]] <- paste("Life form:",infos[[22]])
+        hints[[length(hints)+1]] <- paste("Life form:",infos[[22]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="woodiness" & length(infos)>=23){
-        hints[[i+1]] <- paste("Woodiness:",infos[[23]])
+        hints[[length(hints)+1]] <- paste("Woodiness:",infos[[23]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="clonality" & length(infos)>=24){
-        hints[[i+1]] <- paste("Clonality:",infos[[24]])
+        hints[[length(hints)+1]] <- paste("Clonality:",infos[[24]])
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
       if(hints_ukplantatlas[i]=="mapuk" & !is.na(mapuk)){
-        hints[[i+1]] <- mapuk
-      }
-      
-      if(length(hints)==i+1){
-        names(hints)[i+1] <- hints_ukplantatlas[i]
+        hints[[length(hints)+1]] <- mapuk
+        names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
     }
   }

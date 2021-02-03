@@ -141,7 +141,7 @@ shinyServer(function(input, output, session) {
     
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
-        # write control for right coluns in dataframe
+        # write control for right columns in dataframe
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
         counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
         counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
@@ -198,7 +198,7 @@ shinyServer(function(input, output, session) {
                                hints_ukplantatlas_lookup$show[which(
                                    hints_ukplantatlas_lookup$variable %in% 
                                        hints_reactive$hints_ukplantatlas)],
-                               hints_custom))
+                               hints_reactive$hints_custom))
     })
     
     
@@ -266,8 +266,6 @@ shinyServer(function(input, output, session) {
         # Plant species chosen
         j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
         
-        print(paste("image_floraweb", isolate(hints_reactive$image_floraweb)))
-        
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
@@ -292,24 +290,14 @@ shinyServer(function(input, output, session) {
             slickR(imgs, slideId = "slide_species")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
-        # German name ----
-        output$selected_sp_german <- renderUI({
+        # Name ----
+        output$selected_sp_name <- renderUI({
             HTML(paste("<b>",
-                       isolate(species_list_reactive$df_data)[j,
-                                                              "TAXONNAME"], "</b>",
-                       sp_infos$`German name`, sep = '<br/>'))
+                       isolate(species_list_reactive$df_data)[j,"TAXONNAME"],
+                       "</b>"))
         })
         
-        # Family ----
-        output$selected_sp_family <- renderText({
-            print(sp_infos$family[[1]])
-        })
-        
-        # Status ----
-        output$selected_sp_status <- renderText({
-            print(sp_infos$status)
-        })
-        
+
         # Description ----
         output$selected_sp_description <- renderUI({
             floraweb_link <- paste0(
@@ -317,18 +305,50 @@ shinyServer(function(input, output, session) {
                 isolate(species_list_reactive$df_data)[j, "NAMNR"],
                 "&")
             
-            HTML(paste0(sp_infos$description, "</br>",
-                        "Source: ",
-                        "<a href='",
-                        floraweb_link, # https://www.floraweb.de/,
-                        "' target=_blank>FloraWeb</a>"))
+            
+            ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
+                                        gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(selected_species))))
+            
+            temp_hints <- c(isolate(hints_reactive$hints_floraweb),
+                            isolate(hints_reactive$hints_ukplantatlas),
+                            isolate(hints_reactive$hints_custom))
+            temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
+            
+            temp_hints <- paste0(unlist(sapply(sp_infos[names(sp_infos) %in% temp_hints],
+                                               function(x) c(x,"</br></br>"))), collapse="")
+            
+            HTML(paste0(temp_hints,
+                        ifelse(length(hints_reactive$hints_floraweb)>0|
+                                   length(hints_reactive$hints_ukplantatlas)>0,
+                               "<b>Source:</b></br>",""),
+                        ifelse(length(hints_reactive$hints_floraweb)>0,
+                               paste0("<a href='",
+                                      floraweb_link, # https://www.floraweb.de/,
+                                      "' target=_blank>FloraWeb</a></br>")
+                               ,""),
+                        ifelse(length(hints_reactive$hints_ukplantatlas)>0,
+                               paste0("<a href='",
+                                      ukplantatlas_link, # https://www.brc.ac.uk/,
+                                      "' target=_blank>UK & Ireland Plant Atlas</a></br>")
+                               ,"")
+                        ))
         })
         
-        # Habitat ----
-        output$selected_sp_habitat <- renderText({
-            print(sp_infos$habitat[[1]])
-        })
+        # # Description ----
+        # output$selected_sp_description <- renderUI({
+        #     floraweb_link <- paste0(
+        #         "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+        #         isolate(species_list_reactive$df_data)[j, "NAMNR"],
+        #         "&")
+        #     
+        #     HTML(paste0(sp_infos$description, "</br>",
+        #                 "Source: ",
+        #                 "<a href='",
+        #                 floraweb_link, # https://www.floraweb.de/,
+        #                 "' target=_blank>FloraWeb</a>"))
+        # })
         
+       
         # Map ----
         isolate({
             observe({
