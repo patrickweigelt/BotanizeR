@@ -359,7 +359,7 @@ shinyServer(function(input, output, session) {
     answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
     i <- reactiveValues(i=NA)
     reactive_species <- reactiveValues(species=NA)
-    
+
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
         
@@ -615,23 +615,15 @@ shinyServer(function(input, output, session) {
     })
     
     # Sum.stats ----
-    # observeEvent(input$sumstats_button, {
-    #     X <- 1
-    #     Y <- 1
-    #   showModal(modalDialog(
-    #       title = "Summary statistics test",
-    #       HTML(paste0("You practised ", X, "species and guessed ",
-    #                   Y, " right.")),
-    #       
-    #       plot(1)
-    #   ))  
-    # })
     output$stats_barplot <- renderPlot({
-        plot(1, pch = 16)
+        barplot(1, col = "darkgreen")
     })
     
-    output$stat_text <- renderPrint({
-        
+    output$stats_text <- renderPrint({
+        X <- sum(species_list_reactive$df_data$COUNT)
+        Y <- sum(species_list_reactive$df_data$SCORE)
+        HTML(paste0("<br>", "You practised ", X, " species and guessed ",
+                    Y, " right.", "</br>"))
     })
     
     # Download ----

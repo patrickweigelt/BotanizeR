@@ -137,9 +137,11 @@ tabPanel(
                actionButton("upanddown_button", "Upload/Download progress"),
                br(),
                actionButton("sumstats_button", "Show statistics"),
-               bsModal(id = "sumstats_modal", title = "Show statistics",
+               bsModal(id = "sumstats_modal",
+                       title = "Session information",
                        trigger = "sumstats_button",
-                       size = "large", plotOutput("stats_barplot"))
+                       size = "large", uiOutput("stats_text"),
+                       plotOutput("stats_barplot"))
                
                # dataTableOutput("progress")
                #, tableOutput("df_data_out")
