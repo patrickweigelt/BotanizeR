@@ -41,7 +41,7 @@ windowTitle = "BotanizeR",
 
 ## Species list ---------------------------------------------------------------
 tabPanel(h1(id = "panel1", "Species"),
-         fluidRow(column(4,
+         fluidRow(column(3,
                          # radioButtons("radio", label = h3("Radio buttons"),
                          #              choices = list("Plant list" = "plant_list",
                          #                             "Random plant" = "random_plant"), 
@@ -57,18 +57,18 @@ tabPanel(h1(id = "panel1", "Species"),
                          br(),
                          uiOutput(outputId = "options")
          ),
-         column(4, style="min-width: 440px", 
+         column(6, style="min-width: 600px", 
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "400px", height = "500px")#,
+                slickROutput("selected_sp_photo", width = "560px", height = "700px")#,
                 # tags$style('div#selected_sp_photo:hover {
                 #  transform: scale(1.5);
                 #  transform-origin: top left;
                 # }'
                 #            )
          ),
-         column(4,
+         column(3,
                 htmlOutput("selected_sp_german"),
                 br(),
                 textOutput("selected_sp_family"),
@@ -89,7 +89,7 @@ tabPanel(h1(id = "panel1", "Species"),
 tabPanel(
     h1(id = "panel2", "Quiz"),
     fluidRow(
-        column(4,
+        column(3,
                h5(textOutput("Score")),
                br(),
                uiOutput(outputId = "quizz_options"),
@@ -114,16 +114,16 @@ tabPanel(
         ),
         
         # Second part of the page with the picture
-        column(4, style="min-width: 440px", 
+        column(6, style="min-width: 600px", 
                # uiOutput("random_sp"),
-               slickROutput("random_slickr", width = "400px", height = "500px"),
+               slickROutput("random_slickr", width = "560px", height = "700px"),
                br(),
                plotOutput("random_map"),
                br(),
                h5(textOutput("score"))),
         
         # Third part with other indices
-        column(4,
+        column(3,
                textOutput("random_german"),
                br(),
                textOutput("random_family"),

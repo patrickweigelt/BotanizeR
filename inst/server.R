@@ -36,7 +36,7 @@ shinyServer(function(input, output, session) {
                                         stringsAsFactors = FALSE
     )
     
-    hints_ukplantatlas_lookup <- data.frame(variable = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
+    hints_ukplantatlas_lookup <- data.frame(variable = c("family","status","ecology","trends","perennation","lifeform","woodiness","clonality","mapuk"),
                                         show = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
                                         stringsAsFactors = FALSE
     )
@@ -102,26 +102,17 @@ shinyServer(function(input, output, session) {
     })
 
     observeEvent(input$floraweb_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
-        #print(paste("input:" , input$floraweb_hints))
         temp_variables <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$floraweb_hints)]
         hints_reactive$hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$variable %in% temp_variables)]
     })
 
     observeEvent(input$ukplantatlas_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
-        #print(paste("input:" , input$ukplantatlas_images))
         hints_reactive$image_ukplantatlas <- ("Images" %in% input$ukplantatlas_images)
     })
     
     observeEvent(input$ukplantatlas_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
-        
-        #print(paste("before:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
-        #print(paste("input:" , input$ukplantatlas_hints))
-        
         temp_variables <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
-        #print(paste("temp:",temp_variables))
         hints_reactive$hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$variable %in% temp_variables)]
-
-        #print(paste("after:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
     })
     
     
