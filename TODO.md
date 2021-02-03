@@ -28,7 +28,8 @@ TODO list
   - show as one of the images?
   - ~~remove from quiz due to species name in map~~
 * Summary statistics
-  - number of species practiced, number correct as bar plot?
+  - number of species practiced, number correct as bar plot? (quiz page popup)
+  - number of species in curretnly loaded species list (setup page)
 * Make some of the elements in the about page dependent on the resources used
   - If floraweb used: Floraweb credits
   - If own imagaes used load file with image credits
@@ -53,6 +54,7 @@ TODO list
 * ~~adjust height of panel columns~~
 * move items
   - ~~download button~~
+* Make correct more prominent and easier to go to next species  
 
 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
