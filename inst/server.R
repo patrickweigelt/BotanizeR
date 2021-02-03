@@ -66,8 +66,8 @@ shinyServer(function(input, output, session) {
     
     output$floraweb_images <- renderUI({
         checkboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
-                           choices = c("Images"),
-                           selected = c("Images")[image_floraweb])
+                           choices = c("Images","TEST"),
+                           selected = c(c("Images")[image_floraweb],FALSE))
     })
     output$floraweb_hints <- renderUI({
         checkboxGroupInput(inputId = "floraweb_hints", label = NULL,
@@ -95,8 +95,10 @@ shinyServer(function(input, output, session) {
     
     # Change content of reactive hints ----
     observeEvent(input$floraweb_images ,{
+        print(paste("before:",hints_reactive$image_floraweb))
         print(paste("input:" , input$floraweb_images))
-        hints_reactive$image_floraweb <- input$floraweb_images
+        hints_reactive$image_floraweb <- ("Images" %in% input$floraweb_images)
+        print(paste("after:",hints_reactive$image_floraweb))
     })
 
     observeEvent(input$floraweb_hints ,{
@@ -107,7 +109,7 @@ shinyServer(function(input, output, session) {
 
     observeEvent(input$ukplantatlas_images ,{
         print(paste("input:" , input$ukplantatlas_images))
-        hints_reactive$image_ukplantatlas <- input$ukplantatlas_images
+        hints_reactive$image_ukplantatlas <- (input$ukplantatlas_images == "Images")
     })
     
     observeEvent(input$ukplantatlas_hints ,{
@@ -273,11 +275,17 @@ shinyServer(function(input, output, session) {
         # Plant species chosen
         j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
         
+        print(paste("image_floraweb", isolate(hints_reactive$image_floraweb)))
+        
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
-            image_floraweb = hints_reactive$image_floraweb,
-            hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
+            image_floraweb = isolate(hints_reactive$image_floraweb),
+            hints_floraweb = hints_reactive$hints_floraweb[which(hints_reactive$hints_floraweb!="map")],
+            #image_floraweb = image_floraweb,
+            #hints_floraweb = hints_floraweb[which(hints_floraweb!="map")],
+            image_ukplantatlas = FALSE,
+            hints_ukplantatlas = NULL,
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = image_folders,
             file_location = "temporary", only_links = TRUE)
