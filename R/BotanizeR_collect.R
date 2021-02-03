@@ -52,7 +52,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # 3. Images ----
   # 3.1 Floraweb ----
   
-  if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & (!is.null(hints_floraweb) | image_floraweb)){
+  if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & (length(hints_floraweb)>0 | image_floraweb)){
     
     # Main infos
     # I need this step because of an error in RCURL when getting the url
@@ -99,7 +99,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
   
   # 3.2 Images from own image link ----
-  if(!is.null(imagelink_custom)){
+  if(length(imagelink_custom)>0){
     for(i in 1:length(imagelink_custom)){
       if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
         if(only_links){
@@ -112,7 +112,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
 
   # 3.3 Images from image folder ----
-  if(!is.null(image_folders)){
+  if(length(image_folders)>0){
     for(k in 1:length(image_folders)){
       image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
                                 recursive = TRUE, full.names = FALSE)
@@ -135,7 +135,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
 
   # 3.4 Images from ukplantatlas ----
   
-  if(!is.null(hints_ukplantatlas) | image_ukplantatlas){
+  if((length(hints_ukplantatlas)>0) | image_ukplantatlas){
     try({download.file(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""),
                        destfile = file.path(dir,"species.txt"), quiet = T)
       species_main <- htmlTreeParse(file = file.path(dir,"species.txt"), isURL = F, isHTML=T, useInternalNodes = T)
@@ -182,7 +182,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
   
   # 4.1 Floraweb ----
-  if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & !is.null(hints_floraweb)) { 
+  if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" & length(hints_floraweb)>0) { 
     
     # ecology
     if("habitat" %in% hints_floraweb){
@@ -294,7 +294,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   }
   
   # 4.2 UK Plant Atlas ----
-  if(!is.null(hints_ukplantatlas) & exists("species_main")) { 
+  if(length(hints_ukplantatlas)>0 & exists("species_main")) { 
     
     infos <- xpathApply(species_main, "//div[@class='field-items']",xmlValue)
     
@@ -357,7 +357,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   
   # 4.3 Hints from own entries ----
-  if(!is.null(hints_custom)){
+  if(length(hints_custom)>0){
     for(i in 1:length(hints_custom)){
       if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
         hints[[length(hints)+1]] <- species_row[,hints_custom[i]]
