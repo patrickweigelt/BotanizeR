@@ -8,7 +8,7 @@ TODO list
   - making the app as flexible as possible. Users choose their own list and criteria
   - filtering via column in df
   - summary stats about species list: number of species
-  - save initial scores as reactive values when new list loaded
+  - ~~save initial scores as reactive values when new list loaded~~
 * ~~config file for default values: config.R~~
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
@@ -19,7 +19,7 @@ TODO list
 * allow practicing common name
 * seems to load map each time a box is unchecked (takes long)
 * ~~error finite ylim value needed... if no map available?~~
-* don't show hints that are not available?
+* ~~don't show hints that are not available?~~
 * previous and next species button in species list tab
 * ~~don't do adist when "" submitted~~
 * chorology?
@@ -27,16 +27,18 @@ TODO list
   - Use Halle chorology site directly
   - show as one of the images?
   - ~~remove from quiz due to species name in map~~
+* ~~Add UK flora~~
 * Summary statistics
   - number of species practiced, number correct as bar plot? (quiz page popup)
-  - number of species in curretnly loaded species list (setup page)
+  - number of species in currently loaded species list (setup page)
 * Make some of the elements in the about page dependent on the resources used
   - If floraweb used: Floraweb credits
-  - If own imagaes used load file with image credits
+  - If own images used load file with image credits
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
 * add content from other websites
+  - ~~UK-flora~~
 * plot first image before map is loaded to safe time.
 * loading bar for map
 * add synonyms
@@ -49,7 +51,7 @@ TODO list
 * ~~center smaller images in slider~~
 * ~~avoid overlap of contents when changing window size~~
   - ~~define min width of middle column or make slickR slider shrink~~
-* Source floraweb is inbetween the hints (above habitat); Make dependent on whether floraweb content is shown or not
+* ~~Source floraweb is inbetween the hints (above habitat); Make dependent on whether floraweb content is shown or not~~
 * return between the two status elements
 * ~~adjust height of panel columns~~
 * move items

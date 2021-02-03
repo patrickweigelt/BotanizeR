@@ -15,7 +15,7 @@ image_floraweb = TRUE
 hints_floraweb = c("map","description", "status", "habitat", "family",
                    "German name")
 image_ukplantatlas = FALSE
-# hints_ukplantatlas = c("mapuk","family","ecology","status","trends",
+# hints_ukplantatlas = c("mapuk","familyuk","ecology","statusuk","trends",
 #                        "perennation","lifeform","woodiness","clonality")
 hints_ukplantatlas = NULL
 

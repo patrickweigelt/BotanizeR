@@ -57,11 +57,11 @@ tabPanel(h1(id = "panel1", "Species"),
                          br(),
                          uiOutput(outputId = "options")
          ),
-         column(6, style="min-width: 600px", 
+         column(6, style="min-width: 540px", 
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "560px", height = "700px")#,
+                slickROutput("selected_sp_photo", width = "500px", height = "625px")#,
                 # tags$style('div#selected_sp_photo:hover {
                 #  transform: scale(1.5);
                 #  transform-origin: top left;
@@ -108,9 +108,9 @@ tabPanel(
         ),
         
         # Second part of the page with the picture
-        column(6, style="min-width: 600px", 
+        column(6, style="min-width: 540px", 
                # uiOutput("random_sp"),
-               slickROutput("random_slickr", width = "560px", height = "700px"),
+               slickROutput("random_slickr", width = "500px", height = "625px"),
                br(),
                plotOutput("random_map"),
                br(),

@@ -22,8 +22,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     stop('"hints_floraweb" must be a subset of c("map","description","status","habitat","family","German name")')
   }
   
-  if(!all(hints_ukplantatlas %in% c("mapuk","family","ecology","status","trends","perennation","lifeform","woodiness","clonality"))){
-    stop('"hints_ukplantatlas" must be a subset of c("mapuk","family","ecology","status","trends","perennation","lifeform","woodiness","clonality")')
+  if(!all(hints_ukplantatlas %in% c("mapuk","familyuk","ecology","statusuk","trends","perennation","lifeform","woodiness","clonality"))){
+    stop('"hints_ukplantatlas" must be a subset of c("mapuk","familyuk","ecology","statusuk","trends","perennation","lifeform","woodiness","clonality")')
   }
   
   
@@ -315,12 +315,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     
     for (i in 1:length(hints_ukplantatlas)){
       
-      if(hints_ukplantatlas[i]=="status"){
+      if(hints_ukplantatlas[i]=="statusuk"){
         hints[[length(hints)+1]] <- paste("Status:",infos[[3]])
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
-      if(hints_ukplantatlas[i]=="family"){
+      if(hints_ukplantatlas[i]=="familyuk"){
         hints[[length(hints)+1]] <- paste("Family:", gsub("(.*›)(.*ceae)(›.*)","\\2", infos[[1]]))
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }

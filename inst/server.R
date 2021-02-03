@@ -36,8 +36,8 @@ shinyServer(function(input, output, session) {
                                         stringsAsFactors = FALSE
     )
     
-    hints_ukplantatlas_lookup <- data.frame(variable = c("family","status","ecology","trends","perennation","lifeform","woodiness","clonality","mapuk"),
-                                        show = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
+    hints_ukplantatlas_lookup <- data.frame(variable = c("familyuk","statusuk","ecology","trends","perennation","lifeform","woodiness","clonality","mapuk"),
+                                        show = c("Family UK","Status UK","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map UK"),
                                         stringsAsFactors = FALSE
     )
     
