@@ -650,15 +650,34 @@ shinyServer(function(input, output, session) {
     })
     
     # Sum.stats ----
-    output$stats_barplot <- renderPlot({
-        barplot(1, col = "darkgreen")
+    observeEvent(input$newplant, {
+        counts_reactive$init_count <- counts_reactive$init_count + 1
+        counts_reactive$init_score <- counts_reactive$init_score + + answered_reactive$answered #1
     })
     
+    output$stats_barplot <- renderPlot({
+        barplot_stats <- c(counts_reactive$init_count,
+                           counts_reactive$init_score)
+        names(barplot_stats) <- c("Count", "Score")
+        
+        barplot(barplot_stats, col = c("grey", "darkgreen"))
+    })
+    
+    
     output$stats_text <- renderPrint({
-        X <- sum(species_list_reactive$df_data$COUNT)
-        Y <- sum(species_list_reactive$df_data$SCORE)
-        HTML(paste0("<br>", "You practised ", X, " species and guessed ",
-                    Y, " right.", "</br>"))
+        print(paste0("HERE: ", counts_reactive$init_count))
+        print(paste0("HEREAFTER: ", counts_reactive$init_count))
+        
+        X <- counts_reactive$init_count
+        Y <- counts_reactive$init_score
+        
+        XX <- sum(species_list_reactive$df_data$COUNT)
+        YY <- sum(species_list_reactive$df_data$SCORE)
+        
+        HTML(paste0("<br>", "In this session, you practised ", X,
+                    " species and guessed ", Y, " right.", "</br><br>",
+                    "In total, you practised ", XX,
+                    "species and guessed ", YY, " right.</br>"))
     })
     
     # Download ----
