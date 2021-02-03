@@ -28,11 +28,13 @@ shinyServer(function(input, output, session) {
     
     
     hints_floraweb_lookup <- data.frame(variable = c("German name","family","status","description","habitat","map"),
-                                        show = c("German name","Family","Status","Description","Habitat","Map")
+                                        show = c("German name","Family","Status","Description","Habitat","Map"),
+                                        stringsAsFactors = FALSE
     )
     
     hints_ukplantatlas_lookup <- data.frame(variable = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
-                                        show = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map")
+                                        show = c("Family","Status","Ecology","Trend","Perennation","Life form","Woodiness","Clonality","Map"),
+                                        stringsAsFactors = FALSE
     )
     
     if(!is.null(hints_floraweb)){
