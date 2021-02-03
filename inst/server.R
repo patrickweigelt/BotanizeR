@@ -28,7 +28,8 @@ shinyServer(function(input, output, session) {
     
     reactive_counts <- reactiveValues(init_count = 0,
                                       init_score = 0,
-                                      init_species = 0)
+                                      init_count_species = 0,
+                                      init_score_species = 0)
 
     hints_floraweb_lookup <- data.frame(variable = c("German name","family","status","description","habitat","map"),
                                         show = c("German name","Family","Status","Description","Habitat","Map"),
@@ -147,7 +148,12 @@ shinyServer(function(input, output, session) {
     
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
+        # write control for right coluns in dataframe
         species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
+        reactive_counts$init_count <- sum(species_list_uploaded$COUNT)
+        reactive_counts$init_score <- sum(species_list_uploaded$SCORE)
+        reactive_counts$init_count_species <- sum(species_list_uploaded$COUNT > 0)
+        reactive_counts$init_score_species <- sum(species_list_uploaded$SCORE > 0)
     })
     
     
