@@ -75,7 +75,12 @@ shinyServer(function(input, output, session) {
                            selected = hints_floraweb_lookup$show[which(
                                hints_floraweb_lookup$variable %in% hints_floraweb)])
     })
-
+    output$chorology_hint <- renderUI({
+        checkboxGroupInput(inputId = "chorology_hint", label = NULL,
+                           choices = c("Chorology"),
+                           selected = c("Chorology")[(chorology == "chorology")])
+    })
+    
  
     # Render checkboxes UK Plant Atlas
     output$ukplantatlas_images <- renderUI({
@@ -106,6 +111,10 @@ shinyServer(function(input, output, session) {
         hints_reactive$hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$variable %in% temp_variables)]
     })
 
+    observeEvent(input$chorology_hint, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        hints_reactive$chorology <- c("chorology")[("Chorology" %in% input$chorology_hint)]
+    })
+    
     observeEvent(input$ukplantatlas_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
         hints_reactive$image_ukplantatlas <- ("Images" %in% input$ukplantatlas_images)
     })
@@ -177,10 +186,10 @@ shinyServer(function(input, output, session) {
     
     
     # Render dynamic quiz checkboxes
-    firstup <- function(x) { # function to turn first letter in capital letter
-        substr(x, 1, 1) <- toupper(substr(x, 1, 1))
-        return(x)
-    }
+    #firstup <- function(x) { # function to turn first letter in capital letter
+    #    substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+    #    return(x)
+    #}
     
     # hints_quiz <- sapply(c(hints_floraweb, hints_custom, chorology), firstup)
     # hints_quiz_ordered <- c("German name", "Family", "Status", "Description",

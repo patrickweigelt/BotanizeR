@@ -24,6 +24,7 @@ image_folders = c("www/pictures_gehoelze_winter_500")
 # "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
 hints_custom = NULL
 chorology = "chorology"
+chorology = NULL
 
 ### Winter:
 # species_list <- read.csv("floraweb_species_winter.csv") # for winter list

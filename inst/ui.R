@@ -153,6 +153,7 @@ tabPanel(
                br(),
                uiOutput(outputId = "floraweb_images"),
                uiOutput(outputId = "floraweb_hints"),
+               uiOutput(outputId = "chorology_hint"),
                uiOutput(outputId = "ukplantatlas_images"),
                uiOutput(outputId = "ukplantatlas_hints")
         ),

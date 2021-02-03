@@ -29,6 +29,7 @@ TODO list
   - add to BotanizeR_collect
   - Use Halle chorology site directly
   - show as one of the images?
+  - add to setup
   - ~~remove from quiz due to species name in map~~
 * ~~Add UK flora~~
 * Summary statistics
