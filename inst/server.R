@@ -412,7 +412,7 @@ shinyServer(function(input, output, session) {
         })
         
         # Family ----
-        isolate({
+        #isolate({
             observe({
                 quizz_options <- pmatch(c("German name", "Family", "Status",
                                           "Description", "Habitat", "Map",
@@ -424,7 +424,7 @@ shinyServer(function(input, output, session) {
                     }
                 })
             })
-        })
+        #})
         
         # Status ----
         isolate({
@@ -571,10 +571,31 @@ shinyServer(function(input, output, session) {
         }
     })
     
+    # Sum.stats ----
+    # observeEvent(input$sumstats_button, {
+    #     X <- 1
+    #     Y <- 1
+    #   showModal(modalDialog(
+    #       title = "Summary statistics test",
+    #       HTML(paste0("You practised ", X, "species and guessed ",
+    #                   Y, " right.")),
+    #       
+    #       plot(1)
+    #   ))  
+    # })
+    output$stats_barplot <- renderPlot({
+        plot(1, pch = 16)
+    })
+    
+    output$stat_text <- renderPrint({
+        
+    })
+    
+    # Download ----
     observeEvent(input$upanddown_button, {
         showModal(modalDialog(
             title = "Up and Download",
-            HTML(paste0("Please naviagte to the 'setup' tab to up or download your progress.",
+            HTML(paste0("Please navigate to the 'setup' tab to up or download your progress.",
                         "<br>","<br>",
                         "If you ran the quiz in a previous session and you saved your progress, 
                           you can upload your current scores as a .csv file there. You can also 

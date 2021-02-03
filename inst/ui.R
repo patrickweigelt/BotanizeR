@@ -8,6 +8,7 @@ library(BotanizeR)
 #library(XML)
 library(slickR)
 library(shinyFiles)
+library(shinyBS)
 
 # Data
 # data(floraweb_species)
@@ -134,6 +135,12 @@ tabPanel(
                textOutput("random_habitat"),
                br(),br(),
                actionButton("upanddown_button", "Upload/Download progress"),
+               br(),
+               actionButton("sumstats_button", "Show statistics"),
+               bsModal(id = "sumstats_modal", title = "Show statistics",
+                       trigger = "sumstats_button",
+                       size = "large", plotOutput("stats_barplot"))
+               
                # dataTableOutput("progress")
                #, tableOutput("df_data_out")
                )
