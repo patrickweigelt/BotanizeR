@@ -66,8 +66,8 @@ shinyServer(function(input, output, session) {
     
     output$floraweb_images <- renderUI({
         checkboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
-                           choices = c("Images","TEST"),
-                           selected = c(c("Images")[image_floraweb],FALSE))
+                           choices = c("Images"),
+                           selected = c("Images")[image_floraweb])
     })
     output$floraweb_hints <- renderUI({
         checkboxGroupInput(inputId = "floraweb_hints", label = NULL,
@@ -94,34 +94,34 @@ shinyServer(function(input, output, session) {
     
     
     # Change content of reactive hints ----
-    observeEvent(input$floraweb_images ,{
-        print(paste("before:",hints_reactive$image_floraweb))
-        print(paste("input:" , input$floraweb_images))
+    observeEvent(input$floraweb_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        #print(paste("before:",hints_reactive$image_floraweb))
+        #print(paste("input:" , input$floraweb_images))
         hints_reactive$image_floraweb <- ("Images" %in% input$floraweb_images)
-        print(paste("after:",hints_reactive$image_floraweb))
+        #print(paste("after:",hints_reactive$image_floraweb))
     })
 
-    observeEvent(input$floraweb_hints ,{
-        print(paste("input:" , input$floraweb_hints))
+    observeEvent(input$floraweb_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        #print(paste("input:" , input$floraweb_hints))
         temp_variables <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$floraweb_hints)]
         hints_reactive$hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$variable %in% temp_variables)]
     })
 
-    observeEvent(input$ukplantatlas_images ,{
-        print(paste("input:" , input$ukplantatlas_images))
-        hints_reactive$image_ukplantatlas <- (input$ukplantatlas_images == "Images")
+    observeEvent(input$ukplantatlas_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        #print(paste("input:" , input$ukplantatlas_images))
+        hints_reactive$image_ukplantatlas <- ("Images" %in% input$ukplantatlas_images)
     })
     
-    observeEvent(input$ukplantatlas_hints ,{
+    observeEvent(input$ukplantatlas_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
         
-        print(paste("before:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
-        print(paste("input:" , input$ukplantatlas_hints))
+        #print(paste("before:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
+        #print(paste("input:" , input$ukplantatlas_hints))
         
         temp_variables <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
-        print(paste("temp:",temp_variables))
+        #print(paste("temp:",temp_variables))
         hints_reactive$hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$variable %in% temp_variables)]
 
-        print(paste("after:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
+        #print(paste("after:",paste(hints_reactive$hints_ukplantatlas, collapse = ", ")))
     })
     
     
@@ -280,12 +280,10 @@ shinyServer(function(input, output, session) {
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
-            image_floraweb = isolate(hints_reactive$image_floraweb),
+            image_floraweb = hints_reactive$image_floraweb,
             hints_floraweb = hints_reactive$hints_floraweb[which(hints_reactive$hints_floraweb!="map")],
-            #image_floraweb = image_floraweb,
-            #hints_floraweb = hints_floraweb[which(hints_floraweb!="map")],
-            image_ukplantatlas = FALSE,
-            hints_ukplantatlas = NULL,
+            image_ukplantatlas = hints_reactive$image_ukplantatlas,
+            hints_ukplantatlas = hints_reactive$hints_ukplantatlas[which(hints_reactive$hints_ukplantatlas!="map")],
             hints_custom = NULL, imagelink_custom = NULL,
             image_folders = image_folders,
             file_location = "temporary", only_links = TRUE)
