@@ -202,20 +202,22 @@ shinyServer(function(input, output, session) {
     })
     
     
-    
-    
-    
     # Render dynamic species list checkboxes
-    hints_species <- sapply(c(hints_floraweb, hints_custom, chorology), firstup)
-    hints_species_ordered <- c("Map", "Chorology")
+    #hints_species <- sapply(c(hints_floraweb, hints_custom, chorology), firstup)
+    #hints_species_ordered <- c("Map", "Chorology")
     
-    checkboxes_species <- reactive({
-        hints_species_ordered[which(hints_species_ordered %in% hints_species)]
-    })
+    #checkboxes_species <- reactive({
+    #    hints_species_ordered[which(hints_species_ordered %in% hints_species)]
+    #})
     
     output$options <- renderUI({
         checkboxGroupInput(inputId = "options", label = "Show:",
-                           choices = checkboxes_species())
+                           choices = c("Map","Map UK","Chorology")[
+                               which(c("map","mapuk","chorology") %in%
+                                   c(hints_reactive$hints_floraweb,
+                                     hints_reactive$hints_ukplantatlas,
+                                     hints_reactive$chorology))
+                                   ])
     })
     
     
@@ -334,34 +336,22 @@ shinyServer(function(input, output, session) {
                         ))
         })
         
-        # # Description ----
-        # output$selected_sp_description <- renderUI({
-        #     floraweb_link <- paste0(
-        #         "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-        #         isolate(species_list_reactive$df_data)[j, "NAMNR"],
-        #         "&")
-        #     
-        #     HTML(paste0(sp_infos$description, "</br>",
-        #                 "Source: ",
-        #                 "<a href='",
-        #                 floraweb_link, # https://www.floraweb.de/,
-        #                 "' target=_blank>FloraWeb</a>"))
-        # })
-        
-       
+
         # Map ----
         isolate({
             observe({
-                options <- pmatch(c("Map", "Chorology"), input$options)
+                # options <- pmatch(c("Map", "Map UK", "Chorology"), input$options)
                 output$selected_sp_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if(!is.na(options[1]) & !is.null(hints_floraweb)){
+                    if("Map" %in% input$options & !is.null(hints_floraweb)){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
                             species_row = isolate(species_list_reactive$df_data)[j, ], 
                             image_floraweb = FALSE,
-                            hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
+                            hints_floraweb = ifelse("map" %in% hints_reactive$hints_floraweb, "map", NULL),
+                            image_ukplantatlas = FALSE,
+                            hints_ukplantatlas = NULL,
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                             file_location = "temporary", only_links = TRUE)
                         
@@ -378,16 +368,16 @@ shinyServer(function(input, output, session) {
         # Chorology ----
         isolate({
             observe({
-                options <- pmatch(c("Map", "Chorology"), input$options)
+                # options <- pmatch(c("Map", "Chorology"), input$options)
                 output$selected_sp_chorology <- renderUI({
-                    if(!is.na(options[2]) &
+                    if("Chorology" %in% input$options &
                        isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
                                               isolate(species_list_reactive$df_data)$NAMNR[j],
                                               ".GIF"),
                                  width = "400px", height = "300px")
-                    } else if(!is.na(options[2]) &
+                    } else if("Chorology" %in% input$options &
                               !(isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1)){
                         tags$img(src = "no_chorology.png",
                                  width = "200px", height = "50px")

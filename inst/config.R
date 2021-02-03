@@ -19,11 +19,11 @@ image_ukplantatlas = FALSE
 #                        "perennation","lifeform","woodiness","clonality")
 hints_ukplantatlas = NULL
 
-image_folders = c("www/pictures_gehoelze_winter_560")
+image_folders = c("www/pictures_gehoelze_winter_500")
 # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", 
 # "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
 hints_custom = NULL
-chorology = "Chorology"
+chorology = "chorology"
 
 ### Winter:
 # species_list <- read.csv("floraweb_species_winter.csv") # for winter list

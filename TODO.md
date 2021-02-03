@@ -9,6 +9,9 @@ TODO list
   - filtering via column in df
   - summary stats about species list: number of species
   - ~~save initial scores as reactive values when new list loaded~~
+  - control for right columns in data.frame
+  - make example datasets available via dropdown
+  - read custom hints from table header
 * ~~config file for default values: config.R~~
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
@@ -34,6 +37,7 @@ TODO list
 * Make some of the elements in the about page dependent on the resources used
   - If floraweb used: Floraweb credits
   - If own images used load file with image credits
+* Plot UK map and think about where to plot maps. Make space available if maps not plotted
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
