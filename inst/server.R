@@ -57,6 +57,9 @@ shinyServer(function(input, output, session) {
                                      hints_custom = hints_custom,
                                      chorology = chorology)
     
+    # French common names
+    fr_common <- read.table("nom_vernaculaires_cleaned.csv",
+                            header = TRUE, sep = "\t", fill = TRUE)
     
     # 1. Setup ----
     
@@ -451,6 +454,7 @@ shinyServer(function(input, output, session) {
         
         # setting back answer text
         output$real_answer_print <- renderText("")
+        # output$fr_common_name <- renderText("")
         
         # counting
         species_list_reactive$df_data$COUNT[i$i] <- species_list_reactive$df_data$COUNT[i$i] + 1
@@ -653,6 +657,14 @@ shinyServer(function(input, output, session) {
     # Real answer ----
     observeEvent(input$real_answer, {
         output$real_answer_print <- renderText(reactive_species$species)
+        
+        # French common names
+        # fr_test <- as.character(
+        #     fr_common[grepl(reactive_species$species,
+        #                     fr_common$Nom.scientifique),
+        #               "Nom.vernaculaire"])
+        # output$fr_common_name <- renderText(fr_test)
+        
         if(!answered_reactive$answered){
             answered_reactive$cheated <- TRUE 
             print(paste("cheated ", answered_reactive$cheated))
@@ -664,7 +676,11 @@ shinyServer(function(input, output, session) {
         # Total counts, unique species and score
         total_count <- sum(species_list_reactive$df_data$COUNT)
         total_species <- sum(species_list_reactive$df_data$COUNT > 0)
+        
         total_score <- sum(species_list_reactive$df_data$SCORE)
+        if(answered_reactive$answered){
+            total_score <- total_score + 1
+        }
         
         # Session counts, unique species and score
         session_count <- total_count - counts_reactive$init_count
@@ -692,7 +708,8 @@ shinyServer(function(input, output, session) {
                     " different species) and guessed <b>",
                     session_score, "</b> right.", "</br><br>",
                     "In total, you practised <b>", total_count,
-                    "</b> pictures for ", " species and guessed <b>",
+                    "</b> pictures (for ", total_species,
+                    " different species) and guessed <b>",
                     total_score, "</b> right.</br>"))
     })
     })
