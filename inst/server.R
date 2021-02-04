@@ -20,7 +20,7 @@ shinyServer(function(input, output, session) {
     chorology_list <- read.table("NAMNR_chorology.txt")
     
     # Sort species list alphabetically
-    species_list <- species_list[order(species_list$SPECIES),c(1:14)]
+    species_list <- species_list[order(species_list$SPECIES), c(1:14)]
     
     # Make species list a reactive object and allow for upload
     species_list_reactive <- reactiveValues(df_data = NULL)
@@ -660,36 +660,42 @@ shinyServer(function(input, output, session) {
     })
     
     # Sum.stats ----
-    observeEvent(input$newplant, {
-        counts_reactive$init_count <- counts_reactive$init_count + 1
-        counts_reactive$init_score <- counts_reactive$init_score + + answered_reactive$answered #1
-    })
+    observe({
+        # Total counts, unique species and score
+        total_count <- sum(species_list_reactive$df_data$COUNT)
+        total_species <- sum(species_list_reactive$df_data$COUNT > 0)
+        total_score <- sum(species_list_reactive$df_data$SCORE)
+        
+        # Session counts, unique species and score
+        session_count <- total_count - counts_reactive$init_count
+        session_species <- total_species - counts_reactive$init_count_species
+        session_score <- total_score - counts_reactive$init_score
     
     output$stats_barplot <- renderPlot({
-        barplot_stats <- c(counts_reactive$init_count,
-                           counts_reactive$init_score)
-        names(barplot_stats) <- c("Count", "Score")
+        barplot_stats_session <- c(session_count, session_score)
+        names(barplot_stats_session) <- c("Count", "Score")
         
-        barplot(barplot_stats, col = c("grey", "darkgreen"))
+        barplot_stats_all <- c(total_count, total_score)
+        names(barplot_stats_all) <- c("Count", "Score")
+        
+        par(mfrow = c(1, 2), lwd = 2)
+        barplot(barplot_stats_session, col = c("grey", "chartreuse3"),
+                main = "Current session")
+        barplot(barplot_stats_all, col = c("grey", "chartreuse3"),
+                main = "Total")
     })
-    
-    
+
     output$stats_text <- renderPrint({
-        print(paste0("HERE: ", counts_reactive$init_count))
-        print(paste0("HEREAFTER: ", counts_reactive$init_count))
-        
-        X <- counts_reactive$init_count
-        Y <- counts_reactive$init_score
-        
-        XX <- sum(species_list_reactive$df_data$COUNT)
-        YY <- sum(species_list_reactive$df_data$SCORE)
-        
-        HTML(paste0("<br>", "In this session, you practised ", X,
-                    " species and guessed ", Y, " right.", "</br><br>",
-                    "In total, you practised ", XX,
-                    "species and guessed ", YY, " right.</br>"))
+        HTML(paste0("<br>", "In this session, you practised <b>",
+                    session_count,
+                    "</b> pictures (for ", session_species,
+                    " different species) and guessed <b>",
+                    session_score, "</b> right.", "</br><br>",
+                    "In total, you practised <b>", total_count,
+                    "</b> pictures for ", " species and guessed <b>",
+                    total_score, "</b> right.</br>"))
     })
-    
+    })
     # Download ----
     observeEvent(input$upanddown_button, {
         showModal(modalDialog(
