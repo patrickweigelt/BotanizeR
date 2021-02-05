@@ -13,7 +13,7 @@ species_list_selected <- c("Germany_all","Germany_winter","Germany_summer","UK&I
 image_floraweb = TRUE
 hints_floraweb = c("map","description", "status", "habitat", "family",
                    "German name")
-image_ukplantatlas = FALSE
+image_ukplantatlas = TRUE
 # hints_ukplantatlas = c("mapuk","familyuk","ecology","statusuk","trends",
 #                        "perennation","lifeform","woodiness","clonality")
 hints_ukplantatlas = NULL
@@ -21,7 +21,7 @@ hints_ukplantatlas = NULL
 image_folders = c("www/pictures_gehoelze_winter_500")
 # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", 
 # "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
-hints_custom = c("ownhint_1","COMMONNAME") # column names of own hints to check at start
+hints_custom = c("COMMONNAME") # column names of own hints to check at start
 hints_custom_omit <- c("NAMNR","TAXONNAME","SPECIES","GENUS","EPITHET","AUTHOR",  
                        "NATIVE","SUMMER","WINTER","BioDiv2005","COUNT","SCORE",
                        "ATTEMPTS","INCLUDE", "imagelink_1","imagelink_2")

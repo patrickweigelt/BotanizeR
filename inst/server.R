@@ -401,14 +401,16 @@ shinyServer(function(input, output, session) {
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
             image_floraweb = hints_reactive$image_floraweb,
-            hints_floraweb = hints_reactive$hints_floraweb[which(hints_reactive$hints_floraweb!="map")],
+            hints_floraweb = hints_reactive$hints_floraweb[which(
+                hints_reactive$hints_floraweb!="map")],
             image_ukplantatlas = hints_reactive$image_ukplantatlas,
-            hints_ukplantatlas = hints_reactive$hints_ukplantatlas[which(hints_reactive$hints_ukplantatlas!="map")],
-            hints_custom = hints_reactive$hints_custom, imagelink_custom = NULL,
+            hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
+            hints_custom = hints_reactive$hints_custom, 
+            imagelink_custom = NULL,
             image_folders = image_folders,
             file_location = "temporary", only_links = TRUE)
         
-        # Photos ----
+        ### Photos ----
         output$selected_sp_photo <- renderSlickR({
             if(length(sp_infos$images) == 0){
                 sp_infos$images = "no_picture.png"
@@ -421,7 +423,7 @@ shinyServer(function(input, output, session) {
             slickR(imgs, slideId = "slide_species")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
-        # Name ----
+        ### Name ----
         output$selected_sp_name <- renderUI({
             HTML(paste("<b>",
                        isolate(species_list_reactive$df_data)[j,"TAXONNAME"],
@@ -429,7 +431,7 @@ shinyServer(function(input, output, session) {
         })
         
 
-        # Description ----
+        ### Description ----
         output$selected_sp_description <- renderUI({
             floraweb_link <- paste0(
                 "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
@@ -466,14 +468,14 @@ shinyServer(function(input, output, session) {
         })
         
 
-        # Map ----
+        ### Map ----
         isolate({
             observe({
                 # options <- pmatch(c("Map", "Map UK", "Chorology"), input$options)
                 output$selected_sp_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if("Map" %in% input$options & !is.null(hints_floraweb)){
+                    if("Map" %in% input$options){
                         # Downloading map only
                         sp_map <- BotanizeR_collect(
                             species_row = isolate(species_list_reactive$df_data)[j, ], 
@@ -494,7 +496,7 @@ shinyServer(function(input, output, session) {
             })
         })
         
-        # Chorology ----
+        ### Chorology ----
         isolate({
             observe({
                 # options <- pmatch(c("Map", "Chorology"), input$options)
@@ -527,6 +529,7 @@ shinyServer(function(input, output, session) {
 
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
+        k <- 0
         
         if(!counts_reactive$omit & !is.na(i$i) & !answered_reactive$cheated){
             species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
@@ -536,7 +539,11 @@ shinyServer(function(input, output, session) {
         
         print(paste("SCORE = ",sum(species_list_reactive$df_data$SCORE)))
         
-        while (sp_picture == 0) { # If no picture available => new plant
+        while (sp_picture == 0 & k <= 10) { # If no picture available => new plant
+            
+            # control for bad choice of species list and image hints (no images)
+            k <- k + 1
+            
             # random species
             temp1 <- species_list_reactive$df_data
             reactive_species$species <- sample(temp1$SPECIES, 1, 
@@ -548,11 +555,16 @@ shinyServer(function(input, output, session) {
             # Download information with BotanizeR_collect()
             sp_quizz <- BotanizeR_collect(
                 species_row = temp1[i$i, ], 
-                image_floraweb = image_floraweb,
-                hints_floraweb = hints_floraweb[which(hints_floraweb!="map")], 
-                hints_custom = NULL, imagelink_custom = NULL,
+                image_floraweb = hints_reactive$image_floraweb,
+                hints_floraweb = hints_reactive$hints_floraweb[which(
+                    hints_reactive$hints_floraweb!="map")],
+                image_ukplantatlas = hints_reactive$image_ukplantatlas,
+                hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
+                hints_custom = hints_reactive$hints_custom, 
+                imagelink_custom = NULL,
                 image_folders = image_folders,
-                file_location = "temporary", only_links = TRUE)
+                file_location = "temporary", only_links = TRUE,
+                image_required = TRUE)
             
             if(length(sp_quizz$images) != 0){
                 sp_picture <- 1
@@ -594,121 +606,86 @@ shinyServer(function(input, output, session) {
                                      hints_ukplantatlas_lookup$show[which(
                                          hints_ukplantatlas_lookup$variable %in% 
                                              hints_reactive$hints_ukplantatlas)],
-                                     hints_custom),
+                                     hints_reactive$hints_custom),
                                  selected = NULL)
         
         
-        # Photos ----
+        ### Photos ----
         
         output$random_slickr <- renderSlickR({
-            imgs_quizz <- slick_list(slick_div(sp_quizz$images, css = htmltools::css(width = "100%", 
-                                                                                     margin.left = "auto", margin.right = "auto",
-                                                                                     margin.bottom = "auto", margin.top = "auto"),
+            if(length(sp_quizz$images) == 0){
+                sp_quizz$images = "no_pictures.png"
+            }
+            imgs_quizz <- slick_list(slick_div(sp_quizz$images, 
+                                               css = htmltools::css(
+                                                   width = "100%", margin.left = "auto", 
+                                                   margin.right = "auto", margin.bottom = "auto", 
+                                                   margin.top = "auto"),
                                                type = "img",links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
-        # German name ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_german <- renderText({
-                    if(!is.na(quizz_options[1])){
-                        print(sp_quizz$`German name`)
-                    }
+        
+        
+        ### Description ----
+       
+        observe({
+                
+                temp_hints <- c(hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quizz_options)],
+                                hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quizz_options)],
+                                isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quizz_options)]))
+                temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
+                
+                output$quiz_sp_description <- renderUI({
+                    floraweb_link <- paste0(
+                        "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+                        isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
+                        "&")
+                    
+                    
+                    ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
+                                                gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species))))
+                    
+                
+                    temp_hints <- paste0(unlist(sapply(sp_quizz[names(sp_quizz) %in% temp_hints],
+                                                       function(x) c(x,"</br></br>"))), collapse="")
+                    
+                    HTML(paste0(temp_hints,
+                                ifelse(length(hints_reactive$hints_floraweb)>0|
+                                           length(hints_reactive$hints_ukplantatlas)>0,
+                                       "<b>Source:</b></br>",""),
+                                ifelse(length(hints_reactive$hints_floraweb)>0,
+                                       paste0("<a href='",
+                                              floraweb_link, # https://www.floraweb.de/,
+                                              "' target=_blank>FloraWeb</a></br>")
+                                       ,""),
+                                ifelse(length(hints_reactive$hints_ukplantatlas)>0,
+                                       paste0("<a href='",
+                                              ukplantatlas_link, # https://www.brc.ac.uk/,
+                                              "' target=_blank>UK & Ireland Plant Atlas</a></br>")
+                                       ,"")
+                    ))
                 })
             })
-        })
-        
-        # Family ----
-        #isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_family <- renderText({
-                    if(!is.na(quizz_options[2])){
-                        print(sp_quizz$family)
-                    }
-                })
-            })
-        #})
-        
-        # Status ----
+
+
+        ### Map ----
         isolate({
             observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_status <- renderText({
-                    if(!is.na(quizz_options[3])){
-                        print(sp_quizz$status)
-                    }
-                })
-            })
-        })
-        
-        # Description ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_description <- renderUI({
-                    if(!is.na(quizz_options[4])){
-                        floraweb_link_quizz <- paste0(
-                            "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                            species_list_reactive$df_data[i$i, "NAMNR"],
-                            "&")
-                        
-                        HTML(paste0(sp_quizz$description,
-                                    "</br>",
-                                    "Source: ",
-                                    "<a href='",
-                                    floraweb_link_quizz, # https://www.floraweb.de/,
-                                    "' target=_blank>FloraWeb</a>"))
-                    }
-                })
-            })
-        })
-        
-        # Habitat ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
-                output$random_habitat <- renderText({
-                    if(!is.na(quizz_options[5])){
-                        print(sp_quizz$habitat[[1]])
-                    }
-                })
-            })
-        })
-        
-        # Map ----
-        isolate({
-            observe({
-                quizz_options <- pmatch(c("German name", "Family", "Status",
-                                          "Description", "Habitat", "Map",
-                                          "Chorology"),
-                                        input$quizz_options)
+                #quizz_options <- pmatch(c("German name", "Family", "Status",
+                #                          "Description", "Habitat", "Map",
+                #                          "Chorology"),
+                #                        input$quizz_options)
+                
                 output$random_map <- renderPlot({
                     par(oma = c(0, 0, 0, 10.5))
                     plot.new()
-                    if(!is.na(quizz_options[6]) & !is.null(hints_floraweb)){
+                    if("Map" %in% input$quizz_options){
                         # Downloading map only
                         random_map <- BotanizeR_collect(
                             species_row = species_list_reactive$df_data[i$i, ], 
                             image_floraweb = FALSE,
-                            hints_floraweb = ifelse("map" %in% hints_floraweb, "map", NULL), 
+                            hints_floraweb = ifelse("map" %in% hints_reactive$hints_floraweb, "map", NULL), 
                             hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
                             file_location = "temporary", only_links = TRUE)
                         
@@ -723,7 +700,7 @@ shinyServer(function(input, output, session) {
         })
     })
     
-    # Answer ----
+    ### Answer ----
     # display text when no answer is provided
     
     # Providing an answer simple version
@@ -774,7 +751,7 @@ shinyServer(function(input, output, session) {
     
     
     
-    # Real answer ----
+    ### Real answer ----
     observeEvent(input$real_answer, {
         output$real_answer_print <- renderText(reactive_species$species)
         
@@ -791,7 +768,7 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    # Sum.stats ----
+    ### Sum.stats ----
     observe({
         # Total counts, unique species and score
         total_count <- sum(species_list_reactive$df_data$COUNT)
@@ -833,7 +810,7 @@ shinyServer(function(input, output, session) {
                     total_score, "</b> right.</br>"))
     })
     })
-    # Download ----
+    ### Download ----
     observeEvent(input$upanddown_button, {
         showModal(modalDialog(
             title = "Up and Download",

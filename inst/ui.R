@@ -4,21 +4,10 @@ library(shiny)
 library(shinythemes)
 # library(shinyjs)
 library(BotanizeR)
-# library(imager)
-#library(XML)
 library(slickR)
 library(shinyFiles)
 library(shinyBS)
 
-# Data
-# data(floraweb_species)
-# species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-#                                                floraweb_species$BioDiv2005==1), ]
-# species_list <- read.csv("floraweb_species_winter.csv") # for winter list
-# 
-# species_list <- species_list[order(species_list$SPECIES),c(1:14)]
-# 
-# plant_list <- species_list$SPECIES
 
 # Source text for the "About" panel
 tabPanelAbout = source("About.R")$value
@@ -46,12 +35,8 @@ tabPanel(h1(id = "panel1", "Species"),
                          #              choices = list("Plant list" = "plant_list",
                          #                             "Random plant" = "random_plant"), 
                          #              selected = 1),
-                         # uiOutput("list_or_random"),
                          # br(),
                          em(uiOutput("select_plant")),
-                         # selectInput("plant_list", "Plant list",
-                         #            choices = plant_list,
-                         #            selected = plant_list[1]),
                          # br(),
                          # actionButton("random_plant", "Random plant"),
                          br(),
@@ -118,15 +103,7 @@ tabPanel(
         
         # Third part with other indices
         column(3,
-               textOutput("random_german"),
-               br(),
-               textOutput("random_family"),
-               br(),
-               textOutput("random_status"),
-               br(),
-               htmlOutput("random_description"),
-               br(),
-               textOutput("random_habitat"),
+               htmlOutput("quiz_sp_description"),
                br(),br(),
                actionButton("upanddown_button", "Upload/Download progress"),
                br(),
