@@ -58,8 +58,8 @@ shinyServer(function(input, output, session) {
                                      chorology = chorology)
     
     # French common names
-    fr_common <- read.table("nom_vernaculaires_cleaned.csv",
-                            header = TRUE, sep = "\t", fill = TRUE)
+    # fr_common <- read.table("nom_vernaculaires_cleaned.csv",
+    #                        header = TRUE, sep = "\t", fill = TRUE)
     
     # 1. Setup ----
     
@@ -141,6 +141,27 @@ shinyServer(function(input, output, session) {
         #print(unlist(input$image_folder["path"]))
         #print(typeof(input$image_folder["path"]))
     })
+    
+    
+    
+    
+    # Choosing initial species list
+    # drop down
+    
+    output$selectlist_note <- renderUI({
+        HTML(paste0("<br>",
+                    "Select a species list to start from:"))
+    })
+    
+    
+    output$select_specieslist <- renderUI({
+        selectInput("select_specieslist", label = NULL,
+                    choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all"),
+                    selected = "Germany_winter")
+    })
+    
+
+    
     
     # Uploading progress
     output$upload_note <- renderUI({
@@ -238,14 +259,14 @@ shinyServer(function(input, output, session) {
     # 2. Selected species ----
     
     # Dynamic dropdown
-    choice_plants <- reactive({
-        species_list_reactive$df_data$SPECIES
-    })
+    # choice_plants <- reactive({
+    #     species_list_reactive$df_data$SPECIES
+    # })
     
     output$select_plant <- renderUI({
         selectInput("plant_list", "Plant list",
-                    choices = choice_plants(),
-                    selected = choice_plants()[1])
+                    choices = species_list_reactive$df_data$SPECIES,
+                    selected = species_list_reactive$df_data$SPECIES[1])
     })
     
     # Plant list
