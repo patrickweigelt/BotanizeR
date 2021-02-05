@@ -75,8 +75,11 @@ shinyServer(function(input, output, session) {
                                      image_ukplantatlas = image_ukplantatlas,
                                      hints_ukplantatlas = hints_ukplantatlas,
                                      image_folders = image_folders,
-                                     hints_custom = hints_custom,
+                                     hints_custom = hints_custom[
+                                         which(hints_custom %in% colnames(species_list)
+                                               & !hints_custom %in% hints_custom_omit)],
                                      chorology = chorology)
+    
     
     # French common names
     # fr_common <- read.table("nom_vernaculaires_cleaned.csv",
@@ -150,6 +153,19 @@ shinyServer(function(input, output, session) {
     
     ## Own resources ----
     
+    
+    ### Own hints ----
+    output$own_hints <- renderUI({
+        checkboxGroupInput(inputId = "own_hints", label = "Own hints",
+                           choices = colnames(species_list_reactive$df_data)[
+                               which(!colnames(species_list_reactive$df_data) 
+                                     %in% hints_custom_omit)],
+                           selected = hints_custom[
+                               which(hints_custom %in% colnames(species_list)
+                                     & !hints_custom %in% hints_custom_omit)])
+    })
+    
+
     ### image folder ----
     shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
                    filetypes = c('', 'txt'), allowDirCreate = FALSE)

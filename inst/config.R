@@ -21,7 +21,11 @@ hints_ukplantatlas = NULL
 image_folders = c("www/pictures_gehoelze_winter_500")
 # image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", 
 # "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400")
-hints_custom = NULL
+hints_custom = c("ownhint_1","COMMONNAME") # column names of own hints to check at start
+hints_custom_omit <- c("NAMNR","TAXONNAME","SPECIES","GENUS","EPITHET","AUTHOR",  
+                       "NATIVE","SUMMER","WINTER","BioDiv2005","COUNT","SCORE",
+                       "ATTEMPTS","INCLUDE", "imagelink_1","imagelink_2")
+
 chorology = "chorology"
 chorology = NULL
 
