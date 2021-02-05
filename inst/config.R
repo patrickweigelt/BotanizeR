@@ -1,15 +1,14 @@
 library(BotanizeR)
 # 1. Config ----
 
-### Default:
-# List of species
-data(floraweb_species)
-species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                         floraweb_species$BioDiv2005==1), ]
-# data(ukplantatlas_species)
-# species_list <- ukplantatlas_species
+### In this config file you specify the default starting values for the BotanizeR Shiny app:
 
-## hints and images
+## List of species ----
+
+species_list_selected <- c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all")[3]
+
+
+## Hints and images ----
 # floraweb:
 image_floraweb = TRUE
 hints_floraweb = c("map","description", "status", "habitat", "family",

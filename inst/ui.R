@@ -172,6 +172,7 @@ tabPanel(
                h4("Species list"),
                htmlOutput("selectlist_note"),
                uiOutput("select_specieslist"),
+               htmlOutput("summary_note"),
                htmlOutput("upload_note"),
                fileInput("file", ""),
                htmlOutput("download_note"),

@@ -16,21 +16,41 @@ shinyServer(function(input, output, session) {
     # Load starting config
     source("config.R")
     
-    # List of species that have a chorology map
+    # Load list of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
     
-    # Sort species list alphabetically
-    species_list <- species_list[order(species_list$SPECIES), c(1:14)]
+    # Load initial species list
     
-    # Make species list a reactive object and allow for upload
-    species_list_reactive <- reactiveValues(df_data = NULL)
-    species_list_reactive$df_data <- species_list
+    if(species_list_selected == "Germany_all"){
+        data(floraweb_species)
+        species_list <- floraweb_species
+    }  else if (species_list_selected == "Germany_summer"){
+        data(floraweb_species)
+        species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
+                                                        floraweb_species$BioDiv2005==1), ]
+    } else if (species_list_selected == "Germany_winter"){
+        data(floraweb_species)
+        species_list <- floraweb_species[which(floraweb_species$WINTER==1), ]
+    } else if (species_list_selected == "UK&Ireland_all"){
+        data(ukplantatlas_species)
+        species_list <- ukplantatlas_species
+    }
     
+    # Order species list alphabetically 
+    species_list <- species_list[order(species_list$SPECIES),]
+    
+    # Make species list a reactive object
+    species_list_reactive <- reactiveValues(df_data = species_list)
+    species_list_uploaded_reactive <- reactiveValues(df_data = NULL)
+    
+    # Set reactive initial counts
     counts_reactive <- reactiveValues(init_count = 0,
                                       init_score = 0,
                                       init_count_species = 0,
-                                      init_score_species = 0)
-
+                                      init_score_species = 0,
+                                      omit = FALSE)
+    
+    # Define lookup tables for hint variables and their labels
     hints_floraweb_lookup <- data.frame(variable = c("German name","family","status","description","habitat","map"),
                                         show = c("German name","Family","Status","Description","Habitat","Map"),
                                         stringsAsFactors = FALSE
@@ -41,6 +61,7 @@ shinyServer(function(input, output, session) {
                                         stringsAsFactors = FALSE
     )
     
+    # Order hints accordingly
     if(!is.null(hints_floraweb)){
         hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$variable %in% hints_floraweb)]
     }
@@ -63,10 +84,11 @@ shinyServer(function(input, output, session) {
     
     # 1. Setup ----
     
-    # Online resources
+    ## Online resources ----
     
-    # Render checkboxes floraweb
+    ### Render checkboxes ----
     
+    # Floraweb
     output$floraweb_images <- renderUI({
         checkboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
                            choices = c("Images"),
@@ -85,7 +107,7 @@ shinyServer(function(input, output, session) {
     })
     
  
-    # Render checkboxes UK Plant Atlas
+    # UK Plant Atlas
     output$ukplantatlas_images <- renderUI({
         checkboxGroupInput(inputId = "ukplantatlas_images", label = "UK & Ireland Plant Atlas",
                            choices = c("Images"),
@@ -99,9 +121,7 @@ shinyServer(function(input, output, session) {
     })
 
     
-    
-    
-    # Change content of reactive hints ----
+    ### Change content of reactive hints ----
     observeEvent(input$floraweb_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
         #print(paste("before:",hints_reactive$image_floraweb))
         #print(paste("input:" , input$floraweb_images))
@@ -128,9 +148,9 @@ shinyServer(function(input, output, session) {
     })
     
     
+    ## Own resources ----
     
-
-    # image folder
+    ### image folder ----
     shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
                    filetypes = c('', 'txt'), allowDirCreate = FALSE)
     
@@ -145,25 +165,74 @@ shinyServer(function(input, output, session) {
     
     
     
-    # Choosing initial species list
-    # drop down
+    ## Species list ----
+
+    ### Chose from drop down ----
     
+    # Text note
     output$selectlist_note <- renderUI({
         HTML(paste0("<br>",
-                    "Select a species list to start from:"))
+                    "Select a species list:"))
     })
     
-    
+    # Render drop down
     output$select_specieslist <- renderUI({
         selectInput("select_specieslist", label = NULL,
                     choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all"),
-                    selected = "Germany_winter")
+                    selected = species_list_selected)
+    })
+    
+    
+    # Make condition that input is needed
+    y <- reactive({
+        req(input$select_specieslist)
+        input$select_specieslist
+    })
+    
+    # Observe input
+    observeEvent(y(), ignoreInit = TRUE, {
+        # print(input$select_specieslist)
+        # c("Germany_all","Germany_summer","Germany_winter","UK&Ireland_all")
+        if(input$select_specieslist == "Germany_all"){
+            data(floraweb_species)
+            temp_species_list <- floraweb_species
+        }  else if (input$select_specieslist == "Germany_summer"){
+            data(floraweb_species)
+            temp_species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
+                                                            floraweb_species$BioDiv2005==1), ]
+        } else if (input$select_specieslist == "Germany_winter"){
+            data(floraweb_species)
+            temp_species_list <- floraweb_species[which(floraweb_species$WINTER==1), ]
+        } else if (input$select_specieslist == "UK&Ireland_all"){
+            data(ukplantatlas_species)
+            temp_species_list <- ukplantatlas_species
+        } else if (input$select_specieslist == "uploaded"){
+            temp_species_list <- species_list_uploaded_reactive$df_data
+        }
+        
+        species_list_reactive$df_data <- temp_species_list[order(temp_species_list$SPECIES),]
+        counts_reactive$init_count <- sum(temp_species_list$COUNT)
+        counts_reactive$init_score <- sum(temp_species_list$SCORE)
+        counts_reactive$init_count_species <- sum(temp_species_list$COUNT > 0)
+        counts_reactive$init_score_species <- sum(temp_species_list$SCORE > 0)
+        
+        # Avoid that scores are updated when hitting next plant or download or summary
+        counts_reactive$omit <- TRUE
+        
+        # print(paste(nrow(species_list_reactive$df_data), "species"))
+    })
+    
+    # Species list summary note
+    output$summary_note <- renderUI({
+        HTML(paste0("<i>",
+                    nrow(species_list_reactive$df_data),
+                    " species; ", 
+                    sum(species_list_reactive$df_data$COUNT),
+                    " practiced.</i>"))
     })
     
 
-    
-    
-    # Uploading progress
+    ### Upload a species list ----
     output$upload_note <- renderUI({
         HTML(paste0("<br>",
                     "If you ran the quiz in a previous session and you saved your progress, 
@@ -174,21 +243,29 @@ shinyServer(function(input, output, session) {
     
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
-        # write control for right columns in dataframe
-        species_list_reactive$df_data <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
+        species_list_uploaded <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
+        # write control and note for right columns in dataframe
+        species_list_reactive$df_data <- species_list_uploaded
+        species_list_uploaded_reactive$df_data <- species_list_uploaded
         counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
         counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
         counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
         counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+        
+        # update specieslist drop down
+        updateSelectInput(session,
+                          inputId = "select_specieslist", label = NULL,
+                        choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded"),
+                        selected = "uploaded")
     })
     
     
-    # Downloading progress 
+    ### Download a species list ----
     output$download <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 
         content = function(file){
             species_list_save <- species_list_reactive$df_data
-            if(!answered_reactive$cheated){
+            if(!counts_reactive$omit & !answered_reactive$cheated){
                 species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
             }
             write.csv(species_list_save, file, row.names = FALSE)
@@ -432,9 +509,12 @@ shinyServer(function(input, output, session) {
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         sp_picture <- 0
         
-        if(!is.na(i$i) & !answered_reactive$cheated){
+        if(!counts_reactive$omit & !is.na(i$i) & !answered_reactive$cheated){
             species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
         }
+        
+        counts_reactive$omit <- FALSE
+        
         print(paste("SCORE = ",sum(species_list_reactive$df_data$SCORE)))
         
         while (sp_picture == 0) { # If no picture available => new plant
@@ -699,7 +779,7 @@ shinyServer(function(input, output, session) {
         total_species <- sum(species_list_reactive$df_data$COUNT > 0)
         
         total_score <- sum(species_list_reactive$df_data$SCORE)
-        if(answered_reactive$answered){
+        if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered){
             total_score <- total_score + 1
         }
         
