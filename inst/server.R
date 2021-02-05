@@ -160,9 +160,12 @@ shinyServer(function(input, output, session) {
                            choices = colnames(species_list_reactive$df_data)[
                                which(!colnames(species_list_reactive$df_data) 
                                      %in% hints_custom_omit)],
-                           selected = hints_custom[
-                               which(hints_custom %in% colnames(species_list)
-                                     & !hints_custom %in% hints_custom_omit)])
+                           selected = hints_reactive$hints_custom)
+    })
+    
+    observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        hints_reactive$hints_custom <- input$own_hints
+        print(hints_reactive$hints_custom)
     })
     
 
@@ -401,7 +404,7 @@ shinyServer(function(input, output, session) {
             hints_floraweb = hints_reactive$hints_floraweb[which(hints_reactive$hints_floraweb!="map")],
             image_ukplantatlas = hints_reactive$image_ukplantatlas,
             hints_ukplantatlas = hints_reactive$hints_ukplantatlas[which(hints_reactive$hints_ukplantatlas!="map")],
-            hints_custom = NULL, imagelink_custom = NULL,
+            hints_custom = hints_reactive$hints_custom, imagelink_custom = NULL,
             image_folders = image_folders,
             file_location = "temporary", only_links = TRUE)
         
