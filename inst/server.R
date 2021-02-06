@@ -77,7 +77,9 @@ shinyServer(function(input, output, session) {
                                      image_folders = image_folders,
                                      hints_custom = hints_custom[
                                          which(hints_custom %in% colnames(species_list)
-                                               & !hints_custom %in% hints_custom_omit)],
+                                               & !hints_custom %in% c(hints_custom_omit,
+                                               grep("imagelink", colnames(species_list), 
+                                                    value = TRUE)))],
                                      chorology = chorology)
     
     
@@ -159,7 +161,10 @@ shinyServer(function(input, output, session) {
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
                            choices = colnames(species_list_reactive$df_data)[
                                which(!colnames(species_list_reactive$df_data) 
-                                     %in% hints_custom_omit)],
+                                     %in% c(hints_custom_omit,
+                                            grep("imagelink", 
+                                                 colnames(species_list_reactive$df_data), 
+                                                 value = TRUE)))],
                            selected = hints_reactive$hints_custom)
     })
     
@@ -407,7 +412,7 @@ shinyServer(function(input, output, session) {
             hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
             hints_custom = hints_reactive$hints_custom, 
             imagelink_custom = NULL,
-            image_folders = image_folders,
+            image_folders = paste0(system_path,hints_reactive$image_folders,sep=""),
             file_location = "temporary", only_links = TRUE)
         
         ### Photos ----
@@ -562,7 +567,7 @@ shinyServer(function(input, output, session) {
                 hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
                 hints_custom = hints_reactive$hints_custom, 
                 imagelink_custom = NULL,
-                image_folders = image_folders,
+                image_folders = paste0(system_path,hints_reactive$image_folders),
                 file_location = "temporary", only_links = TRUE,
                 image_required = TRUE)
             
