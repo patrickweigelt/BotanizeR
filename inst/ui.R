@@ -105,9 +105,8 @@ tabPanel(
         column(3,
                htmlOutput("quiz_sp_description"),
                br(),br(),
+               actionButton("sumstats_button", "Statistics"),
                actionButton("upanddown_button", "Upload/Download progress"),
-               br(),
-               actionButton("sumstats_button", "Show statistics"),
                bsModal(id = "sumstats_modal",
                        title = "Session information",
                        trigger = "sumstats_button",
@@ -141,8 +140,9 @@ tabPanel(
                br(),
                h5("Image folders"),
                shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
-               textOutput("img_folders")
-               # Add button to remove image folders consecutively
+               actionButton("remove_folder", "Remove last"),
+               htmlOutput("list_imagefolders"),
+
         ),
         column(4,
                h4("Species list"),

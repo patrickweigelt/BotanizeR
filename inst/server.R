@@ -174,18 +174,37 @@ shinyServer(function(input, output, session) {
     })
     
 
-    ### image folder ----
+    ### Image folder ----
     shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
-                   filetypes = c('', 'txt'), allowDirCreate = FALSE)
+                   filetypes = c('', 'png', 'PNG', 'jpeg', "JPEG", 'jpg', 'JPG'), 
+                   allowDirCreate = FALSE)
     
     
+    # Update reactive image folder
     observeEvent(input$image_folder, {
-        output$img_folders <-  renderText(paste(unlist(input$image_folder["path"]), collapse="/"))
-        #print(str(input$image_folder))
-        #print(unlist(input$image_folder["path"]))
-        #print(typeof(input$image_folder["path"]))
+        if(!is.na(input$image_folder["path"][1])){
+            hints_reactive$image_folders[length(hints_reactive$image_folders)+1] <- paste(
+                unlist(input$image_folder["path"])[which(unlist(input$image_folder["path"]) != "")], collapse="/")
+        }
+        print(str(input$image_folder))
+        print(unlist(input$image_folder["path"]))
     })
     
+    # list image folders
+    output$list_imagefolders <- renderUI({
+        HTML(paste0("<i>",
+            paste0("</br>",
+                    hints_reactive$image_folders)),
+            "</i>")
+    })
+    
+    # Remove last folder
+    observeEvent(input$remove_folder, {
+        if(length(hints_reactive$image_folders)>0){
+            hints_reactive$image_folders <- hints_reactive$image_folders[-length(hints_reactive$image_folders)]
+        }
+    })
+        
     
     
     
