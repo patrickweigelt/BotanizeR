@@ -40,26 +40,27 @@ tabPanel(h1(id = "panel1", "Species"),
                          # br(),
                          # actionButton("random_plant", "Random plant"),
                          br(),
-                         uiOutput(outputId = "options")
+                         uiOutput(outputId = "options_maps")
          ),
          column(6, style="min-width: 540px", 
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "500px", height = "625px")#,
+                slickROutput("selected_sp_photo", width = "500px", height = "625px"),
                 # tags$style('div#selected_sp_photo:hover {
                 #  transform: scale(1.5);
                 #  transform-origin: top left;
                 # }'
                 #            )
+                div(uiOutput("selected_sp_map"), style="text-align: center;")
          ),
          column(3,
                 htmlOutput("selected_sp_name"),
                 br(),
                 htmlOutput("selected_sp_description"),
                 br(),
-                plotOutput("selected_sp_map"),
-                br(),
+                # plotOutput("selected_sp_map"),
+                # br(),
                 uiOutput("selected_sp_chorology")
          ))
 ),
@@ -72,6 +73,7 @@ tabPanel(
                h5(textOutput("Score")),
                br(),
                uiOutput(outputId = "quizz_options"),
+               br(),
                uiOutput(outputId = "quizz_options_maps"),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
@@ -98,7 +100,8 @@ tabPanel(
                # uiOutput("random_sp"),
                slickROutput("random_slickr", width = "500px", height = "625px"),
                br(),
-               plotOutput("random_map"),
+               # plotOutput("random_map"),
+               div(uiOutput("random_map"), style="text-align: center;"),
                br(),
                h5(textOutput("score"))),
         

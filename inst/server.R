@@ -357,6 +357,29 @@ shinyServer(function(input, output, session) {
     })
     
     
+    
+    # Dynamic map checkboxes
+    output$options_maps <- renderUI({
+        temp_options <- c("Map","Map UK","Chorology")[
+            which(c("map","mapuk","chorology") %in%
+                      c(hints_reactive$hints_floraweb,
+                        hints_reactive$hints_ukplantatlas,
+                        hints_reactive$chorology))
+        ]
+        
+        if(length(temp_options)>0) {
+            temp_options <- c("No map", temp_options)
+        }
+        
+        radioButtons(inputId = "options_maps", label = NULL,
+                     choices = temp_options,
+                     selected = "No map")
+    })
+    
+    
+    
+    
+    
     ### Plant list ----
     
     # output$plant_list <- renderPrint({plant_list})
@@ -461,47 +484,99 @@ shinyServer(function(input, output, session) {
         })
         
 
+        # isolate({
+        #     observe({
+        #         # options <- pmatch(c("Map", "Map UK", "Chorology"), input$options)
+        #         output$selected_sp_map <- renderPlot({
+        #             par(oma = c(0, 0, 0, 10.5))
+        #             plot.new()
+        #             if("Map" %in% input$options_maps){
+        #                 # Downloading map only
+        #                 sp_map <- BotanizeR_collect(
+        #                     species_row = isolate(species_list_reactive$df_data)[j, ], 
+        #                     image_floraweb = FALSE,
+        #                     hints_floraweb = ifelse("map" %in% hints_reactive$hints_floraweb, "map", ""),
+        #                     image_ukplantatlas = FALSE,
+        #                     hints_ukplantatlas = NULL,
+        #                     hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+        #                     file_location = "temporary", only_links = TRUE)
+        #                 
+        #                 par(oma = c(0, 0, 0, 10.5))
+        #                 if(length(sp_map$map)>0){
+        #                     plot(sp_map$map[[1]], pal = sp_map$map[[2]],
+        #                          key.pos = 4, main = "")
+        #                 }
+        #             }
+        #         })
+        #     })
+        # })
+        
+
         ### Map ----
-        isolate({
-            observe({
-                # options <- pmatch(c("Map", "Map UK", "Chorology"), input$options)
-                output$selected_sp_map <- renderPlot({
-                    par(oma = c(0, 0, 0, 10.5))
-                    plot.new()
-                    if("Map" %in% input$options){
-                        # Downloading map only
-                        sp_map <- BotanizeR_collect(
-                            species_row = isolate(species_list_reactive$df_data)[j, ], 
-                            image_floraweb = FALSE,
-                            hints_floraweb = ifelse("map" %in% hints_reactive$hints_floraweb, "map", NULL),
-                            image_ukplantatlas = FALSE,
-                            hints_ukplantatlas = NULL,
-                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                            file_location = "temporary", only_links = TRUE)
-                        
-                        par(oma = c(0, 0, 0, 10.5))
-                        if(length(sp_map$map)>0){
-                            plot(sp_map$map[[1]], pal = sp_map$map[[2]],
+        observe({
+            #quizz_options <- pmatch(c("German name", "Family", "Status",
+            #                          "Description", "Habitat", "Map",
+            #                          "Chorology"),
+            #                        input$quizz_options)
+            
+            print(input$options_maps)
+            output$selected_sp_map <- renderUI({
+                
+                if("Map" %in% input$options_maps){
+                    
+                    map <- BotanizeR_collect(
+                        species_row = isolate(species_list_reactive$df_data[j, ]), 
+                        image_floraweb = FALSE,
+                        hints_floraweb = "map",
+                        image_ukplantatlas = FALSE,
+                        hints_ukplantatlas = NULL,                    
+                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                        file_location = "temporary", only_links = TRUE)
+                    
+                    
+                    if(length(map$map)>0){
+                        output$plot_sp_map <- renderPlot({
+                            par(oma = c(0, 0, 0, 11))
+                            plot(map$map[[1]], pal = map$map[[2]],
                                  key.pos = 4, main = "")
-                        }
+                        })
+                        plotOutput("plot_sp_map")
                     }
-                })
+                } else if ("Map UK" %in% input$options_maps){
+                    
+                    map <- BotanizeR_collect(
+                        species_row = isolate(species_list_reactive$df_data[j, ]), 
+                        image_floraweb = FALSE,
+                        hints_floraweb = NULL,
+                        image_ukplantatlas = FALSE,
+                        hints_ukplantatlas = "mapuk",                    
+                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                        file_location = "temporary", only_links = TRUE)
+                    
+                    if(length(map$mapuk)>0){
+                        par(mar = rep(0.5, 4), oma = rep(0, 4))
+                        tags$img(src = map$mapuk,
+                                 width = "500px")
+                        
+                    }
+                }
             })
         })
+    
         
         ### Chorology ----
         isolate({
             observe({
                 # options <- pmatch(c("Map", "Chorology"), input$options)
                 output$selected_sp_chorology <- renderUI({
-                    if("Chorology" %in% input$options &
+                    if("Chorology" %in% input$options_maps &
                        isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1){
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = paste0("https://www.floraweb.de/bilder/areale/a",
                                               isolate(species_list_reactive$df_data)$NAMNR[j],
                                               ".GIF"),
                                  width = "400px", height = "300px")
-                    } else if("Chorology" %in% input$options &
+                    } else if("Chorology" %in% input$options_maps &
                               !(isolate(species_list_reactive$df_data)$NAMNR[j] %in% chorology_list$V1)){
                         tags$img(src = "no_chorology.png",
                                  width = "200px", height = "50px")
@@ -519,10 +594,6 @@ shinyServer(function(input, output, session) {
     
     ### Render quiz checkboxes ----
     
-    # checkboxes_quiz <- reactive({
-    #     hints_quiz_ordered[which(hints_quiz_ordered %in% hints_quiz)]
-    # })
-    
     output$quizz_options <- renderUI({
         checkboxGroupInput(inputId = "quizz_options", label = "Show:",
                            choices = c(hints_floraweb_lookup$show[which(
@@ -535,16 +606,20 @@ shinyServer(function(input, output, session) {
                                        hints_ukplantatlas_lookup$show != "Map UK")],
                                hints_reactive$hints_custom))
     })
-    
 
+    
     # Dynamic map checkboxes
     output$quizz_options_maps <- renderUI({
+        temp_options <- c("Map","Map UK")[which(c("map","mapuk") %in%
+                                                    c(hints_reactive$hints_floraweb,
+                                                      hints_reactive$hints_ukplantatlas))]
+        if(length(temp_options)>0) {
+            temp_options <- c("No map", temp_options)
+        }
+        
         radioButtons(inputId = "quizz_options_maps", label = NULL,
-                           choices = c("Map","Map UK")[
-                               which(c("map","mapuk") %in%
-                                         c(hints_reactive$hints_floraweb,
-                                           hints_reactive$hints_ukplantatlas))],
-                     selected = character(0))
+                           choices = temp_options,
+                     selected = "No map")
     })
     
     
@@ -640,16 +715,20 @@ shinyServer(function(input, output, session) {
                                  selected = NULL)
 
                 
+        temp_options <- c("Map","Map UK")[which(c("map","mapuk") %in%
+                                                    c(hints_reactive$hints_floraweb,
+                                                      hints_reactive$hints_ukplantatlas))]
+        if(length(temp_options)>0) {
+            temp_options <- c("No map", temp_options)
+        }
+        
         updateRadioButtons(session,
                                  inputId = "quizz_options_maps",
-                                 choices = c("Map","Map UK")[
-                                     which(c("map","mapuk") %in%
-                                               c(hints_reactive$hints_floraweb,
-                                                 hints_reactive$hints_ukplantatlas))],
-                           selected = character(0))
+                                 choices = temp_options,
+                           selected = "No map")
+
         
-
-
+        
         ### Photos ----
         
         output$random_slickr <- renderSlickR({
@@ -668,77 +747,99 @@ shinyServer(function(input, output, session) {
         
         
         ### Description ----
-       
+        
         observe({
+            
+            temp_hints <- c(hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quizz_options)],
+                            hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quizz_options)],
+                            isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quizz_options)]))
+            temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
+            
+            output$quiz_sp_description <- renderUI({
+                floraweb_link <- paste0(
+                    "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+                    isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
+                    "&")
                 
-                temp_hints <- c(hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quizz_options)],
-                                hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quizz_options)],
-                                isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quizz_options)]))
-                temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
                 
-                output$quiz_sp_description <- renderUI({
-                    floraweb_link <- paste0(
-                        "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                        isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
-                        "&")
-                    
-                    
-                    ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
-                                                gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species))))
-                    
+                ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
+                                            gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species))))
                 
-                    temp_hints <- paste0(unlist(sapply(sp_quizz[names(sp_quizz) %in% temp_hints],
-                                                       function(x) c(x,"</br></br>"))), collapse="")
-                    
-                    HTML(paste0(temp_hints,
-                                ifelse(length(hints_reactive$hints_floraweb)>0|
-                                           length(hints_reactive$hints_ukplantatlas)>0,
-                                       "<b>Source:</b></br>",""),
-                                ifelse(length(hints_reactive$hints_floraweb)>0,
-                                       paste0("<a href='",
-                                              floraweb_link, # https://www.floraweb.de/,
-                                              "' target=_blank>FloraWeb</a></br>")
-                                       ,""),
-                                ifelse(length(hints_reactive$hints_ukplantatlas)>0,
-                                       paste0("<a href='",
-                                              ukplantatlas_link, # https://www.brc.ac.uk/,
-                                              "' target=_blank>UK & Ireland Plant Atlas</a></br>")
-                                       ,"")
-                    ))
-                })
+                
+                temp_hints <- paste0(unlist(sapply(sp_quizz[names(sp_quizz) %in% temp_hints],
+                                                   function(x) c(x,"</br></br>"))), collapse="")
+                
+                HTML(paste0(temp_hints,
+                            ifelse(length(hints_reactive$hints_floraweb)>0|
+                                       length(hints_reactive$hints_ukplantatlas)>0,
+                                   "<b>Source:</b></br>",""),
+                            ifelse(length(hints_reactive$hints_floraweb)>0,
+                                   paste0("<a href='",
+                                          floraweb_link, # https://www.floraweb.de/,
+                                          "' target=_blank>FloraWeb</a></br>")
+                                   ,""),
+                            ifelse(length(hints_reactive$hints_ukplantatlas)>0,
+                                   paste0("<a href='",
+                                          ukplantatlas_link, # https://www.brc.ac.uk/,
+                                          "' target=_blank>UK & Ireland Plant Atlas</a></br>")
+                                   ,"")
+                ))
             })
-
+        })
+        
 
         ### Map ----
-        isolate({
-            observe({
-                #quizz_options <- pmatch(c("German name", "Family", "Status",
-                #                          "Description", "Habitat", "Map",
-                #                          "Chorology"),
-                #                        input$quizz_options)
+        observe({
+            #quizz_options <- pmatch(c("German name", "Family", "Status",
+            #                          "Description", "Habitat", "Map",
+            #                          "Chorology"),
+            #                        input$quizz_options)
+            
+            print(input$quizz_options_maps)
+            output$random_map <- renderUI({
                 
-                output$random_map <- renderPlot({
-                    if("Map" %in% input$quizz_options_maps){
-                        par(oma = c(0, 0, 0, 10.5))
-                        plot.new()
-                        # Downloading map only
-                        random_map <- BotanizeR_collect(
-                            species_row = species_list_reactive$df_data[i$i, ], 
-                            image_floraweb = FALSE,
-                            hints_floraweb = ifelse("map" %in% hints_reactive$hints_floraweb, "map", NULL), 
-                            hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                            file_location = "temporary", only_links = TRUE)
-                        
-                        par(oma = c(0, 0, 0, 10.5))
-                        if(length(random_map$map)>0){
+                if("Map" %in% input$quizz_options_maps){
+                    
+                    random_map <- BotanizeR_collect(
+                        species_row = species_list_reactive$df_data[i$i, ], 
+                        image_floraweb = FALSE,
+                        hints_floraweb = "map",
+                        image_ukplantatlas = FALSE,
+                        hints_ukplantatlas = NULL,                    
+                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                        file_location = "temporary", only_links = TRUE)
+                    
+                    
+                    if(length(random_map$map)>0){
+                        output$plot_map <- renderPlot({
+                            par(oma = c(0, 0, 0, 11))
                             plot(random_map$map[[1]], pal = random_map$map[[2]],
                                  key.pos = 4, main = "")
-                        }
+                        })
+                        plotOutput("plot_map")
                     }
-                })
+                } else if ("Map UK" %in% input$quizz_options_maps){
+                    
+                    random_map <- BotanizeR_collect(
+                        species_row = species_list_reactive$df_data[i$i, ], 
+                        image_floraweb = FALSE,
+                        hints_floraweb = NULL,
+                        image_ukplantatlas = FALSE,
+                        hints_ukplantatlas = "mapuk",                    
+                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                        file_location = "temporary", only_links = TRUE)
+                    
+                    if(length(random_map$mapuk)>0){
+                        par(mar = rep(0.5, 4), oma = rep(0, 4))
+                        tags$img(src = random_map$mapuk,
+                                 width = "500px")
+                        
+                    }
+                }
             })
         })
     })
+    
     
     ### Answer ----
     # display text when no answer is provided
@@ -763,7 +864,28 @@ shinyServer(function(input, output, session) {
                 answered_reactive$answered = TRUE
                 print(paste("answered = ", answered_reactive$answered))
                 
-                
+                # enable checkboxes
+                updateCheckboxGroupInput(session,
+                                         inputId = "quizz_options",
+                                         choices = c(hints_floraweb_lookup$show[which(
+                                             hints_floraweb_lookup$variable %in% 
+                                                 hints_reactive$hints_floraweb & 
+                                                 hints_floraweb_lookup$show != "Map")],
+                                             hints_ukplantatlas_lookup$show[which(
+                                                 hints_ukplantatlas_lookup$variable %in% 
+                                                     hints_reactive$hints_ukplantatlas & 
+                                                     hints_ukplantatlas_lookup$show != "Map UK")],
+                                             hints_reactive$hints_custom),
+                                         selected = c(hints_floraweb_lookup$show[which(
+                                             hints_floraweb_lookup$variable %in% 
+                                                 hints_reactive$hints_floraweb & 
+                                                 hints_floraweb_lookup$show != "Map")],
+                                             hints_ukplantatlas_lookup$show[which(
+                                                 hints_ukplantatlas_lookup$variable %in% 
+                                                     hints_reactive$hints_ukplantatlas & 
+                                                     hints_ukplantatlas_lookup$show != "Map UK")],
+                                             hints_reactive$hints_custom))
+
             } else { 
                 char_diff <-
                     paste0(adist(tolower(answer), tolower(reactive_species$species)),
@@ -805,6 +927,28 @@ shinyServer(function(input, output, session) {
         if(!answered_reactive$answered){
             answered_reactive$cheated <- TRUE 
             print(paste("cheated ", answered_reactive$cheated))
+            
+            # enable checkboxes
+            updateCheckboxGroupInput(session,
+                                     inputId = "quizz_options",
+                                     choices = c(hints_floraweb_lookup$show[which(
+                                         hints_floraweb_lookup$variable %in% 
+                                             hints_reactive$hints_floraweb & 
+                                             hints_floraweb_lookup$show != "Map")],
+                                         hints_ukplantatlas_lookup$show[which(
+                                             hints_ukplantatlas_lookup$variable %in% 
+                                                 hints_reactive$hints_ukplantatlas & 
+                                                 hints_ukplantatlas_lookup$show != "Map UK")],
+                                         hints_reactive$hints_custom),
+                                     selected = c(hints_floraweb_lookup$show[which(
+                                         hints_floraweb_lookup$variable %in% 
+                                             hints_reactive$hints_floraweb & 
+                                             hints_floraweb_lookup$show != "Map")],
+                                         hints_ukplantatlas_lookup$show[which(
+                                             hints_ukplantatlas_lookup$variable %in% 
+                                                 hints_reactive$hints_ukplantatlas & 
+                                                 hints_ukplantatlas_lookup$show != "Map UK")],
+                                         hints_reactive$hints_custom))
         }
     })
     
