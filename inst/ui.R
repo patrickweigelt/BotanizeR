@@ -72,6 +72,7 @@ tabPanel(
                h5(textOutput("Score")),
                br(),
                uiOutput(outputId = "quizz_options"),
+               uiOutput(outputId = "quizz_options_maps"),
                br(),
                tags$script(' $(document).on("keydown", function (e) {
                                                   Shiny.onInputChange("lastkeypresscode", e.keyCode);
