@@ -14,8 +14,8 @@ TODO list
   - ~~read custom hints from table header~~
   - ~~image folders~~
 * ~~config file for default values: config.R~~
-* Radio buttons checking/unchecking serveral times
-  - Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown
+* **Radio buttons checking/unchecking serveral times**
+  - **Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown**
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
 * ~~make sure score is counted if answer is retrieved accidentally after getting the name right~~
@@ -23,8 +23,8 @@ TODO list
 * make common name and family name independent of floraweb
   - add them to species list table, but not obligatory (too big a hurdle)
 * allow practicing common name
-* seems to load map each time a box is unchecked (takes long)
-  - make individual checkbox object for map
+* ~~seems to load map each time a box is unchecked (takes long)~~
+  - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~don't show hints that are not available?~~
 * previous and next species button in species list tab
@@ -42,26 +42,33 @@ TODO list
 * Make some of the elements in the about page dependent on the resources used
   - If floraweb used: Floraweb credits
   - If own images used load file with image credits
-* Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?
-* App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture
+* ~~Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?~~
+* ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * Only 1000 entries in species list dropdown. Selectize does more but doesn't have auto-complete
-* Some UK pictures don't exist as large pictures and hence don't show up
+* **Some UK pictures don't exist as large pictures and hence don't show up**
+* **Add response image credits below slider**
+* **Map legend and credits**
+* **no map text**
+* redo message images (harmonize)
+* **if map is checked, going to next species is slow because new map loads (uncheck first)**
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
 * add content from other websites
   - ~~UK-flora~~
+  - Telebotanica
 * plot first image before map is loaded to safe time.
 * loading bar for map
 * add synonyms
 * species list Göttingen
-* check image folder path in local shiny app
+* ~~check image folder path in local shiny app~~
 * make error messages in case floraweb is not available
-* define columns needed for species list
-* combine the tables and make columns for UK and GER ...
+* **define columns needed for species list**
+* **combine the tables and make columns for UK and GER ...**
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
+* **next species, previes button**
 
 3. Layout
 * ~~center smaller images in slider~~
