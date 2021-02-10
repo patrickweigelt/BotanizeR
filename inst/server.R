@@ -755,8 +755,8 @@ shinyServer(function(input, output, session) {
                                                css = htmltools::css(
                                                    width = "100%", margin.left = "auto", 
                                                    margin.right = "auto", margin.bottom = "auto", 
-                                                   margin.top = "auto"),
-                                               type = "img",links = NULL))
+                                                   margin.top = "auto"), #onerror = "this.onerror=null; this.src='no_chorology.png'" ),
+                                               type = "img", links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
