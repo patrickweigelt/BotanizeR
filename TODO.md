@@ -12,8 +12,10 @@ TODO list
   - control for right columns in data.frame
   - ~~make example datasets available via dropdown~~
   - ~~read custom hints from table header~~
-  - image folders
+  - ~~image folders~~
 * ~~config file for default values: config.R~~
+* Radio buttons checking/unchecking serveral times
+  - Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
 * ~~make sure score is counted if answer is retrieved accidentally after getting the name right~~
@@ -44,6 +46,7 @@ TODO list
 * App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * Only 1000 entries in species list dropdown. Selectize does more but doesn't have auto-complete
+* Some UK pictures don't exist as large pictures and hence don't show up
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!

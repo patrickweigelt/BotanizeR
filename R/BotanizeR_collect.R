@@ -242,7 +242,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
           legend_info <- data.frame(AFE_SYMBOLCODE=c(1:8), 
                                     SYMBOL_TEXT=c("absent","not assigned","records uncertain","extinct","probably extinct",
                                                   "cultivated, not established alien","established alien","native, incl. archaeophytes"),
-                                    colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69")) 
+                                    colour=c("white","grey90","grey80","grey70","grey60","#fdb462","#fb8072","#b3de69"),
+                                    stringsAsFactors = FALSE) 
           
           legend_info <- legend_info[which(legend_info$AFE_SYMBOLCODE %in% map$AFE_SYMBOLCODE),]
           
