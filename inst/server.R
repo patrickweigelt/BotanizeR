@@ -629,8 +629,16 @@ shinyServer(function(input, output, session) {
     answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
     i <- reactiveValues(i=NA)
     reactive_species <- reactiveValues(species=NA)
-
+    
+    # Workaround to avoid printing map before radiobuttons are set back to "no map"
+    m <- reactiveValues(map=TRUE)
+    
+    
+    # New plant observe
     observeEvent(input$newplant, ignoreNULL = FALSE, {
+        
+        m$map <- FALSE
+        
         sp_picture <- 0
         k <- 0
         
@@ -789,17 +797,16 @@ shinyServer(function(input, output, session) {
         
 
         ### Map ----
-        observe({
+        observeEvent(input$quizz_options_maps, ignoreInit = TRUE, {
             #quizz_options <- pmatch(c("German name", "Family", "Status",
             #                          "Description", "Habitat", "Map",
             #                          "Chorology"),
             #                        input$quizz_options)
-            
-            print(input$quizz_options_maps)
+            isolate(print(m$map))          
             output$random_map <- renderUI({
-                
-                if("Map" %in% input$quizz_options_maps){
-                    
+
+                if("Map" %in% input$quizz_options_maps & m$map){
+                    print(paste("Quiz",input$quizz_options_maps))
                     random_map <- BotanizeR_collect(
                         species_row = species_list_reactive$df_data[i$i, ], 
                         image_floraweb = FALSE,
@@ -818,8 +825,8 @@ shinyServer(function(input, output, session) {
                         })
                         plotOutput("plot_map")
                     }
-                } else if ("Map UK" %in% input$quizz_options_maps){
-                    
+                } else if ("Map UK" %in% input$quizz_options_maps & m$map){
+                    print(paste("Quiz",input$quizz_options_maps))
                     random_map <- BotanizeR_collect(
                         species_row = species_list_reactive$df_data[i$i, ], 
                         image_floraweb = FALSE,
@@ -835,6 +842,9 @@ shinyServer(function(input, output, session) {
                                  width = "500px")
                         
                     }
+                } else if ("No map" %in% input$quizz_options_maps){
+                    m$map <- TRUE
+                    print(paste("Quiz",input$quizz_options_maps))
                 }
             })
         })
