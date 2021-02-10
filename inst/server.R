@@ -868,7 +868,7 @@ shinyServer(function(input, output, session) {
                             ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
                                                         gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
                             
-                            HTML(paste0("Map from <i>New Atlas</i> by the Botanical Society of Britain and Ireland (Blue: native, red: introduced). For more details see: <a href='",
+                            HTML(paste0("Map from <i>New Atlas</i> by the Botanical Society of Britain and Ireland (blue: native, red: introduced). </br>For more details see: <a href='",
                                         ukplantatlas_link, # https://www.brc.ac.uk/,
                                         "' target=_blank>UK & Ireland Plant Atlas</a></br>"))
                         })
