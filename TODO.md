@@ -27,7 +27,7 @@ TODO list
   - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~don't show hints that are not available?~~
-* previous and next species button in species list tab
+* **previous and next species button in species list tab**
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -55,6 +55,7 @@ TODO list
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
+* add flowering time and vegetative/sexual reproduction
 * add content from other websites
   - ~~UK-flora~~
   - Telebotanica
@@ -68,14 +69,12 @@ TODO list
 * **combine the tables and make columns for UK and GER ...**
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
-* **next species, previes button**
 
 3. Layout
 * ~~center smaller images in slider~~
 * ~~avoid overlap of contents when changing window size~~
   - ~~define min width of middle column or make slickR slider shrink~~
 * ~~Source floraweb is inbetween the hints (above habitat); Make dependent on whether floraweb content is shown or not~~
-* return between the two status elements
 * ~~adjust height of panel columns~~
 * move items
   - ~~download button~~
@@ -87,8 +86,8 @@ TODO list
 * embed in stud-ip (why not working?)
 
 5. Other
-* write documentation (for package and for "About" page)
-* contact floraweb for permission to have a public version
+* **write documentation (for package and for "About" page)**
+* **contact floraweb for permission to have a public version**
 * write a little software note?
   - check potential journals
 * write function documentation
