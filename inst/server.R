@@ -226,7 +226,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    # Make condition that input is needed
+    # Make condition that input is needed to initialize drop_down
     y <- reactive({
         req(input$select_specieslist)
         input$select_specieslist
@@ -471,19 +471,23 @@ shinyServer(function(input, output, session) {
                             isolate(hints_reactive$hints_custom))
             temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
             
-            temp_hints <- paste0(unlist(sapply(sp_infos[names(sp_infos) %in% temp_hints],
+            temp_infos <- paste0(unlist(sapply(sp_infos[names(sp_infos) %in% temp_hints],
                                                function(x) c(x,"</br></br>"))), collapse="")
             
-            HTML(paste0(temp_hints,
-                        ifelse(length(hints_reactive$hints_floraweb)>0|
-                                   length(hints_reactive$hints_ukplantatlas)>0,
+            HTML(paste0(temp_infos,
+                        ifelse(length(hints_reactive$hints_floraweb[which(
+                            hints_reactive$hints_floraweb != "map")])>0 | 
+                                length(hints_reactive$hints_ukplantatlas[which(
+                                    hints_reactive$hints_ukplantatlas != "mapuk")])>0,
                                "<b>Source:</b></br>",""),
-                        ifelse(length(hints_reactive$hints_floraweb)>0,
+                        ifelse(length(hints_reactive$hints_floraweb[which(
+                            hints_reactive$hints_floraweb != "map")])>0,
                                paste0("<a href='",
                                       floraweb_link, # https://www.floraweb.de/,
                                       "' target=_blank>FloraWeb</a></br>")
                                ,""),
-                        ifelse(length(hints_reactive$hints_ukplantatlas)>0,
+                        ifelse(length(hints_reactive$hints_ukplantatlas[which(
+                            hints_reactive$hints_ukplantatlas != "mapuk")])>0,
                                paste0("<a href='",
                                       ukplantatlas_link, # https://www.brc.ac.uk/,
                                       "' target=_blank>UK & Ireland Plant Atlas</a></br>")
@@ -549,6 +553,8 @@ shinyServer(function(input, output, session) {
                                  key.pos = 4, main = "")
                         })
                         plotOutput("plot_sp_map")
+                    } else {
+                        "No distribution map for Germany available"
                     }
                 } else if ("Map UK" %in% input$options_maps){
                     
@@ -566,6 +572,8 @@ shinyServer(function(input, output, session) {
                         tags$img(src = map$mapuk,
                                  width = "500px")
                         
+                    } else {
+                        "No distribution map for the UK and Ireland available"
                     }
                 }
             })
@@ -755,8 +763,8 @@ shinyServer(function(input, output, session) {
                                                css = htmltools::css(
                                                    width = "100%", margin.left = "auto", 
                                                    margin.right = "auto", margin.bottom = "auto", 
-                                                   margin.top = "auto"),
-                                               type = "img",links = NULL))
+                                                   margin.top = "auto"), #onerror = "this.onerror=null; this.src='no_chorology.png'" ),
+                                               type = "img", links = NULL))
             slickR(imgs_quizz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
         
@@ -766,10 +774,16 @@ shinyServer(function(input, output, session) {
         
         observe({
             
-            temp_hints <- c(hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quizz_options)],
-                            hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quizz_options)],
-                            isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quizz_options)]))
-            temp_hints <- temp_hints[which(!temp_hints %in% c("map","mapuk"))]
+            temp_hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quizz_options)]
+            # temp_hints_floraweb <- temp_hints_floraweb[which(temp_hints_floraweb != "map")]
+            temp_hints_floraweb <- temp_hints_floraweb[which(temp_hints_floraweb %in% names(sp_quizz))]
+            
+            temp_hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quizz_options)]
+            # temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas != "mapuk")]
+            temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas %in% names(sp_quizz))]
+            
+            temp_hints_custom <- isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quizz_options)])
+            temp_hints <- c(temp_hints_floraweb, temp_hints_ukplantatlas, temp_hints_custom)
             
             output$quiz_sp_description <- renderUI({
                 floraweb_link <- paste0(
@@ -779,22 +793,22 @@ shinyServer(function(input, output, session) {
                 
                 
                 ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
-                                            gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species))))
+                                            gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
                 
                 
                 temp_hints <- paste0(unlist(sapply(sp_quizz[names(sp_quizz) %in% temp_hints],
                                                    function(x) c(x,"</br></br>"))), collapse="")
                 
                 HTML(paste0(temp_hints,
-                            ifelse(length(hints_reactive$hints_floraweb)>0|
-                                       length(hints_reactive$hints_ukplantatlas)>0,
+                            ifelse(length(temp_hints_floraweb)>0|
+                                       length(temp_hints_ukplantatlas)>0,
                                    "<b>Source:</b></br>",""),
-                            ifelse(length(hints_reactive$hints_floraweb)>0,
+                            ifelse(length(temp_hints_floraweb)>0,
                                    paste0("<a href='",
                                           floraweb_link, # https://www.floraweb.de/,
                                           "' target=_blank>FloraWeb</a></br>")
                                    ,""),
-                            ifelse(length(hints_reactive$hints_ukplantatlas)>0,
+                            ifelse(length(temp_hints_ukplantatlas)>0,
                                    paste0("<a href='",
                                           ukplantatlas_link, # https://www.brc.ac.uk/,
                                           "' target=_blank>UK & Ireland Plant Atlas</a></br>")
@@ -803,6 +817,7 @@ shinyServer(function(input, output, session) {
             })
         })
         
+        output$random_map_text <- renderUI({""})
 
         ### Map ----
         observeEvent(input$quizz_options_maps, ignoreInit = TRUE, {
@@ -826,12 +841,24 @@ shinyServer(function(input, output, session) {
                     
                     
                     if(length(random_map$map)>0){
+                        output$random_map_text <- renderUI({
+                            floraweb_link <- paste0(
+                                "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+                                isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
+                                "&")
+                            HTML(paste0("Map source: <a href='",
+                                   floraweb_link, # https://www.floraweb.de/,
+                                   "' target=_blank>FloraWeb</a></br>"))
+                            })
                         output$plot_map <- renderPlot({
                             par(oma = c(0, 0, 0, 11))
                             plot(random_map$map[[1]], pal = random_map$map[[2]],
                                  key.pos = 4, main = "")
                         })
                         plotOutput("plot_map")
+                    } else {
+                        output$random_map_text <- renderUI({""})
+                        "No distribution map for Germany available!"
                     }
                 } else if ("Map UK" %in% input$quizz_options_maps & m$map){
                     print(paste("Quiz",input$quizz_options_maps))
@@ -845,14 +872,27 @@ shinyServer(function(input, output, session) {
                         file_location = "temporary", only_links = TRUE)
                     
                     if(length(random_map$mapuk)>0){
+                        output$random_map_text <- renderUI({
+                            ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
+                                                        gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
+                            
+                            HTML(paste0("Map from <i>New Atlas</i> by the Botanical Society of Britain and Ireland (blue: native, red: introduced). </br>For more details see: <a href='",
+                                        ukplantatlas_link, # https://www.brc.ac.uk/,
+                                        "' target=_blank>UK & Ireland Plant Atlas</a></br>"))
+                        })
+                        
                         par(mar = rep(0.5, 4), oma = rep(0, 4))
                         tags$img(src = random_map$mapuk,
                                  width = "500px")
                         
+                    } else {
+                        output$random_map_text <- renderUI({""})
+                        "No distribution map for the UK and Ireland available!"
                     }
                 } else if ("No map" %in% input$quizz_options_maps){
                     m$map <- TRUE
-                    print(paste("Quiz",input$quizz_options_maps))
+                    output$random_map_text <- renderUI({""})
+                    ""
                 }
             })
         })

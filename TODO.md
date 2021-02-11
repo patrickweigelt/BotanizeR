@@ -27,7 +27,7 @@ TODO list
   - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~don't show hints that are not available?~~
-* previous and next species button in species list tab
+* **previous and next species button in species list tab**
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -45,16 +45,17 @@ TODO list
 * ~~Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?~~
 * ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
 * Why does species list page update immediately after setup changes and quiz doesn't?
-* Only 1000 entries in species list dropdown. Selectize does more but doesn't have auto-complete
+* **Only 1000 entries in species list dropdown. Use Selectize**
 * **Some UK pictures don't exist as large pictures and hence don't show up**
-* **Add response image credits below slider**
-* **Map legend and credits**
-* **no map text**
+* **Add responsive image credits below slider**
+* ~~Map legend and credits~~ <- still needs to be added to species list site
+* ~~no map text~~
 * redo message images (harmonize)
-* **if map is checked, going to next species is slow because new map loads (uncheck first)**
+* ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
 
 2. Base package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
+* add flowering time and vegetative/sexual reproduction
 * add content from other websites
   - ~~UK-flora~~
   - Telebotanica
@@ -68,18 +69,16 @@ TODO list
 * **combine the tables and make columns for UK and GER ...**
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
-* **next species, previes button**
 
 3. Layout
 * ~~center smaller images in slider~~
 * ~~avoid overlap of contents when changing window size~~
   - ~~define min width of middle column or make slickR slider shrink~~
 * ~~Source floraweb is inbetween the hints (above habitat); Make dependent on whether floraweb content is shown or not~~
-* return between the two status elements
 * ~~adjust height of panel columns~~
 * move items
   - ~~download button~~
-* Make correct more prominent and easier to go to next species  
+* **Make correct more prominent and easier to go to next species; info messages** 
 
 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
@@ -87,8 +86,8 @@ TODO list
 * embed in stud-ip (why not working?)
 
 5. Other
-* write documentation (for package and for "About" page)
-* contact floraweb for permission to have a public version
+* **write documentation (for package and for "About" page)**
+* **contact floraweb for permission to have a public version**
 * write a little software note?
   - check potential journals
 * write function documentation
