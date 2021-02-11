@@ -1,8 +1,15 @@
 # BotanizeR
 
-TODO list
+**<span style="color:blue"><font size="4">TO DO list</span></font>**
 
-1. Functionality
+# Table of Contents
+1. [Functionality](#functionality)
+2. [Package](#package)
+3. [Layout](#layout)
+4. [Server](#server)
+5. [Other](#other)
+
+## 1. Functionality
 * ~~fix the mismatch bug~~
 * ~~design settings tab from which to choose the desired version from (winter, summer, other)~~
   - ~~making the app as flexible as possible. Users choose their own list and criteria~~
@@ -14,7 +21,7 @@ TODO list
   - ~~read custom hints from table header~~
   - ~~image folders~~
 * ~~config file for default values: config.R~~
-* **Radio buttons checking/unchecking serveral times**
+* **Radio buttons checking/unchecking several times**
   - **Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown**
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
@@ -45,7 +52,7 @@ TODO list
 * ~~Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?~~
 * ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
 * Why does species list page update immediately after setup changes and quiz doesn't?
-* **Only 1000 entries in species list dropdown. Use Selectize**
+* ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * **Some UK pictures don't exist as large pictures and hence don't show up**
 * **Add responsive image credits below slider**
 * ~~Map legend and credits~~ <- still needs to be added to species list site
@@ -53,7 +60,7 @@ TODO list
 * redo message images (harmonize)
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
 
-2. Base package
+## 2. Package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
 * add flowering time and vegetative/sexual reproduction
 * add content from other websites
@@ -70,7 +77,7 @@ TODO list
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
 
-3. Layout
+## 3. Layout
 * ~~center smaller images in slider~~
 * ~~avoid overlap of contents when changing window size~~
   - ~~define min width of middle column or make slickR slider shrink~~
@@ -80,12 +87,12 @@ TODO list
   - ~~download button~~
 * **Make correct more prominent and easier to go to next species; info messages** 
 
-4. Server
+## 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
 * secure shiny behind nginx or apache remote proxy
 * embed in stud-ip (why not working?)
 
-5. Other
+## 5. Other
 * **write documentation (for package and for "About" page)**
 * **contact floraweb for permission to have a public version**
 * write a little software note?
