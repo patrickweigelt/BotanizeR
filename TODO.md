@@ -34,7 +34,7 @@
   - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~don't show hints that are not available?~~
-* **previous and next species button in species list tab**
+* ~~previous and next species button in species list tab~~
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -55,7 +55,8 @@
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * **Some UK pictures don't exist as large pictures and hence don't show up**
 * **Add responsive image credits below slider**
-* ~~Map legend and credits~~ <- still needs to be added to species list site
+* ~~Map legend and credits~~
+* **separate UK and DE credits in quiz hints**
 * ~~no map text~~
 * redo message images (harmonize)
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~

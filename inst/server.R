@@ -346,16 +346,6 @@ shinyServer(function(input, output, session) {
                        options = list(maxOptions = length(species_list_reactive$df_data$SPECIES)))
     })
     
-    # Previous plant button
-    output$previous_plant <- renderUI({
-        actionButton("previous_plant", label = "Previous plant")
-    })
-    
-    # Next plant button
-    output$next_plant <- renderUI({
-        actionButton("next_plant", label = "Next plant")
-    })
-    
     # Dynamic checkboxes
     output$options <- renderUI({
         checkboxGroupInput(inputId = "options", label = "Show:",
