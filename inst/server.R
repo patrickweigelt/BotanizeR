@@ -340,9 +340,10 @@ shinyServer(function(input, output, session) {
     # })
     
     output$select_plant <- renderUI({
-        selectInput("plant_list", "Plant list",
-                    choices = species_list_reactive$df_data$SPECIES,
-                    selected = species_list_reactive$df_data$SPECIES[1])
+        selectizeInput("plant_list", "Plant list",
+                       choices = species_list_reactive$df_data$SPECIES,
+                       selected = species_list_reactive$df_data$SPECIES[1],
+                       options = list(maxOptions = length(species_list_reactive$df_data$SPECIES)))
     })
     
     # Dynamic checkboxes
@@ -402,7 +403,14 @@ shinyServer(function(input, output, session) {
     #     }
     # }) # closes output$list_or_random
     
-    observe({
+    # Initializing dropdown for species list
+    init <- reactive({
+        req(input$plant_list)
+        input$plant_list
+    })
+    
+    observeEvent(init(), ignoreInit = FALSE, {
+    # observe({
         
         selected_species <- input$plant_list
         
