@@ -404,19 +404,19 @@ shinyServer(function(input, output, session) {
     # }) # closes output$list_or_random
     
     # Initializing dropdown for species list
-    init <- reactive({
-        req(input$plant_list)
-        input$plant_list
-    })
+    #init <- reactive({
+    #    req(input$plant_list)
+    #    input$plant_list
+    #})
     
-    observeEvent(init(), ignoreInit = FALSE, {
-    # observe({
-        
+    #observeEvent(init(), ignoreInit = FALSE, {
+    observe({
+        req(input$plant_list)
         selected_species <- input$plant_list
         
-        if(length(selected_species)==0){
-            selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
-        }
+        # if(length(selected_species)==0){
+        #     selected_species <- isolate(species_list_reactive$df_data)$SPECIES[1]
+        # }
         
         # Plant species chosen
         j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
