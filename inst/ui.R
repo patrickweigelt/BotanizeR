@@ -52,8 +52,9 @@ tabPanel(h1(id = "panel1", "Species"),
                 #  transform-origin: top left;
                 # }'
                 #            )
-                div(uiOutput("selected_sp_map"), style="text-align: center;")#,
-                # div(uiOutput("selected_map_text"), style="text-align: center;")
+                br(),
+                div(uiOutput("selected_sp_map"), style="text-align: center;"),
+                div(uiOutput("selected_map_text"), style="text-align: center;")
          ),
          column(3,
                 htmlOutput("selected_sp_name"),
