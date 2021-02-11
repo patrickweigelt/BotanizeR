@@ -475,14 +475,14 @@ shinyServer(function(input, output, session) {
                         ifelse(length(temp_hints_floraweb)>0,
                                paste0("<b>Source:</b></br><a href='",
                                       floraweb_link, # https://www.floraweb.de/,
-                                      "' target=_blank>FloraWeb</a></br>")
+                                      "' target=_blank>FloraWeb</a></br></br>")
                                ,""),
                         paste0(unlist(sapply(sp_infos[names(sp_infos) %in% temp_hints_ukplantatlas],
                                             function(x) c(x,"</br></br>"))), collapse=""),
                         ifelse(length(temp_hints_ukplantatlas)>0,
                                paste0("<b>Source:</b></br><a href='",
                                       ukplantatlas_link, # https://www.brc.ac.uk/,
-                                      "' target=_blank>UK & Ireland Plant Atlas</a></br>")
+                                      "' target=_blank>UK & Ireland Plant Atlas</a></br></br>")
                                ,""),
                         paste0(unlist(sapply(sp_infos[names(sp_infos) %in% hints_reactive$hints_custom],
                                              function(x) c(x,"</br></br>"))), collapse="")
