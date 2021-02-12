@@ -150,13 +150,17 @@ shinyServer(function(input, output, session) {
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                           choices = colnames(species_list_reactive$df_data)[
-                               which(!colnames(species_list_reactive$df_data) 
+                           choices = colnames(species_list)[
+                               which(!colnames(species_list) 
                                      %in% c(hints_custom_omit,
                                             grep("imagelink", 
-                                                 colnames(species_list_reactive$df_data), 
+                                                 colnames(species_list), 
                                                  value = TRUE)))],
-                           selected = hints_reactive$hints_custom)
+                           selected = hints_custom[
+                               which(hints_custom %in% colnames(species_list)
+                                     & !hints_custom %in% c(hints_custom_omit,
+                                                            grep("imagelink", colnames(species_list), 
+                                                                 value = TRUE)))])
     })
     
     observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
@@ -242,6 +246,17 @@ shinyServer(function(input, output, session) {
         
         # Avoid that scores are updated when hitting next plant or download or summary
         counts_reactive$omit <- TRUE
+        
+        # Update ownhint checkboxes
+        updateCheckboxGroupInput(session,
+                                 inputId = "own_hints", label = "Own hints",
+                                 choices = colnames(temp_species_list)[
+                                     which(!colnames(temp_species_list) 
+                                        %in% c(hints_custom_omit,
+                                               grep("imagelink", 
+                                                    colnames(temp_species_list), 
+                                                    value = TRUE)))],
+                                 selected = hints_reactive$hints_custom)
     })
     
     # Species list summary note
@@ -704,8 +719,7 @@ shinyServer(function(input, output, session) {
             temp_hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quiz_options)]
             temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas %in% names(sp_quiz))]
             
-            temp_hints_custom <- isolate(hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quiz_options)])
-            temp_hints <- c(temp_hints_floraweb, temp_hints_ukplantatlas, temp_hints_custom)
+            temp_hints_custom <- hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quiz_options)]
             
             output$quiz_sp_description <- renderUI({
                 floraweb_link <- paste0(
@@ -716,23 +730,22 @@ shinyServer(function(input, output, session) {
                 ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
                                             gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
                 
-                temp_hints <- paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints],
-                                                   function(x) c(x,"</br></br>"))), collapse="")
-                
-                HTML(paste0(temp_hints,
-                            ifelse(length(temp_hints_floraweb)>0|
-                                       length(temp_hints_ukplantatlas)>0,
-                                   "<b>Source:</b></br>",""),
+                HTML(paste0(paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_floraweb],
+                                                 function(x) c(x,"</br></br>"))), collapse=""),
                             ifelse(length(temp_hints_floraweb)>0,
-                                   paste0("<a href='",
+                                   paste0("<b>Source:</b></br><a href='",
                                           floraweb_link, # https://www.floraweb.de/,
-                                          "' target=_blank>FloraWeb</a></br>")
+                                          "' target=_blank>FloraWeb</a></br></br>")
                                    ,""),
+                            paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_ukplantatlas],
+                                                 function(x) c(x,"</br></br>"))), collapse=""),
                             ifelse(length(temp_hints_ukplantatlas)>0,
-                                   paste0("<a href='",
+                                   paste0("<b>Source:</b></br><a href='",
                                           ukplantatlas_link, # https://www.brc.ac.uk/,
-                                          "' target=_blank>UK & Ireland Plant Atlas</a></br>")
-                                   ,"")
+                                          "' target=_blank>UK & Ireland Plant Atlas</a></br></br>")
+                                   ,""),
+                            paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_custom],
+                                                 function(x) c(x,"</br></br>"))), collapse="")
                 ))
             })
         })
