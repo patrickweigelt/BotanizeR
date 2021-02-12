@@ -826,8 +826,17 @@ shinyServer(function(input, output, session) {
                 answer <- as.character(input$sp_answer)
             })
             if (tolower(answer) == tolower(reactive_species$species)){
-                output$answer_status <- renderUI(HTML(paste0(
-                    "<font color=\"#00CC00\">", "Correct", "</font>")))
+                output$answer_status <- renderUI(
+                        HTML(paste0(
+                            "<p style='border:3px; border-style:solid;
+                            border-color:#38772d; padding: 1em;
+                            background-color:#73f75b;
+                            box-shadow: 3px 5px #666666;
+                            text-align: center'>
+                            <font size=5 color=\"#38772d\"><b>",
+                            "Correct",
+                            "</font></b></p>"))
+                        )
                 
                 # Setting answered
                 answered_reactive$answered = TRUE

@@ -87,7 +87,9 @@
 * ~~adjust height of panel columns~~
 * move items
   - ~~download button~~
-* **Make correct more prominent and easier to go to next species; info messages** 
+* ~~Make correct more prominent and easier to go to next species; info messages~~ 
+* **Make correct easier to go to next species** 
+* **Clean info messages** 
 
 ## 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
