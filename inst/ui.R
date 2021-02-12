@@ -65,6 +65,7 @@ tabPanel(h1(id = "panel1", "Species"),
                 #  transform-origin: top left;
                 # }'
                 #            )
+                div(uiOutput("selected_image_credits"), style="text-align: center;"),
                 br(),
                 div(uiOutput("selected_sp_map"), style="text-align: center;"),
                 div(uiOutput("selected_map_text"), style="text-align: center;")
@@ -110,6 +111,7 @@ tabPanel(
         # Second part of the page with the picture
         column(6, style="min-width: 540px", 
                slickROutput("random_slickr", width = "500px", height = "625px"),
+               div(uiOutput("random_image_credits"), style="text-align: center;"),
                br(),
                div(uiOutput("random_map"), style="text-align: center;"),
                div(uiOutput("random_map_text"), style="text-align: center;"),

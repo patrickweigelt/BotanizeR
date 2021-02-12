@@ -423,13 +423,45 @@ shinyServer(function(input, output, session) {
             slickR(imgs, slideId = "slide_species")
         })
         
+        # Image credits
+        output$selected_image_credits <- renderUI({
+            sources <- c(
+                ifelse(hints_reactive$image_floraweb, 
+                       "<a href='https://www.floraweb.de/' target=_blank>FloraWeb</a>", 
+                       NA),
+                ifelse(hints_reactive$image_ukplantatlas, 
+                       "<a href='https://www.brc.ac.uk/plantatlas/' 
+                       target=_blank>UK & Ireland Plant Atlas</a>", 
+                       NA),
+                ifelse(length(hints_reactive$image_folders) > 0, 
+                       "customized image folders", 
+                       NA)
+            )
+            
+            sources <- sources[!is.na(sources)]
+            
+            if (length(sources)>1){
+                sources <- sapply(sources, function(x) c(x,", "))
+                sources <- sources[-(length(sources))]
+                sources[length(sources)-1] <- " and "
+            }
+            
+            sources <- ifelse(length(sources)>0,
+                              paste0("Available images sourced from ",
+                                     paste(sources, collapse = ""),
+                                     ".</br>See 'About' tab for more details."),
+                              "") 
+            
+            HTML(sources)
+        })
+        
         ### Name ----
         output$selected_sp_name <- renderUI({
             HTML(paste("<b>",
                        species_list_reactive$df_data[j,"TAXONNAME"],
                        "</b>"))
         })
-
+        
         ### Description ----
         output$selected_sp_description <- renderUI({
             floraweb_link <- paste0(
@@ -589,6 +621,7 @@ shinyServer(function(input, output, session) {
                      selected = "No map")
     })
     
+    
     # Setup reactive values 
     answered_reactive <- reactiveValues(answered = FALSE, cheated = FALSE)
     i <- reactiveValues(i=NA)
@@ -597,9 +630,11 @@ shinyServer(function(input, output, session) {
     # Workaround to avoid printing map before radiobuttons are set back to "no map"
     m <- reactiveValues(map=TRUE)
 
+    
     # New plant observe
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         
+        # set map to false to not plot one before radiobuttons are set
         m$map <- FALSE
         
         sp_picture <- 0
@@ -710,6 +745,44 @@ shinyServer(function(input, output, session) {
             slickR(imgs_quiz, slideId = "slide_quiz")# + settings(centerMode = TRUE, slidesToShow = 1, )
         })
 
+        ### Image credits
+        
+        # temp objects to avoid immediate updating:
+        temp_image_floraweb <- hints_reactive$image_floraweb
+        temp_image_ukplantatlas <- hints_reactive$image_ukplantatlas
+        temp_image_folders <- hints_reactive$image_folders
+        
+        output$random_image_credits <- renderUI({
+            sources <- c(
+                ifelse(temp_image_floraweb, 
+                       "<a href='https://www.floraweb.de/' target=_blank>FloraWeb</a>", 
+                       NA),
+                ifelse(temp_image_ukplantatlas, 
+                       "<a href='https://www.brc.ac.uk/plantatlas/' 
+                       target=_blank>UK & Ireland Plant Atlas</a>", 
+                       NA),
+                ifelse(length(temp_image_folders) > 0, 
+                       "customized image folders", 
+                       NA)
+            )
+            
+            sources <- sources[!is.na(sources)]
+            
+            if (length(sources)>1){
+                sources <- sapply(sources, function(x) c(x,", "))
+                sources <- sources[-(length(sources))]
+                sources[length(sources)-1] <- " and "
+            }
+            
+            sources <- ifelse(length(sources)>0,
+                              paste0("Available images sourced from ",
+                                     paste(sources, collapse = ""),
+                                     ".</br>See 'About' tab for more details."),
+                              "") 
+            
+            HTML(sources)
+        })
+        
         ### Description ----
         
         observe({
@@ -845,7 +918,8 @@ shinyServer(function(input, output, session) {
                             border-color:#38772d; padding: 1em;
                             background-color:#73f75b;
                             box-shadow: 3px 5px #666666;
-                            text-align: center'>
+                            text-align: center;
+                            max-width: 300px'>
                             <font size=5 color=\"#38772d\"><b>",
                             "Correct",
                             "</font></b></p>"))
