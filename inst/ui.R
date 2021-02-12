@@ -51,9 +51,7 @@ tabPanel(h1(id = "panel1", "Species"),
                          actionButton("previous_plant", label = "Previous species"),
                          actionButton("next_plant", label = "Next species"),
                          tags$head(tags$script(HTML(js_pr_next))),
-                         # tags$head(tags$script(HTML(js_next))),
                          br(),
-                         # actionButton("random_plant", "Random plant"),
                          br(),
                          uiOutput(outputId = "options_maps")
          ),
@@ -76,8 +74,6 @@ tabPanel(h1(id = "panel1", "Species"),
                 br(),
                 htmlOutput("selected_sp_description"),
                 br(),
-                # plotOutput("selected_sp_map"),
-                # br(),
                 uiOutput("selected_sp_chorology")
          ))
 ),
@@ -107,17 +103,14 @@ tabPanel(
                tags$head(tags$script(src = "BotanizeR_buttons.js")),
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
-               # br(),
                actionButton("newplant", "New plant"),
                div(style = "height:20px")
         ),
         
         # Second part of the page with the picture
         column(6, style="min-width: 540px", 
-               # uiOutput("random_sp"),
                slickROutput("random_slickr", width = "500px", height = "625px"),
                br(),
-               # plotOutput("random_map"),
                div(uiOutput("random_map"), style="text-align: center;"),
                div(uiOutput("random_map_text"), style="text-align: center;"),
                br(),
@@ -134,9 +127,6 @@ tabPanel(
                        trigger = "sumstats_button",
                        size = "large", uiOutput("stats_text"),
                        plotOutput("stats_barplot"))
-               
-               # dataTableOutput("progress")
-               #, tableOutput("df_data_out")
                )
     )
     
@@ -164,7 +154,6 @@ tabPanel(
                shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
                actionButton("remove_folder", "Remove last"),
                htmlOutput("list_imagefolders"),
-
         ),
         column(4,
                h4("Species list"),
@@ -183,4 +172,3 @@ tabPanel(
 ## About ----------------------------------------------------------------------
 tabPanelAbout()
 )
-
