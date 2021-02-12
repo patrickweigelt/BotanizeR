@@ -35,6 +35,7 @@
 * ~~error finite ylim value needed... if no map available?~~
 * ~~don't show hints that are not available?~~
 * ~~previous and next species button in species list tab~~
+* ~~previous and next species working with keyboard~~
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -66,7 +67,7 @@
 * add flowering time and vegetative/sexual reproduction
 * add content from other websites
   - ~~UK-flora~~
-  - Telebotanica
+  - Telabotanica
 * plot first image before map is loaded to safe time.
 * loading bar for map
 * add synonyms
