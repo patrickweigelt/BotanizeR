@@ -12,6 +12,16 @@ library(shinyBS)
 # Source text for the "About" panel
 tabPanelAbout = source("About.R")$value
 
+# ArrowLeft and Right
+js_pr_next <- '$(document).keyup(function(event) {
+    if (event.key == "ArrowLeft") {
+        $("#previous_plant").click();
+    }
+    if (event.key == "ArrowRight") {
+        $("#next_plant").click();
+    }
+});'
+
 # UI
 navbarPage(title = div(
     HTML('<span style="font-size:180%;color:white;font-weight:bold;"> BotanizeR</span></a>'),
@@ -40,6 +50,8 @@ tabPanel(h1(id = "panel1", "Species"),
                          # br(),
                          actionButton("previous_plant", label = "Previous species"),
                          actionButton("next_plant", label = "Next species"),
+                         tags$head(tags$script(HTML(js_pr_next))),
+                         # tags$head(tags$script(HTML(js_next))),
                          br(),
                          # actionButton("random_plant", "Random plant"),
                          br(),
@@ -70,7 +82,7 @@ tabPanel(h1(id = "panel1", "Species"),
          ))
 ),
 
-## Quizz ----------------------------------------------------------------------
+## Quiz -----------------------------------------------------------------------
 tabPanel(
     h1(id = "panel2", "Quiz"),
     fluidRow(
