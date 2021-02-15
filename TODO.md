@@ -24,8 +24,8 @@
   - ~~read custom hints from table header~~
   - ~~image folders~~
 * ~~config file for default values: config.R~~
-* **Radio buttons checking/unchecking several times**
-  - **Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown**
+* ~~Radio buttons checking/unchecking several times~~
+* ~~Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown~~ <- possibly solved
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
 * ~~make sure score is counted if answer is retrieved accidentally after getting the name right~~
