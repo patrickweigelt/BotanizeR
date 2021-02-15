@@ -139,13 +139,15 @@ tabPanel(
     h1(id = "panel3", "Setup"),
     fluidRow(
         column(4,
-               h4("Online resources"),
+               h4("Species list"),
+               htmlOutput("selectlist_note"),
+               uiOutput("select_specieslist"),
+               htmlOutput("summary_note"),
+               htmlOutput("upload_note"),
+               fileInput("file", ""),
+               htmlOutput("download_note"),
                br(),
-               uiOutput(outputId = "floraweb_images"),
-               uiOutput(outputId = "floraweb_hints"),
-               uiOutput(outputId = "chorology_hint"),
-               uiOutput(outputId = "ukplantatlas_images"),
-               uiOutput(outputId = "ukplantatlas_hints")
+               downloadButton("download","Download your progress")
         ),
         column(4,
                h4("Custom material"),
@@ -158,15 +160,13 @@ tabPanel(
                htmlOutput("list_imagefolders"),
         ),
         column(4,
-               h4("Species list"),
-               htmlOutput("selectlist_note"),
-               uiOutput("select_specieslist"),
-               htmlOutput("summary_note"),
-               htmlOutput("upload_note"),
-               fileInput("file", ""),
-               htmlOutput("download_note"),
+               h4("Online resources"),
                br(),
-               downloadButton("download","Download your progress")
+               uiOutput(outputId = "floraweb_images"),
+               uiOutput(outputId = "floraweb_hints"),
+               uiOutput(outputId = "chorology_hint"),
+               uiOutput(outputId = "ukplantatlas_images"),
+               uiOutput(outputId = "ukplantatlas_hints")
         )
     )
 ),
