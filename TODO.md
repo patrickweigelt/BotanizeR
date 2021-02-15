@@ -2,7 +2,8 @@
 
 **<span style="color:blue"><font size="4">TO DO list</span></font>**
 
-**<font size="6">wünsche Patrick alles Gute zum Geburtstag</font>**
+**<font size="6">~~wünsche Patrick alles Gute zum Geburtstag~~ Merci Beaucoup!</font>**
+
 
 # Table of Contents
 1. [Functionality](#functionality)
