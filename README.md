@@ -1,5 +1,5 @@
 # BotanizeR
-Little quiz game to memorize the plant species of Germany
+A quiz game to memorize plant species names and characteristics
 
 ```
 library(devtools)
