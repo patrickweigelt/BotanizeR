@@ -57,5 +57,7 @@ custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_fl
 
 Sources  
 Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
-
 Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
+
+Online Atlas of the British and Irish flora [https://www.brc.ac.uk/plantatlas/](www.brc.ac.uk/plantatlas)
+
