@@ -95,7 +95,7 @@ function(){
 		  <span style="color:#64645F;font-weight: bold;">Authors</span>
 		  <div style="max-width:1000px; word-wrap:break-word;">
 		     <p style="text-align:justify">
-		        The BotainzeR R-package and Shiny app have been developed at <a href="https://www.uni-goettingen.de/en/128741.html" target=_blank>Biodiversity, Macroecology and Biogeography</a> 
+		        The BotanizeR R-package and Shiny app have been developed at <a href="https://www.uni-goettingen.de/en/128741.html" target=_blank>Biodiversity, Macroecology and Biogeography</a> 
 		         by <a href="https://www.uni-goettingen.de/en/157014.html" target=_blank>Patrick Weigelt</a> & Pierre Denelle.
 		     </p>
 		  </div>  
