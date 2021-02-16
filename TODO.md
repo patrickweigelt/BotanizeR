@@ -19,7 +19,7 @@
   - ~~filtering via column in df <- solved y having predefined subsets~~
   - ~~summary stats about species list: number of species~~
   - ~~save initial scores as reactive values when new list loaded~~
-  - control for right columns in data.frame
+  - **control for right columns in data.frame**
   - ~~make example datasets available via dropdown~~
   - ~~read custom hints from table header~~
   - ~~image folders~~
@@ -58,9 +58,10 @@
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * **Some UK pictures don't exist as large pictures and hence don't show up**
-* **Add responsive image credits below slider**
+* ~~Add image credits below slider~~
+  - modify BotanizeR_collect to keep track of image source
 * ~~Map legend and credits~~
-* **separate UK and DE credits in quiz hints**
+* ~~separate UK and DE credits in quiz hints~~
 * ~~no map text~~
 * redo message images (harmonize)
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
