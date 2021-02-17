@@ -58,8 +58,9 @@
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * **Some UK pictures don't exist as large pictures and hence don't show up**
+* **Make images scale automatically in slickR slider**
 * ~~Add image credits below slider~~
-  - modify BotanizeR_collect to keep track of image source
+  - **modify BotanizeR_collect to keep track of image source**
 * ~~Map legend and credits~~
 * ~~separate UK and DE credits in quiz hints~~
 * ~~no map text~~
@@ -82,6 +83,7 @@
 * **combine the tables and make columns for UK and GER ...**
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
+* Map floraweb distribution based on api
 
 ## 3. Layout
 * ~~center smaller images in slider~~
@@ -94,6 +96,7 @@
 * ~~Make correct more prominent and easier to go to next species; info messages~~ 
 * **Make correct easier to go to next species** 
 * **Clean info messages** 
+* Make online resources in Setup collapsable  
 
 ## 4. Server
 * proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
