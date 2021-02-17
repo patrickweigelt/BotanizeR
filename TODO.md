@@ -2,9 +2,6 @@
 
 **<span style="color:blue"><font size="4">TO DO list</span></font>**
 
-**<font size="6">~~wünsche Patrick alles Gute zum Geburtstag~~ Merci Beaucoup!</font>**
-
-
 # Table of Contents
 1. [Functionality](#functionality)
 2. [Package](#package)
@@ -39,6 +36,7 @@
 * ~~don't show hints that are not available?~~
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
+  - this interferes with the next and previous buttons from slickR - maybe remove?
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -58,7 +56,9 @@
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * **Some UK pictures don't exist as large pictures and hence don't show up**
-* **Make images scale automatically in slickR slider**
+  - now that the images scale properly we could load the larger ones for these cases. Need control for this  
+  - Or show large images in the first place  
+* ~~Make images scale automatically in slickR slider~~
 * ~~Add image credits below slider~~
   - **modify BotanizeR_collect to keep track of image source**
 * ~~Map legend and credits~~
@@ -105,9 +105,10 @@
 
 ## 5. Other
 * **write documentation (for package and for "About" page)**
-* **contact floraweb for permission to have a public version**
+* ~~contact floraweb and UKplantatlas for permission to have a public version~~
+  - waiting for response
 * write a little software note?
-  - check potential journals
+  - check potential journals  
 * write function documentation
 * publish on CRAN?
   - Is the quiz function which needs user input a problem?

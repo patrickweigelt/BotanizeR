@@ -32,8 +32,22 @@ navbarPage(title = div(
     tags$style(HTML("#panel1{font-size: 25px}",
                     "#panel2{font-size: 25px}",
                     "#panel3{font-size: 25px}",
-                    "#panel_about{font-size: 25px}"))
-    
+                    "#panel_about{font-size: 25px}")),
+    tags$head(
+        tags$style(HTML(
+            ".slick-slide img {
+               max-width: 100%;
+               height: auto;
+               min-width: 200px;
+               min-height: 150px;
+               max-height: 625px;
+             }
+
+             @media(max-width:800px) {
+               .slick-slide img {
+                 width: 100%;
+               }
+             }")))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
@@ -55,11 +69,11 @@ tabPanel(h1(id = "panel1", "Species"),
                          br(),
                          uiOutput(outputId = "options_maps")
          ),
-         column(6, style="min-width: 540px", 
+         column(6, style="min-width: 250px",
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
                 br(),
-                slickROutput("selected_sp_photo", width = "500px", height = "625px"),
+                slickROutput("selected_sp_photo", width = "93%", height = "625px"),
                 # tags$style('div#selected_sp_photo:hover {
                 #  transform: scale(1.5);
                 #  transform-origin: top left;
@@ -109,8 +123,8 @@ tabPanel(
         ),
         
         # Second part of the page with the picture
-        column(6, style="min-width: 540px", 
-               slickROutput("random_slickr", width = "500px", height = "625px"),
+        column(6, style="min-width: 300px", 
+               slickROutput("random_slickr", width = "93%", height = "625px"),
                div(uiOutput("random_image_credits"), style="text-align: center;"),
                br(),
                div(uiOutput("random_map"), style="text-align: center;"),

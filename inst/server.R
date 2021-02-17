@@ -415,8 +415,11 @@ shinyServer(function(input, output, session) {
             if(length(sp_infos$images) == 0){
                 sp_infos$images = "no_picture.png"
             }
-            slickR(obj = sp_infos$images, slideId = "slide_species") +
-                settings(slidesToShow = 1)
+            imgs <- slick_list(slick_div(sp_infos$images, 
+                                         css = htmltools::css(margin.left = "auto",
+                                                              margin.right = "auto",
+                                                              type = "img",links = NULL)))
+            slickR(imgs, slideId = "slide_species") # + settings(adaptiveHeight = TRUE)
         })
         
         # Image credits
@@ -732,8 +735,11 @@ shinyServer(function(input, output, session) {
             if(length(sp_quiz$images) == 0){
                 sp_quiz$images = "no_pictures.png"
             }
-            slickR(obj = sp_quiz$images, slideId = "slide_quiz") +
-                settings(slidesToShow = 1)
+            imgs <- slick_list(slick_div(sp_quiz$images, 
+                                         css = htmltools::css(margin.left = "auto",
+                                                              margin.right = "auto",
+                                                              type = "img",links = NULL)))
+            slickR(imgs, slideId = "slide_quiz") # + settings(adaptiveHeight = TRUE)
         })
 
         ### Image credits
