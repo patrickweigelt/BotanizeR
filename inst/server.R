@@ -8,6 +8,8 @@ library(sf)
 library(slickR)
 library(htmltools)
 library(shinyFiles)
+library(httr)
+
 
 shinyServer(function(input, output, session) {
     
