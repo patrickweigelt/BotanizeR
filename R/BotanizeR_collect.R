@@ -121,12 +121,14 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         imagelinks <- imagelinks[grepl("/medium/", imagelinks)]
         imagelinks <- gsub("(.*)(\\?itok.*)","\\1",imagelinks)
         imagelinks <- gsub("/medium/","/large/",imagelinks)
-      
-        # Check if medium sized image is available
-        imagelinks_error <- sapply(imagelinks, http_error)
-        imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
-        imagelinks_error <- sapply(imagelinks, http_error)
-        imagelinks <- imagelinks[!imagelinks_error]
+        
+        if(length(imagelinks)>0){
+          # Check if medium sized image is available
+          imagelinks_error <- sapply(imagelinks, http_error)
+          imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
+          imagelinks_error <- sapply(imagelinks, http_error)
+          imagelinks <- imagelinks[!imagelinks_error]
+        }
       }
       
       # # direct access to large images 
