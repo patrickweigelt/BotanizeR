@@ -8,6 +8,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   # 1. Controls ----
   # Package dependencies
+  library(httr)
   require(imager)
   require(XML)
   if("map" %in% hints_floraweb){
@@ -112,9 +113,28 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       imagelinks <- sapply(imagelinks, function(x) x[[2]])
       imagelinks <- imagelinks[grepl("/medium/", imagelinks)]
       imagelinks <- gsub("(.*)(\\?itok.*)","\\1",imagelinks)
-      imagelinks <- gsub("medium","large",imagelinks)
+      imagelinks <- gsub("/medium/","/large/",imagelinks)
       
+      # Check if medium sized image is available
+      imagelinks_error <- sapply(imagelinks, http_error)
+      imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
+      imagelinks_error <- sapply(imagelinks, http_error)
+      imagelinks <- imagelinks[!imagelinks_error]
+      
+      # # direct access to large images 
+      # imagelinks <- xpathApply(species_main, "//a[@class='colorbox']",xmlAttrs)
+      # imagelinks <- imagelinks[sapply(imagelinks, function(x) any(grepl("images", x)))]
+      # imagelinks <- sapply(imagelinks, function(x) x[[1]])
+      # imagelinks <- unique(gsub("(.*)(\\?itok.*)","\\1",imagelinks))
+      
+
       if(length(imagelinks)>0){
+        
+        # image credits
+        imagecredits <- unlist(xpathApply(species_main, "//div[@class='views-field views-field-field-acknowledgement']",xmlValue))
+        imagecredits <- imagecredits[2:length(imagecredits)]
+        imagecredits <- gsub(" +"," ",imagecredits)
+        
         for(i in 1:length(imagelinks)){
           if(only_links){
             hints[[1]][[length(hints[[1]])+1]] <- imagelinks[i]
