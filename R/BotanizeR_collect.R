@@ -105,23 +105,24 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     try({# download.file(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""),
          #               destfile = file.path(dir,"species.txt"), quiet = T)
          # species_main <- htmlTreeParse(file = file.path(dir,"species.txt"), isURL = F, isHTML=T, useInternalNodes = T)
-      if(!http_error(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""))){
+      #if(!http_error(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""))){
         # maybe faster to directly download and check for error content
         species_main <- GET(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""))
         species_main <- htmlTreeParse(file = species_main, isURL = F, isHTML=T, useInternalNodes = T)
-      }
+      #}
     })
     
     if(image_ukplantatlas & exists("species_main")){
       imagelinks <- xpathApply(species_main, "//img[@class='img-responsive']",xmlAttrs)
-      imagelinks <- imagelinks[sapply(imagelinks, function(x) any(grepl("images", x)))]
-      imagelinks <- sapply(imagelinks, function(x) x[[2]])
-      imagelinks <- imagelinks[grepl("/medium/", imagelinks)]
-      imagelinks <- gsub("(.*)(\\?itok.*)","\\1",imagelinks)
-      imagelinks <- gsub("/medium/","/large/",imagelinks)
       
-      # Check if medium sized image is available
       if(length(imagelinks)>0){
+        imagelinks <- imagelinks[sapply(imagelinks, function(x) any(grepl("images", x)))]
+        imagelinks <- sapply(imagelinks, function(x) x[[2]])
+        imagelinks <- imagelinks[grepl("/medium/", imagelinks)]
+        imagelinks <- gsub("(.*)(\\?itok.*)","\\1",imagelinks)
+        imagelinks <- gsub("/medium/","/large/",imagelinks)
+      
+        # Check if medium sized image is available
         imagelinks_error <- sapply(imagelinks, http_error)
         imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
         imagelinks_error <- sapply(imagelinks, http_error)
