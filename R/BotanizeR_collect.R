@@ -118,10 +118,12 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       imagelinks <- gsub("/medium/","/large/",imagelinks)
       
       # Check if medium sized image is available
-      imagelinks_error <- sapply(imagelinks, http_error)
-      imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
-      imagelinks_error <- sapply(imagelinks, http_error)
-      imagelinks <- imagelinks[!imagelinks_error]
+      if(length(imagelinks)>0){
+        imagelinks_error <- sapply(imagelinks, http_error)
+        imagelinks[imagelinks_error] <- gsub("/large/","/largest_1152_870/",imagelinks[imagelinks_error])
+        imagelinks_error <- sapply(imagelinks, http_error)
+        imagelinks <- imagelinks[!imagelinks_error]
+      }
       
       # # direct access to large images 
       # imagelinks <- xpathApply(species_main, "//a[@class='colorbox']",xmlAttrs)
