@@ -102,9 +102,11 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # 3.2 Images from ukplantatlas ----
   
   if((length(hints_ukplantatlas)>0) | image_ukplantatlas){
-    try({download.file(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""),
-                       destfile = file.path(dir,"species.txt"), quiet = T)
-      species_main <- htmlTreeParse(file = file.path(dir,"species.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+    try({#download.file(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""),
+         #               destfile = file.path(dir,"species.txt"), quiet = T)
+      species_main <- GET(paste("https://www.brc.ac.uk/plantatlas/plant/",gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(species_row$SPECIES))),sep=""))
+      # species_main <- htmlTreeParse(file = file.path(dir,"species.txt"), isURL = F, isHTML=T, useInternalNodes = T)
+      species_main <- htmlTreeParse(file = species_main, isURL = F, isHTML=T, useInternalNodes = T)
     })
     
     if(image_ukplantatlas & exists("species_main")){
