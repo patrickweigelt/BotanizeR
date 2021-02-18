@@ -60,7 +60,7 @@
   - Or show large images in the first place  
 * ~~Make images scale automatically in slickR slider~~
 * ~~Add image credits below slider~~
-  - **modify BotanizeR_collect to keep track of image source**
+  - **modify BotanizeR_collect to keep track of image source** <- started  
 * ~~Map legend and credits~~
 * ~~separate UK and DE credits in quiz hints~~
 * ~~no map text~~
@@ -84,6 +84,7 @@
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"
 * Map floraweb distribution based on api
+* switch entirely to httr to get rid of temp folders
 
 ## 3. Layout
 * ~~center smaller images in slider~~
