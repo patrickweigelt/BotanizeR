@@ -35,7 +35,10 @@ navbarPage(title = div(
                     "#panel_about{font-size: 25px}")),
     tags$head(
         tags$style(HTML(
-            ".slick-slide img {
+            " .slick-slide {
+               padding: 0 8px;
+            }
+            .slick-slide img {
                max-width: 100%;
                height: auto;
                min-width: 200px;
