@@ -36,7 +36,8 @@ navbarPage(title = div(
     tags$head(
         tags$style(HTML(
             " .slick-slide {
-               padding: 0 8px;
+               padding: 0 5px;
+               box-sizing: border-box;
             }
             .slick-slide img {
                max-width: 100%;
