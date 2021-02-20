@@ -34,6 +34,9 @@ hints_custom_omit <- c("NAMNR","TAXONNAME","SPECIES","GENUS","EPITHET","AUTHOR",
                        "NATIVE","SUMMER","WINTER","BioDiv2005","COUNT","SCORE",
                        "ATTEMPTS","INCLUDE")
 
+imagelinks_custom = NULL
+# imagelinks_custom = c("imagelink_1")
+
 chorology = "chorology"
 chorology = NULL
 

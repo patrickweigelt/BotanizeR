@@ -81,6 +81,8 @@ shinyServer(function(input, output, session) {
                                                & !hints_custom %in% c(hints_custom_omit,
                                                                       grep("imagelink", colnames(species_list), 
                                                                            value = TRUE)))],
+                                     imagelinks_custom = grep("imagelink", colnames(species_list), 
+                                                              value = TRUE),
                                      chorology = chorology)
 
     # French common names

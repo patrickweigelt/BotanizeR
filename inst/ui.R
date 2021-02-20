@@ -55,6 +55,7 @@ navbarPage(title = div(
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
+selected = h1(id = "panel2", "Quiz"),
 
 ## Species list ---------------------------------------------------------------
 tabPanel(h1(id = "panel1", "Species"),

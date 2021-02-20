@@ -50,7 +50,7 @@ custom_species <- floraweb_species[which(floraweb_species$SPECIES %in% c("Acer c
 custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_floraweb=TRUE,
                                          hints_floraweb = NULL,
                                          hints_custom = c("ownhint_1","ownhint_2"), 
-                                         imagelink_custom = c("imagelink_1","imagelink_2"), 
+                                         imagelinks_custom = c("imagelink_1","imagelink_2"), 
                                          image_folders = NULL, case_sensitive = FALSE)
                                     
 ```

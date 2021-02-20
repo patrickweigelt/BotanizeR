@@ -1,6 +1,6 @@
 ### BotanizeR_collect
 BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb = NULL, image_ukplantatlas=FALSE, hints_ukplantatlas = NULL,
-                           hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
+                           hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
                            file_location="temporary", only_links = FALSE, image_required = FALSE, 
                            image_width = NA){
   
@@ -32,7 +32,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   # all(hints_custom %in% colnames(species_row))
   
-  # all(imagelink_custom %in% colnames(species_row))
+  # all(imagelinks_custom %in% colnames(species_row))
 
   
   # 2. Prep ----
@@ -159,13 +159,13 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   
   
   # 3.3 Images from own image link ----
-  if(length(imagelink_custom)>0){
-    for(i in 1:length(imagelink_custom)){
-      if(!is.na(species_row[,imagelink_custom[i]]) & species_row[,imagelink_custom[i]] != ""){
+  if(length(imagelinks_custom)>0){
+    for(i in 1:length(imagelinks_custom)){
+      if(!is.na(species_row[,imagelinks_custom[i]]) & species_row[,imagelinks_custom[i]] != ""){
         if(only_links){
-          hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelink_custom[i]]
+          hints[[1]][[length(hints[[1]])+1]] <- species_row[,imagelinks_custom[i]]
         } else {
-          try({hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelink_custom[i]])})
+          try({hints[[1]][[length(hints[[1]])+1]] <- load.image(species_row[,imagelinks_custom[i]])})
         }
       }
     }
