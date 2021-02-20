@@ -81,8 +81,10 @@ shinyServer(function(input, output, session) {
                                                & !hints_custom %in% c(hints_custom_omit,
                                                                       grep("imagelink", colnames(species_list), 
                                                                            value = TRUE)))],
-                                     imagelinks_custom = grep("imagelink", colnames(species_list), 
-                                                              value = TRUE),
+                                     imagelinks_custom = imagelinks_custom[
+                                         which(imagelinks_custom %in% 
+                                                   grep("imagelink", colnames(species_list), 
+                                                        value = TRUE))],
                                      chorology = chorology)
 
     # French common names
@@ -171,6 +173,22 @@ shinyServer(function(input, output, session) {
         hints_reactive$hints_custom <- input$own_hints
     })
 
+    
+    ### Own image links ----
+    output$own_links <- renderUI({
+        checkboxGroupInput(inputId = "own_links", label = "Own images",
+                           choices = grep("imagelink", colnames(species_list), 
+                                          value = TRUE),
+                           selected = imagelinks_custom[which(imagelinks_custom %in% 
+                                     grep("imagelink", colnames(species_list), 
+                                                                 value = TRUE))])
+    })
+    
+    observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        hints_reactive$imagelinks_custom <- input$own_links
+    })
+    
+    
     ### Image folder ----
     shinyDirChoose(input, 'image_folder', roots = c(wd = '.'),
                    filetypes = c('', 'png', 'PNG', 'jpeg', "JPEG", 'jpg', 'JPG'), 
@@ -256,11 +274,19 @@ shinyServer(function(input, output, session) {
                                  inputId = "own_hints", label = "Own hints",
                                  choices = colnames(temp_species_list)[
                                      which(!colnames(temp_species_list) 
-                                        %in% c(hints_custom_omit,
-                                               grep("imagelink", 
-                                                    colnames(temp_species_list), 
-                                                    value = TRUE)))],
+                                           %in% c(hints_custom_omit,
+                                                  grep("imagelink", 
+                                                       colnames(temp_species_list), 
+                                                       value = TRUE)))],
                                  selected = hints_reactive$hints_custom)
+        
+        # Update ownlink checkboxes
+        updateCheckboxGroupInput(session,
+                                 inputId = "own_links", label = "Own images",
+                                 choices = grep("imagelink", 
+                                                colnames(temp_species_list), 
+                                                value = TRUE),
+                                 selected = hints_reactive$imagelinks_custom)
     })
     
     # Species list summary note
@@ -325,11 +351,6 @@ shinyServer(function(input, output, session) {
     ### Render Options ----
     
     # Dynamic dropdown
-    
-    # choice_plants <- reactive({
-    #     species_list_reactive$df_data$SPECIES
-    # })
-    
     output$select_plant <- renderUI({
         selectizeInput("plant_list", "Plant list",
                        choices = species_list_reactive$df_data$SPECIES,
@@ -410,9 +431,9 @@ shinyServer(function(input, output, session) {
             image_ukplantatlas = hints_reactive$image_ukplantatlas,
             hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
             hints_custom = hints_reactive$hints_custom, 
-            imagelink_custom = NULL,
+            imagelinks_custom = hints_reactive$imagelinks_custom,
             image_folders = paste0(system_path,hints_reactive$image_folders,sep=""),
-            file_location = "temporary", only_links = TRUE)
+            only_links = TRUE)
         
         ### Photos ----
         output$selected_sp_photo <- renderSlickR({
@@ -507,12 +528,10 @@ shinyServer(function(input, output, session) {
                     print(paste("List",input$options_maps))
                     map <- BotanizeR_collect(
                         species_row = isolate(species_list_reactive$df_data[j, ]), 
-                        image_floraweb = FALSE,
-                        hints_floraweb = "map",
-                        image_ukplantatlas = FALSE,
-                        hints_ukplantatlas = NULL,                    
-                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                        file_location = "temporary", only_links = TRUE)
+                        image_floraweb = FALSE, hints_floraweb = "map",
+                        image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,                    
+                        hints_custom = NULL, imagelinks_custom = NULL, 
+                        image_folders = NULL, only_links = TRUE)
                     
                     if(length(map$map)>0){
                         output$selected_map_text <- renderUI({
@@ -537,12 +556,10 @@ shinyServer(function(input, output, session) {
                     print(paste("List",input$options_maps))
                     map <- BotanizeR_collect(
                         species_row = isolate(species_list_reactive$df_data[j, ]), 
-                        image_floraweb = FALSE,
-                        hints_floraweb = NULL,
-                        image_ukplantatlas = FALSE,
-                        hints_ukplantatlas = "mapuk",                    
-                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                        file_location = "temporary", only_links = TRUE)
+                        image_floraweb = FALSE, hints_floraweb = NULL,
+                        image_ukplantatlas = FALSE, hints_ukplantatlas = "mapuk",                    
+                        hints_custom = NULL, imagelinks_custom = NULL, 
+                        image_folders = NULL, only_links = TRUE)
                     
                     if(length(map$mapuk)>0){
                         output$selected_map_text <- renderUI({
@@ -673,10 +690,9 @@ shinyServer(function(input, output, session) {
                 image_ukplantatlas = hints_reactive$image_ukplantatlas,
                 hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
                 hints_custom = hints_reactive$hints_custom, 
-                imagelink_custom = NULL,
+                imagelinks_custom = hints_reactive$imagelinks_custom,
                 image_folders = paste0(system_path,hints_reactive$image_folders),
-                file_location = "temporary", only_links = TRUE,
-                image_required = TRUE)
+                only_links = TRUE, image_required = TRUE)
             
             if(length(sp_quiz$images) != 0){
                 sp_picture <- 1
@@ -833,12 +849,10 @@ shinyServer(function(input, output, session) {
                 if("Map" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
                         species_row = species_list_reactive$df_data[i$i, ], 
-                        image_floraweb = FALSE,
-                        hints_floraweb = "map",
-                        image_ukplantatlas = FALSE,
-                        hints_ukplantatlas = NULL,                    
-                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                        file_location = "temporary", only_links = TRUE)
+                        image_floraweb = FALSE, hints_floraweb = "map",
+                        image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,                    
+                        hints_custom = NULL, imagelinks_custom = NULL, 
+                        image_folders = NULL, only_links = TRUE)
                     
                     if(length(random_map$map)>0){
                         output$random_map_text <- renderUI({
@@ -863,12 +877,10 @@ shinyServer(function(input, output, session) {
                 } else if ("Map UK" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
                         species_row = species_list_reactive$df_data[i$i, ], 
-                        image_floraweb = FALSE,
-                        hints_floraweb = NULL,
-                        image_ukplantatlas = FALSE,
-                        hints_ukplantatlas = "mapuk",                    
-                        hints_custom = NULL, imagelink_custom = NULL, image_folders = NULL,
-                        file_location = "temporary", only_links = TRUE)
+                        image_floraweb = FALSE, hints_floraweb = NULL,
+                        image_ukplantatlas = FALSE, hints_ukplantatlas = "mapuk",                    
+                        hints_custom = NULL, imagelinks_custom = NULL, 
+                        image_folders = NULL, only_links = TRUE)
                     
                     if(length(random_map$mapuk)>0){
                         output$random_map_text <- renderUI({
@@ -981,13 +993,6 @@ shinyServer(function(input, output, session) {
     observeEvent(input$real_answer, {
         output$real_answer_print <- renderText(reactive_species$species)
         
-        # French common names
-        # fr_test <- as.character(
-        #     fr_common[grepl(reactive_species$species,
-        #                     fr_common$Nom.scientifique),
-        #               "Nom.vernaculaire"])
-        # output$fr_common_name <- renderText(fr_test)
-        
         if(!answered_reactive$answered){
             answered_reactive$cheated <- TRUE 
             print(paste("cheated ", answered_reactive$cheated))
@@ -1058,6 +1063,7 @@ shinyServer(function(input, output, session) {
                         total_score, "</b> right.</br>"))
         })
     })
+    
     ### Download ----
     observeEvent(input$upanddown_button, {
         showModal(modalDialog(

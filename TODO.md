@@ -37,6 +37,7 @@
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
   - this interferes with the next and previous buttons from slickR - maybe remove?
+  - make left and right buttons in quiz switch pictures also when outside lider
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -66,6 +67,8 @@
 * ~~no map text~~
 * redo message images (harmonize)
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
+* make whether setup tab is shown a variable in config
+  - include upload and download of species list in quiz if setup tab is disabled
 
 ## 2. Package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
