@@ -93,6 +93,7 @@
 * replace species names in descriptions be "The species"
 * Map floraweb distribution based on api
 * switch entirely to httr to get rid of temp folders
+* jpg, JPG, JPEG, jpeg etc. for own folder
 
 ## 3. Layout
 * ~~center smaller images in slider~~
