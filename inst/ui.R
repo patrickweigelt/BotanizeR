@@ -8,6 +8,8 @@ library(slickR)
 library(shinyFiles)
 library(shinyBS)
 
+# Load starting config
+source("config.R")
 
 # Source text for the "About" panel
 tabPanelAbout = source("About.R")$value
@@ -154,7 +156,7 @@ tabPanel(
 ),
 
 ## Setup ----------------------------------------------------------------------
-tabPanel(
+if(setup){tabPanel(
     h1(id = "panel3", "Setup"),
     fluidRow(
         column(4,
@@ -190,8 +192,10 @@ tabPanel(
                uiOutput(outputId = "ukplantatlas_hints")
         )
     )
-),
+)} else {
+  tabPanelAbout()  
+},
 
 ## About ----------------------------------------------------------------------
-tabPanelAbout()
+if(setup) tabPanelAbout()
 )

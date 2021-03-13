@@ -56,9 +56,8 @@
 * ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
 * Why does species list page update immediately after setup changes and quiz doesn't?
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
-* **Some UK pictures don't exist as large pictures and hence don't show up**
-  - now that the images scale properly we could load the larger ones for these cases. Need control for this  
-  - Or show large images in the first place  
+* ~~Some UK pictures don't exist as large pictures and hence don't show up~~
+  - ~~now that the images scale properly we could load the larger ones for these cases. Need control for this~~  
 * ~~Make images scale automatically in slickR slider~~
 * ~~Add image credits below slider~~
   - **modify BotanizeR_collect to keep track of image source** <- started  

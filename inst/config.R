@@ -4,10 +4,12 @@ library(BotanizeR)
 ### In this config file you specify the default starting values for the BotanizeR Shiny app:
 
 
+# Shall setup tab be shown?
+setup = TRUE
+
 ### System ----
 system_path <- ""
 #system_path <- "~/ShinyApps/BotanizeR/"
-
 
 ### List of species ----
 
