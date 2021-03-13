@@ -9,7 +9,7 @@ library(slickR)
 library(htmltools)
 library(shinyFiles)
 library(httr)
-
+# library(shinyjs)
 
 shinyServer(function(input, output, session) {
     
@@ -156,12 +156,12 @@ shinyServer(function(input, output, session) {
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                           choices = colnames(species_list)[
-                               which(!colnames(species_list) 
+                           choices = isolate(colnames(species_list_reactive$df_data)[
+                               which(!colnames(species_list_reactive$df_data) 
                                      %in% c(hints_custom_omit,
                                             grep("imagelink", 
-                                                 colnames(species_list), 
-                                                 value = TRUE)))],
+                                                 colnames(species_list_reactive$df_data), 
+                                                 value = TRUE)))]),
                            selected = hints_custom[
                                which(hints_custom %in% colnames(species_list)
                                      & !hints_custom %in% c(hints_custom_omit,
@@ -169,7 +169,7 @@ shinyServer(function(input, output, session) {
                                                                  value = TRUE)))])
     })
     
-    observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, {
+    observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
         hints_reactive$hints_custom <- input$own_hints
     })
 
@@ -177,14 +177,14 @@ shinyServer(function(input, output, session) {
     ### Own image links ----
     output$own_links <- renderUI({
         checkboxGroupInput(inputId = "own_links", label = "Own images",
-                           choices = grep("imagelink", colnames(species_list), 
-                                          value = TRUE),
+                           choices = isolate(grep("imagelink", colnames(species_list_reactive$df_data), 
+                                          value = TRUE)),
                            selected = imagelinks_custom[which(imagelinks_custom %in% 
                                      grep("imagelink", colnames(species_list), 
                                                                  value = TRUE))])
     })
     
-    observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, {
+    observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
         hints_reactive$imagelinks_custom <- input$own_links
     })
     
@@ -323,7 +323,7 @@ shinyServer(function(input, output, session) {
         counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
         counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
         counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
-        
+
         # update specieslist drop down
         updateSelectInput(session,
                           inputId = "select_specieslist", label = NULL,
@@ -343,11 +343,35 @@ shinyServer(function(input, output, session) {
         counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
         counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
         
+        counts_reactive$omit <- TRUE
+        
         # update specieslist drop down
         updateSelectInput(session,
                           inputId = "select_specieslist", label = NULL,
                           choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded"),
                           selected = "uploaded")
+        
+        # Update ownhint checkboxes   ### Continue here!
+        updateCheckboxGroupInput(session,
+                                 inputId = "own_hints", label = "Own hints",
+                                 choices = colnames(species_list_uploaded)[
+                                     which(!colnames(species_list_uploaded) 
+                                           %in% c(hints_custom_omit,
+                                                  grep("imagelink", 
+                                                       colnames(species_list_uploaded), 
+                                                       value = TRUE)))],
+                                 selected = hints_reactive$hints_custom)
+        
+        # Update ownlink checkboxes
+        updateCheckboxGroupInput(session,
+                                 inputId = "own_links", label = "Own images",
+                                 choices = grep("imagelink", 
+                                                colnames(species_list_uploaded), 
+                                                value = TRUE),
+                                 selected = hints_reactive$imagelinks_custom)
+        
+        # click("newplant", asis = TRUE) # gets executed before hints are uodated and may cause error due to missing columns
+        
     })
     
     ### Download a species list ----
@@ -362,7 +386,7 @@ shinyServer(function(input, output, session) {
         }
     )
 
-    # The second dowload button in the quiz pop-up only works with its own handler
+    # The second download button in the quiz pop-up only works with its own handler
     output$download_2 <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 
         content = function(file){

@@ -103,7 +103,7 @@ tabPanel(h1(id = "panel1", "Species"),
 ## Quiz -----------------------------------------------------------------------
 tabPanel(
     h1(id = "panel2", "Quiz"),
-    fluidRow(
+    fluidRow(#useShinyjs(),  # Set up shinyjs
         column(3,
                h5(textOutput("Score")),
                br(),
