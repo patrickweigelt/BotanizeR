@@ -149,8 +149,18 @@ tabPanel(
                        title = "Session information",
                        trigger = "sumstats_button",
                        size = "large", uiOutput("stats_text"),
-                       plotOutput("stats_barplot"))
+                       plotOutput("stats_barplot")),
+               bsModal(id = "upanddown_modal",
+                       title = "Up and Download",
+                       trigger = "upanddown_button",
+                       size = "large",
+                       htmlOutput("upload_note_2"),
+                       fileInput("file_2", ""),
+                       htmlOutput("download_note_2"),
+                       br(),
+                       downloadButton("download_2","Download your progress")
                )
+        )
     )
     
 ),

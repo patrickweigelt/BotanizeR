@@ -231,10 +231,13 @@ shinyServer(function(input, output, session) {
     # Render drop down
     output$select_specieslist <- renderUI({
         selectInput("select_specieslist", label = NULL,
-                    choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all"),
-                    selected = species_list_selected)
+                    choices = {if (length(species_list_uploaded_reactive$df_data) > 0)
+                                   c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded") else 
+                                       c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all")},
+                    selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded",species_list_selected))
     })
 
+    
     # Make condition that input is needed to initialize drop_down
     y <- reactive({
         req(input$select_specieslist)
@@ -299,13 +302,17 @@ shinyServer(function(input, output, session) {
     })
 
     ### Upload a species list ----
-    output$upload_note <- renderUI({
-        HTML(paste0("<br>",
-                    "If you ran the quiz in a previous session and you saved your progress, 
+    upload_text <- "If you ran the quiz in a previous session and you saved your progress, 
                     you can upload your current scores as a .csv file here. You can also upload 
-                    a modified species list with another set of species or your own hints."))
+                    a modified species list with another set of species or your own hints."
+    output$upload_note <- renderUI({
+        HTML(paste0("<br>",upload_text))
     })
-
+    # The second upload note in the quiz pop-up only works with its own output
+    output$upload_note_2 <- renderUI({
+        HTML(paste0("<br>",upload_text))
+    })
+    
     observeEvent(input$file, {
         species_list_uploaded <- read.csv(input$file$datapath)
         species_list_uploaded <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
@@ -324,6 +331,25 @@ shinyServer(function(input, output, session) {
                           selected = "uploaded")
     })
 
+    # The second upload button in the quiz pop-up only works with its own handler
+    observeEvent(input$file_2, {
+        species_list_uploaded <- read.csv(input$file_2$datapath)
+        species_list_uploaded <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
+        # write control and note for right columns in dataframe
+        species_list_reactive$df_data <- species_list_uploaded
+        species_list_uploaded_reactive$df_data <- species_list_uploaded
+        counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
+        counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
+        counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
+        counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+        
+        # update specieslist drop down
+        updateSelectInput(session,
+                          inputId = "select_specieslist", label = NULL,
+                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded"),
+                          selected = "uploaded")
+    })
+    
     ### Download a species list ----
     output$download <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 
@@ -336,15 +362,35 @@ shinyServer(function(input, output, session) {
         }
     )
 
+    # The second dowload button in the quiz pop-up only works with its own handler
+    output$download_2 <- downloadHandler(
+        filename = function(){"BotanizeR_practised.csv"}, 
+        content = function(file){
+            species_list_save <- species_list_reactive$df_data
+            if(!counts_reactive$omit & !answered_reactive$cheated){
+                species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
+            }
+            write.csv(species_list_save, file, row.names = FALSE)
+        }
+    )
+    
+    
+    download_text <- paste0("Downloading the current species list allows you to save the progress 
+                                  you made during the quiz and load it the next time you practice to get 
+                                  species you are not yet familiar with shown more frequently.",
+                                 "<br>",
+                                 "You can also download the species list to modify it according to your 
+                                  needs and upload it again.")
+    
     output$download_note <- renderUI({
-        HTML(paste0("<br>",
-                    "Downloading the current species list allows you to save the progress 
-                    you made during the quiz and load it the next time you practice to get 
-                    species you are not yet familiar with shown more frequently.",
-                    "<br>",
-                    "You can also download the species list to modify it according to your needs."))
+        HTML(paste0("<br>",download_text))
     })
-
+    # The second upload note in the quiz pop-up only works with its own output
+    output$download_note_2 <- renderUI({
+        HTML(paste0("<br>",download_text))
+    })
+    
+    
     
     # 2. Selected species ----
     
@@ -1065,21 +1111,21 @@ shinyServer(function(input, output, session) {
     })
     
     ### Download ----
-    observeEvent(input$upanddown_button, {
-        showModal(modalDialog(
-            title = "Up and Download",
-            HTML(paste0("Please navigate to the 'setup' tab to up or download your progress.",
-                        "<br>","<br>",
-                        "If you ran the quiz in a previous session and you saved your progress, 
-                          you can upload your current scores as a .csv file there. You can also 
-                          upload a modified species list with another set of species or your own hints.",
-                        "<br>","<br>",
-                        "Downloading the current species list allows you to save the progress 
-                          you made during the quiz and load it the next time you practice to get 
-                          species you are not yet familiar with shown more frequently. 
-                          You can also modify the downloaded species list according to your needs.")),
-            easyClose = TRUE
-        ))
-    })
+    # observeEvent(input$upanddown_button, {
+    #     showModal(modalDialog(
+    #         title = "Up and Download",
+    #         HTML(paste0("Please navigate to the 'setup' tab to up or download your progress.",
+    #                     "<br>","<br>",
+    #                     "If you ran the quiz in a previous session and you saved your progress, 
+    #                       you can upload your current scores as a .csv file there. You can also 
+    #                       upload a modified species list with another set of species or your own hints.",
+    #                     "<br>","<br>",
+    #                     "Downloading the current species list allows you to save the progress 
+    #                       you made during the quiz and load it the next time you practice to get 
+    #                       species you are not yet familiar with shown more frequently. 
+    #                       You can also modify the downloaded species list according to your needs.")),
+    #         easyClose = TRUE
+    #     ))
+    # })
     
 })
