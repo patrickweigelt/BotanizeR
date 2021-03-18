@@ -13,7 +13,7 @@ system_path <- ""
 
 ### List of species ----
 
-species_list_selected <- c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all")[3]
+species_list_selected <- c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex")[3]
 
 
 ### Hints and images ----

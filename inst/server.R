@@ -28,13 +28,16 @@ shinyServer(function(input, output, session) {
     }  else if (species_list_selected == "Germany_summer"){
         data(floraweb_species)
         species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                                   floraweb_species$BioDiv2005==1), ]
+                                                   floraweb_species$BioDiv2005==1),]
     } else if (species_list_selected == "Germany_winter"){
         data(floraweb_species)
         species_list <- floraweb_species[which(floraweb_species$WINTER==1), ]
     } else if (species_list_selected == "UK&Ireland_all"){
         data(ukplantatlas_species)
         species_list <- ukplantatlas_species
+    } else if (species_list_selected == "UK&Ireland_sussex"){
+        data(ukplantatlas_species)
+        species_list <- ukplantatlas_species[which(ukplantatlas_species$SUSSEX==1),]
     }
     
     # Order species list alphabetically 
@@ -232,8 +235,8 @@ shinyServer(function(input, output, session) {
     output$select_specieslist <- renderUI({
         selectInput("select_specieslist", label = NULL,
                     choices = {if (length(species_list_uploaded_reactive$df_data) > 0)
-                                   c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded") else 
-                                       c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all")},
+                                   c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded") else 
+                                       c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex")},
                     selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded",species_list_selected))
     })
 
@@ -259,6 +262,9 @@ shinyServer(function(input, output, session) {
         } else if (input$select_specieslist == "UK&Ireland_all"){
             data(ukplantatlas_species)
             temp_species_list <- ukplantatlas_species
+        } else if (input$select_specieslist == "UK&Ireland_sussex"){
+            data(ukplantatlas_species)
+            temp_species_list <- ukplantatlas_species[which(ukplantatlas_species$SUSSEX==1),]
         } else if (input$select_specieslist == "uploaded"){
             temp_species_list <- species_list_uploaded_reactive$df_data
         }
@@ -327,7 +333,7 @@ shinyServer(function(input, output, session) {
         # update specieslist drop down
         updateSelectInput(session,
                           inputId = "select_specieslist", label = NULL,
-                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded"),
+                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded"),
                           selected = "uploaded")
     })
 
@@ -348,7 +354,7 @@ shinyServer(function(input, output, session) {
         # update specieslist drop down
         updateSelectInput(session,
                           inputId = "select_specieslist", label = NULL,
-                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","uploaded"),
+                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded"),
                           selected = "uploaded")
         
         # Update ownhint checkboxes   ### Continue here!
