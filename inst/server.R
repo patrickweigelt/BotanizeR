@@ -22,22 +22,17 @@ shinyServer(function(input, output, session) {
     chorology_list <- read.table("NAMNR_chorology.txt")
     
     # Load initial species list
-    if(species_list_selected == "Germany_all"){
-        data(floraweb_species)
-        species_list <- floraweb_species
-    }  else if (species_list_selected == "Germany_summer"){
-        data(floraweb_species)
-        species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                                   floraweb_species$BioDiv2005==1),]
-    } else if (species_list_selected == "Germany_winter"){
-        data(floraweb_species)
-        species_list <- floraweb_species[which(floraweb_species$WINTER==1), ]
-    } else if (species_list_selected == "UK&Ireland_all"){
-        data(ukplantatlas_species)
-        species_list <- ukplantatlas_species
-    } else if (species_list_selected == "UK&Ireland_sussex"){
-        data(ukplantatlas_species)
-        species_list <- ukplantatlas_species[which(ukplantatlas_species$SUSSEX==1),]
+    if(species_list_path == ""){
+        data("BotanizeR_species")
+    } else {
+        BotanizeR_species <- read.csv(paste0(system_path,species_list_path))
+    }
+    
+    # Filter species list for predefined filter column
+    if(species_list_selected != "All species"){
+        species_list <- BotanizeR_species[which(BotanizeR_species[,species_list_selected]==1),]
+    } else {
+        species_list <- BotanizeR_species
     }
     
     # Order species list alphabetically 
@@ -90,10 +85,6 @@ shinyServer(function(input, output, session) {
                                                         value = TRUE))],
                                      chorology = chorology)
 
-    # French common names
-    # fr_common <- read.table("nom_vernaculaires_cleaned.csv",
-    #                        header = TRUE, sep = "\t", fill = TRUE)
-    
     # 1. Setup ----
     
     ## Online resources ----
@@ -235,9 +226,9 @@ shinyServer(function(input, output, session) {
     output$select_specieslist <- renderUI({
         selectInput("select_specieslist", label = NULL,
                     choices = {if (length(species_list_uploaded_reactive$df_data) > 0)
-                                   c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded") else 
-                                       c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex")},
-                    selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded",species_list_selected))
+                                   c(species_list_filter,"uploaded") else 
+                                       species_list_filter},
+                    selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded", species_list_selected))
     })
 
     
@@ -249,25 +240,13 @@ shinyServer(function(input, output, session) {
     
     # Observe input
     observeEvent(y(), ignoreInit = TRUE, {
-        if(input$select_specieslist == "Germany_all"){
-            data(floraweb_species)
-            temp_species_list <- floraweb_species
-        }  else if (input$select_specieslist == "Germany_summer"){
-            data(floraweb_species)
-            temp_species_list <- floraweb_species[which(floraweb_species$SUMMER==1 |
-                                                            floraweb_species$BioDiv2005==1), ]
-        } else if (input$select_specieslist == "Germany_winter"){
-            data(floraweb_species)
-            temp_species_list <- floraweb_species[which(floraweb_species$WINTER==1), ]
-        } else if (input$select_specieslist == "UK&Ireland_all"){
-            data(ukplantatlas_species)
-            temp_species_list <- ukplantatlas_species
-        } else if (input$select_specieslist == "UK&Ireland_sussex"){
-            data(ukplantatlas_species)
-            temp_species_list <- ukplantatlas_species[which(ukplantatlas_species$SUSSEX==1),]
+        if(input$select_specieslist == "All species"){
+            temp_species_list <- BotanizeR_species
         } else if (input$select_specieslist == "uploaded"){
             temp_species_list <- species_list_uploaded_reactive$df_data
-        }
+        } else {
+            temp_species_list <- BotanizeR_species[which(BotanizeR_species[,input$select_specieslist]==1),]
+        } 
         
         species_list_reactive$df_data <- temp_species_list[order(temp_species_list$SPECIES),]
         counts_reactive$init_count <- sum(temp_species_list$COUNT)
@@ -332,8 +311,8 @@ shinyServer(function(input, output, session) {
 
         # update specieslist drop down
         updateSelectInput(session,
-                          inputId = "select_specieslist", label = NULL,
-                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded"),
+                          inputId = "select_specieslist", label = Null,
+                          choices = c(species_list_filter,"uploaded"),
                           selected = "uploaded")
     })
 
@@ -354,7 +333,7 @@ shinyServer(function(input, output, session) {
         # update specieslist drop down
         updateSelectInput(session,
                           inputId = "select_specieslist", label = NULL,
-                          choices = c("Germany_all","Germany_winter","Germany_summer","UK&Ireland_all","UK&Ireland_sussex","uploaded"),
+                          choices = c(species_list_filter,"uploaded"),
                           selected = "uploaded")
         
         # Update ownhint checkboxes   ### Continue here!
