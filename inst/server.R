@@ -74,11 +74,9 @@ shinyServer(function(input, output, session) {
                                      image_ukplantatlas = image_ukplantatlas,
                                      hints_ukplantatlas = hints_ukplantatlas,
                                      image_folders = image_folders,
-                                     hints_custom = hints_custom[
-                                         which(hints_custom %in% colnames(species_list)
-                                               & !hints_custom %in% c(hints_custom_omit,
-                                                                      grep("imagelink", colnames(species_list), 
-                                                                           value = TRUE)))],
+                                     hints_custom = hints_custom[which(imagelinks_custom %in% 
+                                                                           grep("ownhints", colnames(species_list), 
+                                                                                value = TRUE))],
                                      imagelinks_custom = imagelinks_custom[
                                          which(imagelinks_custom %in% 
                                                    grep("imagelink", colnames(species_list), 
@@ -150,17 +148,11 @@ shinyServer(function(input, output, session) {
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                           choices = isolate(colnames(species_list_reactive$df_data)[
-                               which(!colnames(species_list_reactive$df_data) 
-                                     %in% c(hints_custom_omit,
-                                            grep("imagelink", 
-                                                 colnames(species_list_reactive$df_data), 
-                                                 value = TRUE)))]),
-                           selected = hints_custom[
-                               which(hints_custom %in% colnames(species_list)
-                                     & !hints_custom %in% c(hints_custom_omit,
-                                                            grep("imagelink", colnames(species_list), 
-                                                                 value = TRUE)))])
+                           choices = isolate(grep("ownhint", colnames(species_list_reactive$df_data), 
+                                                  value = TRUE)),
+                           selected = hints_custom[which(hints_custom %in% 
+                                                                  grep("ownhint", colnames(species_list), 
+                                                                       value = TRUE))])
     })
     
     observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
@@ -260,12 +252,9 @@ shinyServer(function(input, output, session) {
         # Update ownhint checkboxes
         updateCheckboxGroupInput(session,
                                  inputId = "own_hints", label = "Own hints",
-                                 choices = colnames(temp_species_list)[
-                                     which(!colnames(temp_species_list) 
-                                           %in% c(hints_custom_omit,
-                                                  grep("imagelink", 
-                                                       colnames(temp_species_list), 
-                                                       value = TRUE)))],
+                                 choices = grep("ownhint", 
+                                                colnames(temp_species_list), 
+                                                value = TRUE),
                                  selected = hints_reactive$hints_custom)
         
         # Update ownlink checkboxes
@@ -287,76 +276,141 @@ shinyServer(function(input, output, session) {
     })
 
     ### Upload a species list ----
+    
+    sanitize_input <- function(x) {
+        ext <- tools::file_ext(x)
+        if(ext == "csv"){
+            header <- read.csv(x, header=FALSE, nrows=1)
+            if(all(c("TAXONNAME", "SPECIES", "GENUS") %in% header)){
+                header <- header[1,] %in% c("NAMNR", "TAXONNAME", "SPECIES", "GENUS",
+                                            "COUNT", "SCORE", "ATTEMPTS", "INCLUDE",
+                                            grep("ownhint|imagelink", header[1,], value = TRUE))
+                
+                header <- ifelse(header, NA, "NULL")
+                
+                species_list_clean <- read.csv(x, colClasses = header, nrows = 5000)
+                
+                if(nrow(species_list_clean)>0){
+                if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
+                if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
+                if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
+                if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
+                if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
+                
+                species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
+                
+                return(species_list_clean)
+                } else {
+                    return("No entries found!")
+                }
+            } else {
+                return("At least one of the columns 'TAXONNAME', 'SPECIES' and 'GENUS' is missing.")
+            }
+        } else {
+            return("Please upload a *.csv file!")
+        }
+    }
+    
+    
     upload_text <- "If you ran the quiz in a previous session and you saved your progress, 
                     you can upload your current scores as a .csv file here. You can also upload 
                     a modified species list with another set of species or your own hints."
+
     output$upload_note <- renderUI({
         HTML(paste0("<br>",upload_text))
     })
+    output$upload_error <- renderUI("")
+
     # The second upload note in the quiz pop-up only works with its own output
     output$upload_note_2 <- renderUI({
         HTML(paste0("<br>",upload_text))
     })
+    output$upload_error_2 <- renderUI("")
+    
     
     observeEvent(input$file, {
-        species_list_uploaded <- read.csv(input$file$datapath)
-        species_list_uploaded <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
-        # write control and note for right columns in dataframe
-        species_list_reactive$df_data <- species_list_uploaded
-        species_list_uploaded_reactive$df_data <- species_list_uploaded
-        counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
-        counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
-        counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
-        counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
-
-        # update specieslist drop down
-        updateSelectInput(session,
-                          inputId = "select_specieslist", label = Null,
-                          choices = c(species_list_filter,"uploaded"),
-                          selected = "uploaded")
+        file <- input$file$datapath
+        req(file)
+        try(species_list_uploaded <- sanitize_input(file))
+        
+        req(species_list_uploaded)
+        
+        if(is.data.frame(species_list_uploaded)){
+            output$upload_error <- renderUI("")
+            output$upload_error_2 <- renderUI("")
+            
+            species_list_reactive$df_data <- species_list_uploaded
+            species_list_uploaded_reactive$df_data <- species_list_uploaded
+            counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
+            counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
+            counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
+            counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+            
+            # update specieslist drop down
+            updateSelectInput(session,
+                              inputId = "select_specieslist", label = NULL,
+                              choices = c(species_list_filter,"uploaded"),
+                              selected = "uploaded")
+        } else if (is.character(species_list_uploaded)){
+            output$upload_error <- renderUI({
+                HTML(paste0("<i>Species list could not be loaded. ",
+                            species_list_uploaded,
+                            "</i>"))
+            })
+        }
     })
-
+    
+    
     # The second upload button in the quiz pop-up only works with its own handler
     observeEvent(input$file_2, {
-        species_list_uploaded <- read.csv(input$file_2$datapath)
-        species_list_uploaded <- species_list_uploaded[order(species_list_uploaded$SPECIES),]
-        # write control and note for right columns in dataframe
-        species_list_reactive$df_data <- species_list_uploaded
-        species_list_uploaded_reactive$df_data <- species_list_uploaded
-        counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
-        counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
-        counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
-        counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+        file <- input$file_2$datapath
+        req(file)
+        try(species_list_uploaded <- sanitize_input(file))
         
-        counts_reactive$omit <- TRUE
+        req(species_list_uploaded)
         
-        # update specieslist drop down
-        updateSelectInput(session,
-                          inputId = "select_specieslist", label = NULL,
-                          choices = c(species_list_filter,"uploaded"),
-                          selected = "uploaded")
-        
-        # Update ownhint checkboxes   ### Continue here!
-        updateCheckboxGroupInput(session,
-                                 inputId = "own_hints", label = "Own hints",
-                                 choices = colnames(species_list_uploaded)[
-                                     which(!colnames(species_list_uploaded) 
-                                           %in% c(hints_custom_omit,
-                                                  grep("imagelink", 
-                                                       colnames(species_list_uploaded), 
-                                                       value = TRUE)))],
-                                 selected = hints_reactive$hints_custom)
-        
-        # Update ownlink checkboxes
-        updateCheckboxGroupInput(session,
-                                 inputId = "own_links", label = "Own images",
-                                 choices = grep("imagelink", 
-                                                colnames(species_list_uploaded), 
-                                                value = TRUE),
-                                 selected = hints_reactive$imagelinks_custom)
-        
-        # click("newplant", asis = TRUE) # gets executed before hints are uodated and may cause error due to missing columns
-        
+        if(is.data.frame(species_list_uploaded)){
+            output$upload_error <- renderUI("")
+            output$upload_error_2 <- renderUI("")
+            
+            species_list_uploaded_reactive$df_data <- species_list_uploaded
+            counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
+            counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
+            counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
+            counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
+            
+            counts_reactive$omit <- TRUE
+            
+            # update specieslist drop down
+            updateSelectInput(session,
+                              inputId = "select_specieslist", label = NULL,
+                              choices = c(species_list_filter,"uploaded"),
+                              selected = "uploaded")
+            
+            # Update ownhint checkboxes   ### Continue here!
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_hints", label = "Own hints",
+                                     choices = grep("ownhint", 
+                                                    colnames(species_list_uploaded), 
+                                                    value = TRUE),
+                                     selected = hints_reactive$hints_custom)
+            
+            # Update ownlink checkboxes
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_links", label = "Own images",
+                                     choices = grep("imagelink", 
+                                                    colnames(species_list_uploaded), 
+                                                    value = TRUE),
+                                     selected = hints_reactive$imagelinks_custom)
+            
+            # click("newplant", asis = TRUE) # gets executed before hints are updated and may cause error due to missing columns
+        } else if (is.character(species_list_uploaded)){
+            output$upload_error_2 <- renderUI({
+                HTML(paste0("<i>Species list could not be loaded. ",
+                            species_list_uploaded,
+                            "</i>"))
+            })
+        }
     })
     
     ### Download a species list ----

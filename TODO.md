@@ -16,9 +16,9 @@
   - ~~filtering via column in df <- solved y having predefined subsets~~
   - ~~summary stats about species list: number of species~~
   - ~~save initial scores as reactive values when new list loaded~~
-  - **control for right columns in data.frame**
-  - only accept ownhint columns to make security checks easier
-  - get rid of omit_columns statement
+  - ~~control for right columns in data.frame~~
+  - ~~only accept ownhint columns to make security checks easier~~
+  - ~~get rid of omit_columns statement~~
   - ~~make example datasets available via dropdown~~
   - ~~read custom hints from table header~~
   - ~~image folders~~
@@ -88,7 +88,7 @@
 * species list Göttingen
 * ~~check image folder path in local shiny app~~
 * make error messages in case floraweb is not available
-* **define columns needed for species list**
+* ~~define columns needed for species list~~
 * ~~combine the tables and make columns for UK and GER~~
 * Subspecies in UK-list
 * replace species names in descriptions be "The species"

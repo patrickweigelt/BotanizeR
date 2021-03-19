@@ -39,20 +39,18 @@ hints_ukplantatlas = NULL
 # hints_ukplantatlas = c("mapuk","familyuk","ecology","statusuk","trends",
 #                        "perennation","lifeform","woodiness","clonality")
 
-image_folders = c("WWW/pictures_gehoelze_winter_500")
+image_folders = NULL
+# image_folders = c("WWW/pictures_gehoelze_winter_500")
 # image_folders = c("WWW/pictures_Clemens_400","WWW/drawings_Schulz_400")
 
 hints_custom = NULL
-# hints_custom = c("ownhint_English_name") # column names of own hints to check at start
-hints_custom_omit <- c("NAMNR","TAXONNAME","SPECIES","GENUS","EPITHET","AUTHOR",  
-                       "NATIVE","SUMMER","WINTER","BioDiv2005","COUNT","SCORE",
-                       "ATTEMPTS","INCLUDE","SUSSEX")
+hints_custom = c("ownhint_English_name") # column names of own hints to check at start
 
 imagelinks_custom = NULL
-imagelinks_custom = c("imagelink_1")
+# imagelinks_custom = c("imagelink_1")
 
-chorology = "chorology"
 chorology = NULL
+# chorology = "chorology"
 
 
 ### Winter:

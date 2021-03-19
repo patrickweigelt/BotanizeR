@@ -156,6 +156,7 @@ tabPanel(
                        size = "large",
                        htmlOutput("upload_note_2"),
                        fileInput("file_2", ""),
+                       htmlOutput("upload_error_2"),
                        htmlOutput("download_note_2"),
                        br(),
                        downloadButton("download_2","Download your progress")
@@ -175,7 +176,8 @@ if(setup){tabPanel(
                uiOutput("select_specieslist"),
                htmlOutput("summary_note"),
                htmlOutput("upload_note"),
-               fileInput("file", ""),
+               fileInput("file", "", accept = ".csv"),
+               htmlOutput("upload_error"),
                htmlOutput("download_note"),
                br(),
                downloadButton("download","Download your progress")
