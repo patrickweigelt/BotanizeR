@@ -192,7 +192,7 @@ if(setup){tabPanel(
                actionButton("remove_folder", "Remove last"),
                htmlOutput("list_imagefolders"),
         ),
-        column(4,
+        if(online_ressources) {column(4,
                h4("Online resources"),
                br(),
                uiOutput(outputId = "floraweb_images"),
@@ -200,7 +200,7 @@ if(setup){tabPanel(
                uiOutput(outputId = "chorology_hint"),
                uiOutput(outputId = "ukplantatlas_images"),
                uiOutput(outputId = "ukplantatlas_hints")
-        )
+        )}
     )
 )} else {
   tabPanelAbout()  

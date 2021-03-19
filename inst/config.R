@@ -7,6 +7,9 @@ library(BotanizeR)
 # Shall setup tab be shown?
 setup = TRUE
 
+# Shall online ressources in setup tab be shown
+online_ressources = FALSE
+
 ### System ----
 system_path <- ""
 #system_path <- "~/ShinyApps/BotanizeR/"
