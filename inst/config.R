@@ -54,16 +54,15 @@ chorology = NULL
 
 
 ### Winter:
-# species_list <- read.csv("floraweb_species_winter.csv") # for winter list
-
-## hints and images
+# species_list_path <- "floraweb_species_winter.csv" # for winter list
+# 
+# # hints and images
 # floraweb:
-# image_floraweb = FALSE # for winter list
 # hints_floraweb =  c("German name", "family", "status") # for winter list
 # # hints_floraweb =  NULL # for winter list
-
+# 
 # # image_folders = c("www/pictures_Clemens_400", "www/drawings_Schulz_400")
-# image_folders = c("~/ShinyApps/BotanizeR/WWW/pictures_Clemens_400", 
-# "~/ShinyApps/BotanizeR/WWW/drawings_Schulz_400") # This is needed on server
+# image_folders = c("WWW/pictures_gehoelze_winter_560", 
+#                  "WWW/drawings_Schulz_560")
 # hints_custom = NULL
 # chorology = "Chorology"

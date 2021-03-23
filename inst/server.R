@@ -291,15 +291,25 @@ shinyServer(function(input, output, session) {
                 species_list_clean <- read.csv(x, colClasses = header, nrows = 5000)
                 
                 if(nrow(species_list_clean)>0){
-                if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
-                if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
-                if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
-                if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
-                if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
-                
-                species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
-                
-                return(species_list_clean)
+                    
+                    if(all(apply(species_list_clean[,c('TAXONNAME','SPECIES','GENUS')], 2,function(x) all(!is.na(x) & x != "")))){
+                        
+                        if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
+                        if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
+                        if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
+                        if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
+                        if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
+                        
+                        species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
+                        
+                        if(all(apply(species_list_clean[,c('COUNT','SCORE','ATTEMPTS','INCLUDE')], 2,function(x) is.numeric(x) & all(!is.na(x))))){
+                            return(species_list_clean)
+                        } else {
+                            return("Not all entries of the columns 'COUNT', 'SCORE', 'ATTEMPTS' and 'INCLUDE' are numeric.")
+                        }
+                    } else {
+                        return("Missing entries in at least one of the columns 'TAXONNAME', 'SPECIES' and 'GENUS'.")
+                    }
                 } else {
                     return("No entries found!")
                 }

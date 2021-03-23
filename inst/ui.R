@@ -46,7 +46,7 @@ navbarPage(title = div(
                height: auto;
                min-width: 200px;
                min-height: 150px;
-               max-height: 625px;
+               max-height: 600px;
              }
 
              @media(max-width:800px) {
@@ -79,8 +79,8 @@ tabPanel(h1(id = "panel1", "Species"),
          column(6, style="min-width: 250px",
                 # splitLayout(cellWidths = c("100%"),
                 #             uiOutput("selected_sp_photo")),
-                br(),
-                slickROutput("selected_sp_photo", width = "93%", height = "625px"),
+                # br(),
+                slickROutput("selected_sp_photo", width = "93%", height = "600px"),
                 # tags$style('div#selected_sp_photo:hover {
                 #  transform: scale(1.5);
                 #  transform-origin: top left;
@@ -130,8 +130,8 @@ tabPanel(
         ),
         
         # Second part of the page with the picture
-        column(6, style="min-width: 300px", 
-               slickROutput("random_slickr", width = "93%", height = "625px"),
+        column(6, style="min-width: 250px", 
+               slickROutput("random_slickr", width = "93%", height = "600px"),
                div(uiOutput("random_image_credits"), style="text-align: center;"),
                br(),
                div(uiOutput("random_map"), style="text-align: center;"),
