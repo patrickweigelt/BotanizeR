@@ -37,6 +37,7 @@
 * ~~error finite ylim value needed... if no map available?~~
 * ~~Ownhints are only showing after setup tab has been visited~~
 * ~~don't show hints that are not available?~~
+* **remove ownhint_ from checkboxes**
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
   - this interferes with the next and previous buttons from slickR - maybe remove?
@@ -49,6 +50,7 @@
   - ~~add to setup~~
   - ~~remove from quiz due to species name in map~~
 * ~~Add UK flora~~
+* **filfeform not working**
 * ~~Summary statistics~~
   - ~~number of species practiced, number correct as bar plot? (quiz page popup)~~
   - ~~number of species in currently loaded species list (setup page)~~
@@ -96,6 +98,7 @@
 * Map floraweb distribution based on api
 * switch entirely to httr to get rid of temp folders
 * jpg, JPG, JPEG, jpeg etc. for own folder
+* **BotanizeR collect needs to also look for won images after replacing . in species names (sp. etc)**
 
 ## 3. Layout
 * ~~center smaller images in slider~~
