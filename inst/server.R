@@ -74,15 +74,16 @@ shinyServer(function(input, output, session) {
                                      image_ukplantatlas = image_ukplantatlas,
                                      hints_ukplantatlas = hints_ukplantatlas,
                                      image_folders = image_folders,
-                                     hints_custom = hints_custom[which(imagelinks_custom %in% 
-                                                                           grep("ownhints", colnames(species_list), 
-                                                                                value = TRUE))],
+                                     hints_custom = hints_custom[
+                                         which(hints_custom %in% 
+                                                   grep("ownhint", colnames(species_list), 
+                                                        value = TRUE))],
                                      imagelinks_custom = imagelinks_custom[
                                          which(imagelinks_custom %in% 
                                                    grep("imagelink", colnames(species_list), 
                                                         value = TRUE))],
                                      chorology = chorology)
-
+    
     # 1. Setup ----
     
     ## Online resources ----
@@ -356,7 +357,7 @@ shinyServer(function(input, output, session) {
             counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
             counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
             
-            # update specieslist drop down
+            # update species list drop down
             updateSelectInput(session,
                               inputId = "select_specieslist", label = NULL,
                               choices = c(species_list_filter,"uploaded"),
@@ -397,7 +398,7 @@ shinyServer(function(input, output, session) {
                               choices = c(species_list_filter,"uploaded"),
                               selected = "uploaded")
             
-            # Update ownhint checkboxes   ### Continue here!
+            # Update ownhint checkboxes  
             updateCheckboxGroupInput(session,
                                      inputId = "own_hints", label = "Own hints",
                                      choices = grep("ownhint", 
