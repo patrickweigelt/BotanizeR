@@ -50,7 +50,7 @@ image_folders = c("WWW/pictures_Trees_LoreLinduNP_Sulawesi_700")
 
 hints_custom = NULL
 hints_custom = c("ownhint_English_name") # column names of own hints to check at start
-hints_custom = c("ownhint_Family","ownhint_Habit","Elevational_range","Elevational_belt","ownhint_Elevation","Indicator_species","ownhint_Distribution") # column names of own hints to check at start
+hints_custom = c("ownhint_Family","ownhint_Habit","ownhint_Elevation","ownhint_Distribution") # column names of own hints to check at start
 
 imagelinks_custom = NULL
 # imagelinks_custom = c("imagelink_1")
