@@ -346,22 +346,22 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     
     for (i in 1:length(hints_ukplantatlas)){
       
-      if(hints_ukplantatlas[i]=="statusuk"){
+      if(hints_ukplantatlas[i]=="statusuk" & length(infos)>=3){
         hints[[length(hints)+1]] <- paste("Status:",infos[[3]])
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
-      if(hints_ukplantatlas[i]=="familyuk"){
+      if(hints_ukplantatlas[i]=="familyuk" & length(infos)>=1){
         hints[[length(hints)+1]] <- paste("Family:", gsub("(.*›)(.*ceae)(›.*)","\\2", infos[[1]]))
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
-      if(hints_ukplantatlas[i]=="ecology"){
+      if(hints_ukplantatlas[i]=="ecology" & length(infos)>=2){
         hints[[length(hints)+1]] <- paste("Ecology:",infos[[2]])
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
 
-      if(hints_ukplantatlas[i]=="trends"){
+      if(hints_ukplantatlas[i]=="trends" & length(infos)>=4){
         hints[[length(hints)+1]] <- paste("Trends:",infos[[4]])
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
