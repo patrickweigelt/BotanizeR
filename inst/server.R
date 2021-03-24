@@ -549,7 +549,7 @@ shinyServer(function(input, output, session) {
             hints_floraweb = hints_reactive$hints_floraweb[which(
                 hints_reactive$hints_floraweb!="map")],
             image_ukplantatlas = hints_reactive$image_ukplantatlas,
-            hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
+            hints_ukplantatlas = hints_reactive$hints_ukplantatlas,  # TODO: add != mapuk for UK
             hints_custom = hints_reactive$hints_custom, 
             imagelinks_custom = hints_reactive$imagelinks_custom,
             image_folders = paste0(system_path,hints_reactive$image_folders,sep=""),
@@ -808,7 +808,7 @@ shinyServer(function(input, output, session) {
                 hints_floraweb = hints_reactive$hints_floraweb[which(
                     hints_reactive$hints_floraweb!="map")],
                 image_ukplantatlas = hints_reactive$image_ukplantatlas,
-                hints_ukplantatlas = hints_reactive$hints_ukplantatlas,
+                hints_ukplantatlas = hints_reactive$hints_ukplantatlas, # TODO: add != mapuk for UK
                 hints_custom = hints_reactive$hints_custom, 
                 imagelinks_custom = hints_reactive$imagelinks_custom,
                 image_folders = paste0(system_path,hints_reactive$image_folders),

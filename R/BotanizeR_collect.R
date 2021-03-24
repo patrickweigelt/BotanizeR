@@ -334,10 +334,10 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         # map
     mapuk <- NA
     if("mapuk" %in% hints_ukplantatlas){
-      try({mapuk <- xpathApply(species_main, "//img[@class='img-responsive']",xmlAttrs)
+      try({mapuk_temp <- xpathApply(species_main, "//img[@class='img-responsive']",xmlAttrs)
       # mapuk <- unlist(mapuk[sapply(mapuk, function(x) any(grepl("\\.png", x)))])[1]
-      mapuk <- unlist(mapuk[sapply(mapuk, function(x) any(grepl("atlas_maps", x)))])[1]
-      mapuk <- paste0("https://www.brc.ac.uk/plantatlas",gsub("\\.\\.","",mapuk))
+      mapuk_temp <- unlist(mapuk_temp[sapply(mapuk_temp, function(x) any(grepl("atlas_maps", x)))])[1]
+      mapuk <- paste0("https://www.brc.ac.uk/plantatlas",gsub("\\.\\.","",mapuk_temp))
       if (!only_links){
         mapuk <- image_read(mapuk)
       }
