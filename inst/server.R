@@ -149,27 +149,45 @@ shinyServer(function(input, output, session) {
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                           choices = isolate(grep("ownhint", colnames(species_list_reactive$df_data), 
+                           choices = isolate(grep("ownhint", colnames(species_list_reactive$df_data),
                                                   value = TRUE)),
-                           selected = hints_custom[which(hints_custom %in% 
-                                                                  grep("ownhint", colnames(species_list), 
-                                                                       value = TRUE))])
+                           selected = hints_custom[which(hints_custom %in%
+                                                             grep("ownhint", colnames(species_list),
+                                                                  value = TRUE))])
     })
+
+    # output$own_hints <- renderUI({
+    #     checkboxGroupInput(inputId = "own_hints", label = "Own hints",
+    #                        choices = grep("ownhint", colnames(species_list),
+    #                                               value = TRUE),
+    #                        selected = hints_custom[which(hints_custom %in%
+    #                                                          grep("ownhint", colnames(species_list),
+    #                                                               value = TRUE))])
+    # })
     
     observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
         hints_reactive$hints_custom <- input$own_hints
     })
 
     
-    ### Own image links ----
+    ## Own image links ----
     output$own_links <- renderUI({
         checkboxGroupInput(inputId = "own_links", label = "Own images",
-                           choices = isolate(grep("imagelink", colnames(species_list_reactive$df_data), 
-                                          value = TRUE)),
-                           selected = imagelinks_custom[which(imagelinks_custom %in% 
-                                     grep("imagelink", colnames(species_list), 
-                                                                 value = TRUE))])
+                           choices = isolate(grep("imagelink", colnames(species_list_reactive$df_data),
+                                                  value = TRUE)),
+                           selected = imagelinks_custom[which(imagelinks_custom %in%
+                                                                  grep("imagelink", colnames(species_list),
+                                                                       value = TRUE))])
     })
+
+    # output$own_links <- renderUI({
+    #     checkboxGroupInput(inputId = "own_links", label = "Own images",
+    #                        choices = grep("imagelink", colnames(species_list),
+    #                                               value = TRUE),
+    #                        selected = imagelinks_custom[which(imagelinks_custom %in%
+    #                                                               grep("imagelink", colnames(species_list),
+    #                                                                    value = TRUE))])
+    # })
     
     observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
         hints_reactive$imagelinks_custom <- input$own_links
@@ -219,11 +237,16 @@ shinyServer(function(input, output, session) {
     output$select_specieslist <- renderUI({
         selectInput("select_specieslist", label = NULL,
                     choices = {if (length(species_list_uploaded_reactive$df_data) > 0)
-                                   c(species_list_filter,"uploaded") else 
+                                   c(species_list_filter,"uploaded") else
                                        species_list_filter},
                     selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded", species_list_selected))
     })
 
+    # output$select_specieslist <- renderUI({
+    #     selectInput("select_specieslist", label = NULL,
+    #                 choices = species_list_filter,
+    #                 selected = species_list_selected)
+    # })
     
     # Make condition that input is needed to initialize drop_down
     y <- reactive({
@@ -295,18 +318,24 @@ shinyServer(function(input, output, session) {
                     
                     if(all(apply(species_list_clean[,c('TAXONNAME','SPECIES','GENUS')], 2,function(x) all(!is.na(x) & x != "")))){
                         
-                        if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
-                        if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
-                        if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
-                        if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
-                        if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
-                        
-                        species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
-                        
-                        if(all(apply(species_list_clean[,c('COUNT','SCORE','ATTEMPTS','INCLUDE')], 2,function(x) is.numeric(x) & all(!is.na(x))))){
-                            return(species_list_clean)
+                        if(length(which(duplicated(species_list_clean$SPECIES))) == 0){
+                            
+                            
+                            if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
+                            if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
+                            if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
+                            if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
+                            if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
+                            
+                            species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
+                            
+                            if(all(apply(species_list_clean[,c('COUNT','SCORE','ATTEMPTS','INCLUDE')], 2,function(x) is.numeric(x) & all(!is.na(x))))){
+                                return(species_list_clean)
+                            } else {
+                                return("Not all entries of the columns 'COUNT', 'SCORE', 'ATTEMPTS' and 'INCLUDE' are numeric.")
+                            }
                         } else {
-                            return("Not all entries of the columns 'COUNT', 'SCORE', 'ATTEMPTS' and 'INCLUDE' are numeric.")
+                            return("Duplicates in 'SPECIES' column found.")
                         }
                     } else {
                         return("Missing entries in at least one of the columns 'TAXONNAME', 'SPECIES' and 'GENUS'.")
@@ -358,10 +387,11 @@ shinyServer(function(input, output, session) {
             counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
             
             # update species list drop down
-            updateSelectInput(session,
-                              inputId = "select_specieslist", label = NULL,
-                              choices = c(species_list_filter,"uploaded"),
-                              selected = "uploaded")
+            updateSelectInput(session,                                    # <- needed?
+                           inputId = "select_specieslist", label = NULL,
+                           choices = c(species_list_filter,"uploaded"),
+                           selected = "uploaded")
+            
         } else if (is.character(species_list_uploaded)){
             output$upload_error <- renderUI({
                 HTML(paste0("<i>Species list could not be loaded. ",
@@ -384,35 +414,41 @@ shinyServer(function(input, output, session) {
             output$upload_error <- renderUI("")
             output$upload_error_2 <- renderUI("")
             
+            species_list_reactive$df_data <- species_list_uploaded
             species_list_uploaded_reactive$df_data <- species_list_uploaded
             counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
             counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
             counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
             counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
             
+            hints_reactive$hints_custom <- hints_reactive$ints_custom[which(
+                hints_reactive$ints_custom %in% colnames(species_list_uploaded))]
+            hints_reactive$imagelinks_custom  <- hints_reactive$ints_custom[which(
+                hints_reactive$ints_custom %in% colnames(species_list_uploaded))]
+            
             counts_reactive$omit <- TRUE
             
-            # update specieslist drop down
-            updateSelectInput(session,
+            # # update specieslist drop down
+            updateSelectInput(session,                                         # <- needed?
                               inputId = "select_specieslist", label = NULL,
                               choices = c(species_list_filter,"uploaded"),
                               selected = "uploaded")
-            
-            # Update ownhint checkboxes  
-            updateCheckboxGroupInput(session,
-                                     inputId = "own_hints", label = "Own hints",
-                                     choices = grep("ownhint", 
-                                                    colnames(species_list_uploaded), 
-                                                    value = TRUE),
-                                     selected = hints_reactive$hints_custom)
-            
-            # Update ownlink checkboxes
-            updateCheckboxGroupInput(session,
-                                     inputId = "own_links", label = "Own images",
-                                     choices = grep("imagelink", 
-                                                    colnames(species_list_uploaded), 
-                                                    value = TRUE),
-                                     selected = hints_reactive$imagelinks_custom)
+
+            # # Update ownhint checkboxes  
+            # updateCheckboxGroupInput(session,
+            #                          inputId = "own_hints", label = "Own hints",
+            #                          choices = grep("ownhint", 
+            #                                         colnames(species_list_uploaded), 
+            #                                         value = TRUE),
+            #                          selected = hints_reactive$hints_custom)
+            # 
+            # # Update ownlink checkboxes
+            # updateCheckboxGroupInput(session,
+            #                          inputId = "own_links", label = "Own images",
+            #                          choices = grep("imagelink", 
+            #                                         colnames(species_list_uploaded), 
+            #                                         value = TRUE),
+            #                          selected = hints_reactive$imagelinks_custom)
             
             # click("newplant", asis = TRUE) # gets executed before hints are updated and may cause error due to missing columns
         } else if (is.character(species_list_uploaded)){
@@ -538,21 +574,23 @@ shinyServer(function(input, output, session) {
         req(input$plant_list)
 
         selected_species <- input$plant_list
-
+        print(paste("List:",selected_species))
+        
         # Plant species chosen
         j <- which(isolate(species_list_reactive$df_data)$SPECIES == selected_species)
         
         # Download information with BotanizeR_collect()
         sp_infos <- BotanizeR_collect(
             species_row = isolate(species_list_reactive$df_data)[j, ], 
-            image_floraweb = hints_reactive$image_floraweb,
-            hints_floraweb = hints_reactive$hints_floraweb[which(
-                hints_reactive$hints_floraweb!="map")],
-            image_ukplantatlas = hints_reactive$image_ukplantatlas,
-            hints_ukplantatlas = hints_reactive$hints_ukplantatlas,  # TODO: add != mapuk for UK
-            hints_custom = hints_reactive$hints_custom, 
-            imagelinks_custom = hints_reactive$imagelinks_custom,
-            image_folders = paste0(system_path,hints_reactive$image_folders,sep=""),
+            image_floraweb = isolate(hints_reactive$image_floraweb),
+            hints_floraweb = isolate(hints_reactive$hints_floraweb[which(
+                hints_reactive$hints_floraweb!="map")]),
+            image_ukplantatlas = isolate(hints_reactive$image_ukplantatlas),
+            hints_ukplantatlas = isolate(hints_reactive$hints_ukplantatlas[which(
+                hints_reactive$hints_ukplantatlas!="mapuk")]),
+            hints_custom = isolate(hints_reactive$hints_custom), 
+            imagelinks_custom = isolate(hints_reactive$imagelinks_custom),
+            image_folders = isolate(paste0(system_path,hints_reactive$image_folders,sep="")),
             only_links = TRUE)
         
         ### Photos ----
@@ -570,14 +608,14 @@ shinyServer(function(input, output, session) {
         # Image credits
         output$selected_image_credits <- renderUI({
             sources <- c(
-                ifelse(hints_reactive$image_floraweb, 
+                ifelse(isolate(hints_reactive$image_floraweb), 
                        "<a href='https://www.floraweb.de/' target=_blank>FloraWeb</a>", 
                        NA),
-                ifelse(hints_reactive$image_ukplantatlas, 
+                ifelse(isolate(hints_reactive$image_ukplantatlas), 
                        "<a href='https://www.brc.ac.uk/plantatlas/' 
                        target=_blank>UK & Ireland Plant Atlas</a>", 
                        NA),
-                ifelse(length(hints_reactive$image_folders) > 0, 
+                ifelse(length(isolate(hints_reactive$image_folders)) > 0, 
                        "customized image folders", 
                        NA)
             )
@@ -799,7 +837,7 @@ shinyServer(function(input, output, session) {
                                                prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                                            (temp1$SCORE+1))*temp1$INCLUDE)
             i$i <- which(temp1$SPECIES == reactive_species$species)
-            print(i$i)
+            print(paste(i$i, temp1$SPECIES[i$i]))
             
             # Download information with BotanizeR_collect()
             sp_quiz <- BotanizeR_collect(
@@ -808,7 +846,8 @@ shinyServer(function(input, output, session) {
                 hints_floraweb = hints_reactive$hints_floraweb[which(
                     hints_reactive$hints_floraweb!="map")],
                 image_ukplantatlas = hints_reactive$image_ukplantatlas,
-                hints_ukplantatlas = hints_reactive$hints_ukplantatlas, # TODO: add != mapuk for UK
+                hints_ukplantatlas = hints_reactive$hints_ukplantatlas[which(
+                    hints_reactive$hints_ukplantatlas!="mapuk")],
                 hints_custom = hints_reactive$hints_custom, 
                 imagelinks_custom = hints_reactive$imagelinks_custom,
                 image_folders = paste0(system_path,hints_reactive$image_folders),

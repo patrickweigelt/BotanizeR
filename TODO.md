@@ -36,7 +36,8 @@
   - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~Ownhints are only showing after setup tab has been visited~~
-* ~~don't show hints that are not available?~~
+* Only list own hints in setup which have data for species subset
+* don't show hints that are not available?
 * **remove ownhint_ from checkboxes**
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
@@ -73,6 +74,7 @@
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
 * ~~make whether setup tab is shown a variable in config~~
   - ~~include upload and download of species list in quiz if setup tab is disabled~~
+  - Give feedback about species number and number of species practiced in upload popup on Quizpage
 * ~~Put upload/download buttons into popup on species page~~
 * Twitter buttons in navbar and stats
 * Privacy issues (Martin)
