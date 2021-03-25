@@ -24,7 +24,7 @@
   - ~~image folders~~
 * ~~config file for default values: config.R~~
 * ~~Radio buttons checking/unchecking several times~~
-* ~~Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown~~ <- possibly solved
+* ~~Sanguisorba minor: species without UK map caused error when enabling uk map in settings while German was shown~~
 * ~~allow to upload previous progress table for defining sample probabilities (higher prob for species not well practiced)~~
 * ~~record successes (score; account for retrieved answer) and number of times species shown and include them in the progress download~~
 * ~~make sure score is counted if answer is retrieved accidentally after getting the name right~~
@@ -36,7 +36,7 @@
   - ~~make individual checkbox object for map~~
 * ~~error finite ylim value needed... if no map available?~~
 * ~~Ownhints are only showing after setup tab has been visited~~
-* Only list own hints in setup which have data for species subset
+* ~~Only list own hints in setup which have data for species subset~~
 * don't show hints that are not available?
 * **remove ownhint_ from checkboxes**
 * **Add ownhint category to hints printout**

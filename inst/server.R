@@ -146,11 +146,15 @@ shinyServer(function(input, output, session) {
     
     ## Own resources ----
 
+    hints_available <- function(x, grp) {
+        grep(grp, colnames(x)[apply(x, 2, function(y) any(!is.na(y) & y!=""))], value = TRUE)
+    }
+    
+
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-                           choices = isolate(grep("ownhint", colnames(species_list_reactive$df_data),
-                                                  value = TRUE)),
+                           choices = isolate(hints_available(species_list_reactive$df_data, "ownhint")),
                            selected = hints_custom[which(hints_custom %in%
                                                              grep("ownhint", colnames(species_list),
                                                                   value = TRUE))])
@@ -173,8 +177,7 @@ shinyServer(function(input, output, session) {
     ## Own image links ----
     output$own_links <- renderUI({
         checkboxGroupInput(inputId = "own_links", label = "Own images",
-                           choices = isolate(grep("imagelink", colnames(species_list_reactive$df_data),
-                                                  value = TRUE)),
+                           choices = isolate(hints_available(species_list_reactive$df_data, "imagelink")),
                            selected = imagelinks_custom[which(imagelinks_custom %in%
                                                                   grep("imagelink", colnames(species_list),
                                                                        value = TRUE))])
@@ -276,17 +279,13 @@ shinyServer(function(input, output, session) {
         # Update ownhint checkboxes
         updateCheckboxGroupInput(session,
                                  inputId = "own_hints", label = "Own hints",
-                                 choices = grep("ownhint", 
-                                                colnames(temp_species_list), 
-                                                value = TRUE),
+                                 choices = hints_available(temp_species_list, "ownhint"),
                                  selected = hints_reactive$hints_custom)
         
         # Update ownlink checkboxes
         updateCheckboxGroupInput(session,
                                  inputId = "own_links", label = "Own images",
-                                 choices = grep("imagelink", 
-                                                colnames(temp_species_list), 
-                                                value = TRUE),
+                                 choices = hints_available(temp_species_list, "imagelink"),
                                  selected = hints_reactive$imagelinks_custom)
     })
     
@@ -387,7 +386,7 @@ shinyServer(function(input, output, session) {
             counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
             
             # update species list drop down
-            updateSelectInput(session,                                    # <- needed?
+            updateSelectInput(session,
                            inputId = "select_specieslist", label = NULL,
                            choices = c(species_list_filter,"uploaded"),
                            selected = "uploaded")
@@ -429,7 +428,7 @@ shinyServer(function(input, output, session) {
             counts_reactive$omit <- TRUE
             
             # # update specieslist drop down
-            updateSelectInput(session,                                         # <- needed?
+            updateSelectInput(session,
                               inputId = "select_specieslist", label = NULL,
                               choices = c(species_list_filter,"uploaded"),
                               selected = "uploaded")
@@ -437,17 +436,13 @@ shinyServer(function(input, output, session) {
             # # Update ownhint checkboxes  
             # updateCheckboxGroupInput(session,
             #                          inputId = "own_hints", label = "Own hints",
-            #                          choices = grep("ownhint", 
-            #                                         colnames(species_list_uploaded), 
-            #                                         value = TRUE),
+            #                          choices = hints_available(species_list_uploaded, "ownhint"),
             #                          selected = hints_reactive$hints_custom)
             # 
             # # Update ownlink checkboxes
             # updateCheckboxGroupInput(session,
             #                          inputId = "own_links", label = "Own images",
-            #                          choices = grep("imagelink", 
-            #                                         colnames(species_list_uploaded), 
-            #                                         value = TRUE),
+            #                          choices = hints_available(species_list_uploaded, "imagelink"),
             #                          selected = hints_reactive$imagelinks_custom)
             
             # click("newplant", asis = TRUE) # gets executed before hints are updated and may cause error due to missing columns
