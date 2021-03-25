@@ -371,7 +371,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
-      if(hints_ukplantatlas[i]=="fifeform" & length(infos)>=22){
+      if(hints_ukplantatlas[i]=="lifeform" & length(infos)>=22){
         hints[[length(hints)+1]] <- paste("Life form:",infos[[22]])
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
@@ -398,12 +398,11 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   if(length(hints_custom)>0){
     for(i in 1:length(hints_custom)){
       if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
-        hints[[length(hints)+1]] <- species_row[,hints_custom[i]]
+        hints[[length(hints)+1]] <- paste0(gsub("_"," ",gsub("ownhint_","",hints_custom)), ": ",species_row[,hints_custom[i]])
         names(hints)[length(hints)] <- hints_custom[i]
       }
     }
   }
-  # }
   
   hints <- hints[which(!sapply(hints, is.null))]
   return(hints)

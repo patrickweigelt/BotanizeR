@@ -40,7 +40,7 @@
 * don't show hints that are not available?
 * ~~remove ownhint_ from checkboxes~~
   - names of checkboxes vs values is implemented in a more complicated way than necessary 
-* **Add ownhint category to hints printout**
+* ~~Add ownhint category to hints printout~~
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
   - this interferes with the next and previous buttons from slickR - maybe remove?
@@ -53,7 +53,7 @@
   - ~~add to setup~~
   - ~~remove from quiz due to species name in map~~
 * ~~Add UK flora~~
-* **filfeform not working**
+* ~~filfeform not working~~
 * ~~Summary statistics~~
   - ~~number of species practiced, number correct as bar plot? (quiz page popup)~~
   - ~~number of species in currently loaded species list (setup page)~~
