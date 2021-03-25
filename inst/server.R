@@ -767,9 +767,13 @@ shinyServer(function(input, output, session) {
 
     ### Render quiz checkboxes ----
     
+    name_hints <- function(x) {
+        setNames(x, gsub("_"," ",gsub("ownhint_","",x)))
+    }
+    
     output$quiz_options <- renderUI({
         checkboxGroupInput(inputId = "quiz_options", label = "Show:",
-                           choices = c(hints_floraweb_lookup$show[which(
+                           choices = name_hints(c(hints_floraweb_lookup$show[which(
                                hints_floraweb_lookup$variable %in% 
                                    hints_reactive$hints_floraweb & 
                                    hints_floraweb_lookup$show != "Map")],
@@ -777,7 +781,7 @@ shinyServer(function(input, output, session) {
                                    hints_ukplantatlas_lookup$variable %in% 
                                        hints_reactive$hints_ukplantatlas & 
                                        hints_ukplantatlas_lookup$show != "Map UK")],
-                               hints_reactive$hints_custom))
+                               hints_reactive$hints_custom)))
     })
 
     # Dynamic map checkboxes
@@ -880,7 +884,7 @@ shinyServer(function(input, output, session) {
         # setting back checkboxes
         updateCheckboxGroupInput(session,
                                  inputId = "quiz_options",
-                                 choices = c(hints_floraweb_lookup$show[which(
+                                 choices = name_hints(c(hints_floraweb_lookup$show[which(
                                      hints_floraweb_lookup$variable %in% 
                                          hints_reactive$hints_floraweb & 
                                          hints_floraweb_lookup$show != "Map")],
@@ -888,7 +892,7 @@ shinyServer(function(input, output, session) {
                                          hints_ukplantatlas_lookup$variable %in% 
                                              hints_reactive$hints_ukplantatlas & 
                                              hints_ukplantatlas_lookup$show != "Map UK")],
-                                     hints_reactive$hints_custom),
+                                     hints_reactive$hints_custom)),
                                  selected = NULL)
 
         temp_options <- c("Map","Map UK")[which(c("map","mapuk") %in%
@@ -1099,7 +1103,7 @@ shinyServer(function(input, output, session) {
                 # enable checkboxes
                 updateCheckboxGroupInput(session,
                                          inputId = "quiz_options",
-                                         choices = c(hints_floraweb_lookup$show[which(
+                                         choices = name_hints(c(hints_floraweb_lookup$show[which(
                                              hints_floraweb_lookup$variable %in% 
                                                  hints_reactive$hints_floraweb & 
                                                  hints_floraweb_lookup$show != "Map")],
@@ -1107,7 +1111,7 @@ shinyServer(function(input, output, session) {
                                                  hints_ukplantatlas_lookup$variable %in% 
                                                      hints_reactive$hints_ukplantatlas & 
                                                      hints_ukplantatlas_lookup$show != "Map UK")],
-                                             hints_reactive$hints_custom),
+                                             hints_reactive$hints_custom)),
                                          selected = c(hints_floraweb_lookup$show[which(
                                              hints_floraweb_lookup$variable %in% 
                                                  hints_reactive$hints_floraweb & 
@@ -1154,7 +1158,7 @@ shinyServer(function(input, output, session) {
             # enable checkboxes
             updateCheckboxGroupInput(session,
                                      inputId = "quiz_options",
-                                     choices = c(hints_floraweb_lookup$show[which(
+                                     choices = name_hints(c(hints_floraweb_lookup$show[which(
                                          hints_floraweb_lookup$variable %in% 
                                              hints_reactive$hints_floraweb & 
                                              hints_floraweb_lookup$show != "Map")],
@@ -1162,7 +1166,7 @@ shinyServer(function(input, output, session) {
                                              hints_ukplantatlas_lookup$variable %in% 
                                                  hints_reactive$hints_ukplantatlas & 
                                                  hints_ukplantatlas_lookup$show != "Map UK")],
-                                         hints_reactive$hints_custom),
+                                         hints_reactive$hints_custom)),
                                      selected = c(hints_floraweb_lookup$show[which(
                                          hints_floraweb_lookup$variable %in% 
                                              hints_reactive$hints_floraweb & 
@@ -1217,23 +1221,4 @@ shinyServer(function(input, output, session) {
                         total_score, "</b> right.</br>"))
         })
     })
-    
-    ### Download ----
-    # observeEvent(input$upanddown_button, {
-    #     showModal(modalDialog(
-    #         title = "Up and Download",
-    #         HTML(paste0("Please navigate to the 'setup' tab to up or download your progress.",
-    #                     "<br>","<br>",
-    #                     "If you ran the quiz in a previous session and you saved your progress, 
-    #                       you can upload your current scores as a .csv file there. You can also 
-    #                       upload a modified species list with another set of species or your own hints.",
-    #                     "<br>","<br>",
-    #                     "Downloading the current species list allows you to save the progress 
-    #                       you made during the quiz and load it the next time you practice to get 
-    #                       species you are not yet familiar with shown more frequently. 
-    #                       You can also modify the downloaded species list according to your needs.")),
-    #         easyClose = TRUE
-    #     ))
-    # })
-    
 })

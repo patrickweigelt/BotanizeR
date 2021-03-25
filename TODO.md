@@ -38,7 +38,8 @@
 * ~~Ownhints are only showing after setup tab has been visited~~
 * ~~Only list own hints in setup which have data for species subset~~
 * don't show hints that are not available?
-* **remove ownhint_ from checkboxes**
+* ~~remove ownhint_ from checkboxes~~
+  - names of checkboxes vs values is implemented in a more complicated way than necessary 
 * **Add ownhint category to hints printout**
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
