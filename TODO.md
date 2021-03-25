@@ -39,6 +39,7 @@
 * Only list own hints in setup which have data for species subset
 * don't show hints that are not available?
 * **remove ownhint_ from checkboxes**
+* **Add ownhint category to hints printout**
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
   - this interferes with the next and previous buttons from slickR - maybe remove?
@@ -69,6 +70,7 @@
   - **modify BotanizeR_collect to keep track of image source** <- started  
 * ~~Map legend and credits~~
 * ~~separate UK and DE credits in quiz hints~~
+* Allow defining images not used in quiz
 * ~~no map text~~
 * redo message images (harmonize)
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
@@ -84,6 +86,7 @@
 ## 2. Package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
 * add flowering time and vegetative/sexual reproduction
+* Replace "." and alike in species namse for finding local pictures
 * add content from other websites
   - ~~UK-flora~~
   - Telabotanica
