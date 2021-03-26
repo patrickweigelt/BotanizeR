@@ -176,7 +176,10 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
     for(k in 1:length(image_folders)){
       image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
                                 recursive = TRUE, full.names = FALSE)
-      image_files <- image_files[which(grepl(species, image_files) | grepl(gsub(" ","_",species), image_files))]
+      image_files <- image_files[which(grepl(species, image_files) |
+                                         grepl(gsub(".","",species), image_files) |
+                                         grepl(gsub(" ","_",gsub(".","",species)), image_files) |
+                                         grepl(gsub(" ","_",species), image_files))]
       if(length(image_files)>0){
         if(only_links){
           # WWW/image_folder in local shiny needs to be image_folder
@@ -398,7 +401,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   if(length(hints_custom)>0){
     for(i in 1:length(hints_custom)){
       if(!is.na(species_row[,hints_custom[i]]) & species_row[,hints_custom[i]] != ""){
-        hints[[length(hints)+1]] <- paste0(gsub("_"," ",gsub("ownhint_","",hints_custom)), ": ",species_row[,hints_custom[i]])
+        hints[[length(hints)+1]] <- paste0(gsub("_"," ",gsub("ownhint_","",hints_custom[i])), ": ",species_row[,hints_custom[i]])
         names(hints)[length(hints)] <- hints_custom[i]
       }
     }
