@@ -2,6 +2,7 @@
 
 ### In this config file you specify the default starting values for the BotanizeR Shiny app:
 
+### TODO soplit up default vs user config into two files
 
 # Shall setup tab be shown?
 setup = TRUE
@@ -10,16 +11,24 @@ setup = TRUE
 online_ressources = TRUE
 # online_ressources = FALSE
 
+
+### Include Goggle analytics
+# Default
+analytics = FALSE
+# Put your Google analytics ID
+# analytics = "UA-97979680-1"
+
+
 ### System ----
 system_path <- ""
 #system_path <- "~/ShinyApps/BotanizeR/"
 
 ### List of species ----
-species_list_path <- "Indonesia_species.csv"
+# species_list_path <- "Indonesia_species.csv"
 species_list_path <- ""
 
-species_list_filter <- "All species" # If set to "All species" the only option shown will be "All species" 
-species_list_filter <- c("All species","Germany","Germany_winter","Germany_summer","UK_Ireland","UK_Ireland_Sussex")
+# species_list_filter <- "All species" # If set to "All species" the only option shown will be "All species" 
+# species_list_filter <- c("All species","Germany","Germany_winter","Germany_summer","UK_Ireland","UK_Ireland_Sussex")
 species_list_filter <- c("Germany","Germany_BioDiv","Germany_winter","Germany_summer","UK_Ireland","UK_Ireland_Sussex")
 # species_list_filter <- c("Lore_Lindu_Sulawesi","Roadside_Sumatra")
 

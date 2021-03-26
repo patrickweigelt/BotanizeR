@@ -74,14 +74,18 @@
 * Allow defining images not used in quiz
 * ~~no map text~~
 * redo message images (harmonize)
+* instructions
+  - how does table for upload have to look like
+  - About tab: more details; dynamic depending on what is shown
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
 * ~~make whether setup tab is shown a variable in config~~
   - ~~include upload and download of species list in quiz if setup tab is disabled~~
   - Give feedback about species number and number of species practiced in upload popup on Quizpage
 * ~~Put upload/download buttons into popup on species page~~
-* Twitter buttons in navbar and stats
-* Privacy issues (Martin)
+* ~~Twitter buttons in navbar and stats~~
+* ~~Privacy issues (Martin)~~
 * zoom into images
+* Think about the draggable popup (already implemented but commented out)
 
 
 ## 2. Package

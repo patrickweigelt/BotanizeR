@@ -9,6 +9,7 @@ library(slickR)
 library(htmltools)
 library(shinyFiles)
 library(httr)
+# library(shinyjqui)
 # library(shinyjs)
 
 shinyServer(function(input, output, session) {
@@ -391,6 +392,18 @@ shinyServer(function(input, output, session) {
                            choices = c(species_list_filter,"uploaded"),
                            selected = "uploaded")
             
+            # Update ownhint checkboxes  
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_hints", label = "Own hints",
+                                     choices = hints_available(species_list_uploaded, "ownhint"),
+                                     selected = hints_reactive$hints_custom)
+            
+            # Update ownlink checkboxes
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_links", label = "Own images",
+                                     choices = hints_available(species_list_uploaded, "imagelink"),
+                                     selected = hints_reactive$imagelinks_custom)
+            
         } else if (is.character(species_list_uploaded)){
             output$upload_error <- renderUI({
                 HTML(paste0("<i>Species list could not be loaded. ",
@@ -433,17 +446,17 @@ shinyServer(function(input, output, session) {
                               choices = c(species_list_filter,"uploaded"),
                               selected = "uploaded")
 
-            # # Update ownhint checkboxes  
-            # updateCheckboxGroupInput(session,
-            #                          inputId = "own_hints", label = "Own hints",
-            #                          choices = hints_available(species_list_uploaded, "ownhint"),
-            #                          selected = hints_reactive$hints_custom)
-            # 
-            # # Update ownlink checkboxes
-            # updateCheckboxGroupInput(session,
-            #                          inputId = "own_links", label = "Own images",
-            #                          choices = hints_available(species_list_uploaded, "imagelink"),
-            #                          selected = hints_reactive$imagelinks_custom)
+            # Update ownhint checkboxes  
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_hints", label = "Own hints",
+                                     choices = hints_available(species_list_uploaded, "ownhint"),
+                                     selected = hints_reactive$hints_custom)
+             
+            # Update ownlink checkboxes
+            updateCheckboxGroupInput(session,
+                                     inputId = "own_links", label = "Own images",
+                                     choices = hints_available(species_list_uploaded, "imagelink"),
+                                     selected = hints_reactive$imagelinks_custom)
             
             # click("newplant", asis = TRUE) # gets executed before hints are updated and may cause error due to missing columns
         } else if (is.character(species_list_uploaded)){
@@ -1179,8 +1192,8 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    ### Sum.stats ----
-    observe({
+    ### Summary statistics ----
+    observeEvent(input$sumstats_button, {
         # Total counts, unique species and score
         total_count <- sum(species_list_reactive$df_data$COUNT)
         total_species <- sum(species_list_reactive$df_data$COUNT > 0)
@@ -1212,13 +1225,42 @@ shinyServer(function(input, output, session) {
         output$stats_text <- renderPrint({
             HTML(paste0("<br>", "In this session, you practised <b>",
                         session_count,
-                        "</b> pictures (for ", session_species,
-                        " different species) and guessed <b>",
-                        session_score, "</b> right.", "</br><br>",
+                        "</b> species ", 
+                        ifelse(session_species>1,
+                               paste0("(",session_species,
+                                      " different ones)"), ""),
+                        " and got <b>", session_score, "</b> right.", "</br><br>",
                         "In total, you practised <b>", total_count,
-                        "</b> pictures (for ", total_species,
-                        " different species) and guessed <b>",
-                        total_score, "</b> right.</br>"))
+                        "</b> species ", 
+                        ifelse(total_species>1,
+                               paste0("(",total_species,
+                                      " different ones)"), ""),
+                        " and got <b>", total_score, "</b> right.</br>"))
         })
+        
+        
+        twitter_text <- paste0("Hey, I just practised ",session_count,
+                               " species with %23BotanizeR and got ",session_score,
+                               " right! Try it out here: ")
+        twitter_text <- gsub(" ","%20",twitter_text)
+        url <- paste0("https://twitter.com/intent/tweet?text=",
+                      twitter_text,
+                      "&url=https://gift.uni-goettingen.de/shiny/BotanizeR/")
+        
+        showModal(
+            # shinyjqui::draggableModalDialog(
+            modalDialog(
+                title = "Session information",
+                size = "l",
+                uiOutput("stats_text"),
+                plotOutput("stats_barplot"),
+                footer = tagList(
+                    actionButton("twitter_share",
+                                 label = "Share",
+                                 icon = icon("twitter"),
+                                 onclick = sprintf("window.open('%s')", url)),
+                modalButton('Close'))
+            )
+        )
     })
 })

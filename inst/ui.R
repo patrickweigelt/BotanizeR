@@ -29,7 +29,7 @@ navbarPage(title = div(
     HTML('<span style="font-size:180%;color:white;font-weight:bold;"> BotanizeR</span></a>'),
     # Team logo 
     tags$script(HTML("var header = $('.navbar > .container-fluid');
-             header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a></div>');console.log(header)")),
+             header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; width:140px;height:80px;padding-top:10px;\"> </a><a href=\"https://twitter.com/intent/tweet?text=TEST&url=https://gift.uni-goettingen.de/shiny/BotanizeR/\"><img src=\"twitter_bird_logo.png\" alt=\"alt\" style=\"float:right; height:35px;padding-top:10px;padding-right:20px;\"> </a></div>');console.log(header)")),
     tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}",
                     "#panel2{font-size: 25px}",
@@ -53,7 +53,18 @@ navbarPage(title = div(
                .slick-slide img {
                  width: 100%;
                }
-             }")))
+             }"))),
+    tags$head(HTML(
+      ifelse(analytics==FALSE, "", paste(
+      "<!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src='https://www.googletagmanager.com/gtag/js?id=",analytics,"'></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '",analytics,"');
+      </script>"
+    ))))
 ),
 theme = shinytheme("flatly"),
 windowTitle = "BotanizeR",
@@ -145,12 +156,8 @@ tabPanel(
                br(),br(),
                actionButton("sumstats_button", "Statistics"),
                actionButton("upanddown_button", "Upload/Download progress"),
-               bsModal(id = "sumstats_modal",
-                       title = "Session information",
-                       trigger = "sumstats_button",
-                       size = "large", uiOutput("stats_text"),
-                       plotOutput("stats_barplot")),
                bsModal(id = "upanddown_modal",
+                       draggable = TRUE,
                        title = "Up and Download",
                        trigger = "upanddown_button",
                        size = "large",
