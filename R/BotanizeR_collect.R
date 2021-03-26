@@ -177,8 +177,8 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
                                 recursive = TRUE, full.names = FALSE)
       image_files <- image_files[which(grepl(species, image_files) |
-                                         grepl(gsub(".","",species), image_files) |
-                                         grepl(gsub(" ","_",gsub(".","",species)), image_files) |
+                                         grepl(gsub("\\.","",species), image_files) |
+                                         grepl(gsub(" ","_",gsub("\\.","",species)), image_files) |
                                          grepl(gsub(" ","_",species), image_files))]
       if(length(image_files)>0){
         if(only_links){
