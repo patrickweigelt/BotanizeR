@@ -166,7 +166,6 @@ tabPanel(
                actionButton("sumstats_button", "Statistics"),
                actionButton("upanddown_button", "Upload/Download progress"),
                bsModal(id = "upanddown_modal",
-                       draggable = TRUE,
                        title = "Up and Download",
                        trigger = "upanddown_button",
                        size = "large",
