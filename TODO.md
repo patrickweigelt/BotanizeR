@@ -83,7 +83,7 @@
   - Give feedback about species number and number of species practiced in upload popup on Quizpage
 * ~~Put upload/download buttons into popup on species page~~
 * ~~Twitter buttons in navbar and stats~~
-  - change links for different instances
+  - ~~change links for different instances~~
 * ~~Privacy issues (Martin)~~
 * zoom into images
 * Think about the draggable popup (already implemented but commented out)
