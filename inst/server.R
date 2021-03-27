@@ -1245,7 +1245,8 @@ shinyServer(function(input, output, session) {
         twitter_text <- gsub(" ","%20",twitter_text)
         url <- paste0("https://twitter.com/intent/tweet?text=",
                       twitter_text,
-                      "&url=https://gift.uni-goettingen.de/shiny/BotanizeR/")
+                      "&url=",
+                      BotanizeR_URL)
         
         showModal(
             # shinyjqui::draggableModalDialog(

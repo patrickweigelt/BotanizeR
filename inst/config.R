@@ -16,7 +16,13 @@ online_ressources = TRUE
 # Default
 analytics = FALSE
 # Put your Google analytics ID
-# analytics = "UA-97979680-1"
+analytics = "UA-97979680-1"
+
+### URL for Twitter
+BotanizeR_URL <- ""
+BotanizeR_URL <- "https://gift.uni-goettingen.de/shiny/BotanizeR/"
+#BotanizeR_URL <- "https://gift.uni-goettingen.de/shiny/BotanizeR_winter/"
+#BotanizeR_URL <- "https://gift.uni-goettingen.de/shiny/BotanizeR_Indonesia/"
 
 
 ### System ----

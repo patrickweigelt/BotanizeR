@@ -28,8 +28,17 @@ js_pr_next <- '$(document).keyup(function(event) {
 navbarPage(title = div(
     HTML('<span style="font-size:180%;color:white;font-weight:bold;"> BotanizeR</span></a>'),
     # Team logo 
-    tags$script(HTML("var header = $('.navbar > .container-fluid');
-             header.append('<div style=\"float:right\"><a href=\"https://www.uni-goettingen.de/en/128741.html\"><img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" style=\"float:right; height:80px;padding-top:10px;\"> </a><a href=\"https://twitter.com/intent/tweet?text=Do%20you%20want%20to%20practise%20your%20plant%20identification%20skills?%20Try%20out%20the%20%23BotanizeR%20Shiny%20app%20at:%20&url=https://gift.uni-goettingen.de/shiny/BotanizeR/\"><img src=\"twitter_bird_logo.png\" alt=\"alt\" style=\"float:right; height:35px;padding-top:10px;padding-right:20px;\"> </a></div>');console.log(header)")),
+    tags$script(HTML(paste0("var header = $('.navbar > .container-fluid');",
+                            "header.append('<div style=\"float:right\">",
+                            "<a href=\"https://www.uni-goettingen.de/en/128741.html\">",
+                            "<img src=\"biodiv_gottingen_logo.png\" alt=\"alt\" ",
+                            "style=\"float:right; height:80px;padding-top:10px;\"> </a>",
+                            "<a href=\"https://twitter.com/intent/tweet?text=",
+                            "Do%20you%20want%20to%20practise%20your%20plant%20identification%20",
+                            "skills?%20Try%20out%20the%20%23BotanizeR%20Shiny%20app%20at:%20&url=",
+                            BotanizeR_URL,"\"><img src=\"twitter_bird_logo.png\" alt=\"alt\" ",
+                            "style=\"float:right; height:35px;padding-top:10px;padding-right:20px;\"> ",
+                            "</a></div>');console.log(header)"))),
     tags$style(style = 'position:absolute; right:42px;'),
     tags$style(HTML("#panel1{font-size: 25px}",
                     "#panel2{font-size: 25px}",
