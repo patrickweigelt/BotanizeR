@@ -312,7 +312,7 @@ shinyServer(function(input, output, session) {
                 
                 header <- ifelse(header, NA, "NULL")
                 
-                species_list_clean <- read.csv(x, colClasses = header, nrows = 5000)
+                species_list_clean <- read.csv(x, colClasses = header, nrows = 6000)
                 
                 if(nrow(species_list_clean)>0){
                     

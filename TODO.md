@@ -88,6 +88,7 @@
 * zoom into images
 * Think about the draggable popup (already implemented but commented out)
 * Multiple Choice
+* Stats, counting last one if identified?
 
 
 
