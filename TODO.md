@@ -87,6 +87,8 @@
 * ~~Privacy issues (Martin)~~
 * zoom into images
 * Think about the draggable popup (already implemented but commented out)
+* Multiple Choice
+
 
 
 ## 2. Package

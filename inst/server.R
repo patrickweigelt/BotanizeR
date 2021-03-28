@@ -1203,6 +1203,11 @@ shinyServer(function(input, output, session) {
             total_score <- total_score + 1
         }
         
+        no_species <- sum(species_list_reactive$df_data$INCLUDE > 0)
+        no_species_right <- sum(species_list_reactive$df_data$INCLUDE > 0 &
+                                species_list_reactive$df_data$SCORE > 0)
+        
+        
         # Session counts, unique species and score
         session_count <- total_count - counts_reactive$init_count
         session_species <- total_species - counts_reactive$init_count_species
@@ -1230,12 +1235,10 @@ shinyServer(function(input, output, session) {
                                paste0("(",session_species,
                                       " different ones)"), ""),
                         " and got <b>", session_score, "</b> right.", "</br><br>",
-                        "In total, you practised <b>", total_count,
-                        "</b> species ", 
-                        ifelse(total_species>1,
-                               paste0("(",total_species,
-                                      " different ones)"), ""),
-                        " and got <b>", total_score, "</b> right.</br>"))
+                        "In total, you practised <b>", total_species,
+                        "</b> unique species out of <b>",no_species, 
+                        "</b> ones and got <b>", no_species_right, 
+                        "</b> of them right at least once.</br>"))
         })
         
         
@@ -1251,7 +1254,7 @@ shinyServer(function(input, output, session) {
         showModal(
             # shinyjqui::draggableModalDialog(
             modalDialog(
-                title = "Session information",
+                title = "Session summary statistics",
                 size = "l",
                 uiOutput("stats_text"),
                 plotOutput("stats_barplot"),
