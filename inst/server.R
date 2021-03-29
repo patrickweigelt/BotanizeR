@@ -379,6 +379,8 @@ shinyServer(function(input, output, session) {
             output$upload_error <- renderUI("")
             output$upload_error_2 <- renderUI("")
             
+            counts_reactive$omit <- TRUE
+            
             species_list_reactive$df_data <- species_list_uploaded
             species_list_uploaded_reactive$df_data <- species_list_uploaded
             counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
@@ -1195,17 +1197,25 @@ shinyServer(function(input, output, session) {
     ### Summary statistics ----
     observeEvent(input$sumstats_button, {
         # Total counts, unique species and score
+        no_species <- sum(species_list_reactive$df_data$INCLUDE > 0)
+        no_species_right <- sum(species_list_reactive$df_data$INCLUDE > 0 &
+                                species_list_reactive$df_data$SCORE > 0)
+        
+        if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered &
+           species_list_reactive$df_data$SCORE[
+               which(species_list_reactive$df_data$SPECIES == reactive_species$species)] == 0){
+            no_species_right <- no_species_right + 1
+        }
+        
         total_count <- sum(species_list_reactive$df_data$COUNT)
         total_species <- sum(species_list_reactive$df_data$COUNT > 0)
         
         total_score <- sum(species_list_reactive$df_data$SCORE)
+        
         if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered){
             total_score <- total_score + 1
         }
         
-        no_species <- sum(species_list_reactive$df_data$INCLUDE > 0)
-        no_species_right <- sum(species_list_reactive$df_data$INCLUDE > 0 &
-                                species_list_reactive$df_data$SCORE > 0)
         
         
         # Session counts, unique species and score

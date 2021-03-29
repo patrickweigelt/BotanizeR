@@ -44,7 +44,7 @@
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
   - this interferes with the next and previous buttons from slickR - maybe remove?
-  - make left and right buttons in quiz switch pictures also when outside lider
+  - **make left and right buttons in quiz switch pictures also when outside slider**
 * ~~don't do adist when "" submitted~~
 * chorology?
   - add to BotanizeR_collect
@@ -62,7 +62,7 @@
   - If own images used load file with image credits
 * ~~Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?~~
 * ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
-* Why does species list page update immediately after setup changes and quiz doesn't?
+* ~~Why does species list page update immediately after setup changes and quiz doesn't?~~
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * ~~Some UK pictures don't exist as large pictures and hence don't show up~~
   - ~~now that the images scale properly we could load the larger ones for these cases. Need control for this~~  
@@ -73,7 +73,7 @@
 * ~~separate UK and DE credits in quiz hints~~
 * Allow defining images not used in quiz
 * ~~no map text~~
-* redo message images (harmonize)
+* **redo message images (harmonize)**
 * instructions
   - how does table for upload have to look like
   - About tab: more details; dynamic depending on what is shown
@@ -88,7 +88,7 @@
 * zoom into images
 * Think about the draggable popup (already implemented but commented out)
 * Multiple Choice
-* Stats, counting last one if identified?
+* ~~Stats, counting last one if identified?~~
 
 
 
