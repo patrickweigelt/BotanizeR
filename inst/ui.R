@@ -94,7 +94,8 @@ tabPanel(h1(id = "panel1", "Species"),
                          # tags$head(tags$script(HTML(js_pr_next))),
                          br(),
                          br(),
-                         uiOutput(outputId = "options_maps")
+                         uiOutput(outputId = "options_maps"),
+                         br()
          ),
          column(6, style="min-width: 250px",
                 # splitLayout(cellWidths = c("100%"),
@@ -109,7 +110,8 @@ tabPanel(h1(id = "panel1", "Species"),
                 div(uiOutput("selected_image_credits"), style="text-align: center;"),
                 br(),
                 div(uiOutput("selected_sp_map"), style="text-align: center;"),
-                div(uiOutput("selected_map_text"), style="text-align: center;")
+                div(uiOutput("selected_map_text"), style="text-align: center;"),
+                br()
          ),
          column(3,
                 htmlOutput("selected_sp_name"),
@@ -146,7 +148,7 @@ tabPanel(
                actionButton("submit", "Submit"),
                actionButton("real_answer", "Answer"),
                actionButton("newplant", "New plant"),
-               div(style = "height:20px")
+               div(style = "height:30px")
         ),
         
         # Second part of the page with the picture
@@ -156,8 +158,9 @@ tabPanel(
                br(),
                div(uiOutput("random_map"), style="text-align: center;"),
                div(uiOutput("random_map_text"), style="text-align: center;"),
-               br(),
-               h5(textOutput("score"))),
+               br()
+               #, h5(textOutput("score"))
+               ),
         
         # Third part with other indices
         column(3,
@@ -175,7 +178,8 @@ tabPanel(
                        htmlOutput("download_note_2"),
                        br(),
                        downloadButton("download_2","Download your progress")
-               )
+               ),
+               br()
         )
     )
     
@@ -195,7 +199,8 @@ if(setup){tabPanel(
                htmlOutput("upload_error"),
                htmlOutput("download_note"),
                br(),
-               downloadButton("download","Download your progress")
+               downloadButton("download","Download your progress"),
+               br()
         ),
         column(4,
                h4("Custom material"),
@@ -208,6 +213,7 @@ if(setup){tabPanel(
                shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
                actionButton("remove_folder", "Remove last"),
                htmlOutput("list_imagefolders"),
+               br()
         ),
         if(online_ressources) {column(4,
                h4("Online resources"),
@@ -216,7 +222,8 @@ if(setup){tabPanel(
                uiOutput(outputId = "floraweb_hints"),
                uiOutput(outputId = "chorology_hint"),
                uiOutput(outputId = "ukplantatlas_images"),
-               uiOutput(outputId = "ukplantatlas_hints")
+               uiOutput(outputId = "ukplantatlas_hints"),
+               br()
         )}
     )
 )} else {
