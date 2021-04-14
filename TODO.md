@@ -90,6 +90,9 @@
 * Multiple Choice
 * ~~Stats, counting last one if identified?~~
 * Flora Incognita images?  
+* **unique species counting too few due to overall table?**  
+* **include == 0 if floraweb down?**  
+
 
 
 
