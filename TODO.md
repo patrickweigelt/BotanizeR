@@ -90,9 +90,9 @@
 * Multiple Choice
 * ~~Stats, counting last one if identified?~~
 * Flora Incognita images?  
-* **unique species counting too few due to overall table?**  
-* **include == 0 if floraweb down?**  
-* **ownhints uncheck when uploading species list in quiz popup**  
+* ~~unique species counting too few due to overall table?~~  
+* ~~include == 0 if floraweb down? <- not the case~~  
+* ~~ownhints uncheck when uploading species list in quiz popup~~  
 
 
 
@@ -117,7 +117,7 @@
 * Map floraweb distribution based on api
 * switch entirely to httr to get rid of temp folders
 * jpg, JPG, JPEG, jpeg etc. for own folder
-* **BotanizeR collect needs to also look for won images after replacing . in species names (sp. etc)**
+* **BotanizeR collect needs to also look for own images after replacing . in species names (sp. etc)**
 
 ## 3. Layout
 * ~~center smaller images in slider~~
@@ -133,16 +133,14 @@
 * Make online resources in Setup collapsable  
 
 ## 4. Server
-* proper url (e.g. gift.uni-goeetingen.de/BotanizeR)
-* secure shiny behind nginx or apache remote proxy
-* embed in stud-ip (why not working?)
+* ~~proper url (e.g. gift.uni-goeetingen.de/BotanizeR)~~  
+* ~~secure shiny behind nginx or apache remote proxy~~  
+* ~~embed in stud-ip (why not working?)~~
 
 ## 5. Other
 * **write documentation (for package and for "About" page)**
 * ~~contact floraweb and UKplantatlas for permission to have a public version~~
-  - waiting for response
-* write a little software note?
-  - check potential journals  
+* ~~write a little software note~~
 * write function documentation
 * publish on CRAN?
   - Is the quiz function which needs user input a problem?

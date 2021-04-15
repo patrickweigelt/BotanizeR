@@ -1221,7 +1221,7 @@ shinyServer(function(input, output, session) {
         
         # Session counts, unique species and score
         session_count <- total_count - counts_reactive$init_count
-        session_species <- total_species - counts_reactive$init_count_species
+        # session_species <- total_species - counts_reactive$init_count_species # identity plays a role here
         session_score <- total_score - counts_reactive$init_score
         
         output$stats_barplot <- renderPlot({
@@ -1242,10 +1242,10 @@ shinyServer(function(input, output, session) {
             HTML(paste0("<br>", "In this session, you practised <b>",
                         session_count,
                         "</b> species ", 
-                        ifelse(session_species>1,
-                               paste0("(",session_species,
-                                      " different ones)"), ""),
-                        " and got <b>", session_score, "</b> right.", "</br><br>",
+                        #ifelse(session_species>1,
+                        #       paste0("(",session_species,
+                        #              " different ones) "), ""),
+                        "and got <b>", session_score, "</b> right.", "</br><br>",
                         "In total, you practised <b>", total_species,
                         "</b> unique species out of <b>",no_species, 
                         "</b> ones and got <b>", no_species_right, 
