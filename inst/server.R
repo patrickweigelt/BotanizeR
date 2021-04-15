@@ -435,10 +435,11 @@ shinyServer(function(input, output, session) {
             counts_reactive$init_count_species <- sum(species_list_uploaded$COUNT > 0)
             counts_reactive$init_score_species <- sum(species_list_uploaded$SCORE > 0)
             
-            hints_reactive$hints_custom <- hints_reactive$ints_custom[which(
-                hints_reactive$ints_custom %in% colnames(species_list_uploaded))]
-            hints_reactive$imagelinks_custom  <- hints_reactive$ints_custom[which(
-                hints_reactive$ints_custom %in% colnames(species_list_uploaded))]
+            hints_reactive$hints_custom <- hints_reactive$hints_custom[which(
+                hints_reactive$hints_custom %in% colnames(species_list_uploaded))]
+            
+            hints_reactive$imagelinks_custom  <- hints_reactive$imagelinks_custom[which(
+                hints_reactive$imagelinks_custom %in% colnames(species_list_uploaded))]
             
             counts_reactive$omit <- TRUE
             
