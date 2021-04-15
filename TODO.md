@@ -92,6 +92,7 @@
 * Flora Incognita images?  
 * **unique species counting too few due to overall table?**  
 * **include == 0 if floraweb down?**  
+* **ownhints uncheck when uploading species list in quiz popup**  
 
 
 
