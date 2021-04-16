@@ -477,7 +477,7 @@ shinyServer(function(input, output, session) {
         content = function(file){
             species_list_save <- species_list_reactive$df_data
             if(!counts_reactive$omit & !answered_reactive$cheated){
-                species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
+                species_list_save$SCORE[isolate(i$i)] <- species_list_save$SCORE[isolate(i$i)] + answered_reactive$answered
             }
             write.csv(species_list_save, file, row.names = FALSE)
         }
@@ -489,7 +489,7 @@ shinyServer(function(input, output, session) {
         content = function(file){
             species_list_save <- species_list_reactive$df_data
             if(!counts_reactive$omit & !answered_reactive$cheated){
-                species_list_save$SCORE[i$i] <- species_list_save$SCORE[i$i] + answered_reactive$answered
+                species_list_save$SCORE[isolate(i$i)] <- species_list_save$SCORE[isolate(i$i)] + answered_reactive$answered
             }
             write.csv(species_list_save, file, row.names = FALSE)
         }
@@ -833,8 +833,8 @@ shinyServer(function(input, output, session) {
         sp_picture <- 0
         k <- 0
         
-        if(!counts_reactive$omit & !is.na(i$i) & !answered_reactive$cheated){
-            species_list_reactive$df_data$SCORE[i$i] <- species_list_reactive$df_data$SCORE[i$i] + answered_reactive$answered
+        if(!counts_reactive$omit & !is.na(isolate(i$i)) & !answered_reactive$cheated){
+            species_list_reactive$df_data$SCORE[isolate(i$i)] <- species_list_reactive$df_data$SCORE[isolate(i$i)] + answered_reactive$answered
         }
         
         counts_reactive$omit <- FALSE
@@ -852,11 +852,11 @@ shinyServer(function(input, output, session) {
                                                prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                                            (temp1$SCORE+1))*temp1$INCLUDE)
             i$i <- which(temp1$SPECIES == reactive_species$species)
-            print(paste(i$i, temp1$SPECIES[i$i]))
+            print(paste(isolate(i$i), temp1$SPECIES[isolate(i$i)]))
             
             # Download information with BotanizeR_collect()
             sp_quiz <- BotanizeR_collect(
-                species_row = temp1[i$i, ], 
+                species_row = temp1[isolate(i$i), ], 
                 image_floraweb = hints_reactive$image_floraweb,
                 hints_floraweb = hints_reactive$hints_floraweb[which(
                     hints_reactive$hints_floraweb!="map")],
@@ -890,7 +890,7 @@ shinyServer(function(input, output, session) {
         # output$fr_common_name <- renderText("")
         
         # counting
-        species_list_reactive$df_data$COUNT[i$i] <- species_list_reactive$df_data$COUNT[i$i] + 1
+        species_list_reactive$df_data$COUNT[isolate(i$i)] <- species_list_reactive$df_data$COUNT[isolate(i$i)] + 1
         print(paste("COUNT = ",sum(species_list_reactive$df_data$COUNT)))
         answered_reactive$cheated <- FALSE
         print(paste("cheated = ", answered_reactive$cheated))
@@ -988,7 +988,7 @@ shinyServer(function(input, output, session) {
             output$quiz_sp_description <- renderUI({
                 floraweb_link <- paste0(
                     "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                    isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
+                    isolate(species_list_reactive$df_data)[isolate(i$i), "NAMNR"],
                     "&")
 
                 ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
@@ -1022,7 +1022,7 @@ shinyServer(function(input, output, session) {
                 
                 if("Map" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
-                        species_row = species_list_reactive$df_data[i$i, ], 
+                        species_row = species_list_reactive$df_data[isolate(i$i), ], 
                         image_floraweb = FALSE, hints_floraweb = "map",
                         image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,                    
                         hints_custom = NULL, imagelinks_custom = NULL, 
@@ -1032,7 +1032,7 @@ shinyServer(function(input, output, session) {
                         output$random_map_text <- renderUI({
                             floraweb_link <- paste0(
                                 "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
-                                isolate(species_list_reactive$df_data)[i$i, "NAMNR"],
+                                isolate(species_list_reactive$df_data)[isolate(i$i), "NAMNR"],
                                 "&")
                             HTML(paste0("Map source: <a href='",
                                         floraweb_link, # https://www.floraweb.de/,
@@ -1050,7 +1050,7 @@ shinyServer(function(input, output, session) {
                     }
                 } else if ("Map UK" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
-                        species_row = species_list_reactive$df_data[i$i, ], 
+                        species_row = species_list_reactive$df_data[isolate(i$i), ], 
                         image_floraweb = FALSE, hints_floraweb = NULL,
                         image_ukplantatlas = FALSE, hints_ukplantatlas = "mapuk",                    
                         hints_custom = NULL, imagelinks_custom = NULL, 
@@ -1145,7 +1145,7 @@ shinyServer(function(input, output, session) {
                                   " characters"," character"),
                            " different")
                 
-                genus <- species_list_reactive$df_data[i$i, "GENUS"]
+                genus <- species_list_reactive$df_data[isolate(i$i), "GENUS"]
                 
                 if(nchar(answer)>0){
                     genus_correct <- paste0(
