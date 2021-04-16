@@ -851,7 +851,7 @@ shinyServer(function(input, output, session) {
             reactive_species$species <- sample(temp1$SPECIES, 1, 
                                                prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                                            (temp1$SCORE+1))*temp1$INCLUDE)
-            i$i <- which(temp1$SPECIES == reactive_species$species)
+            i$i <- which(temp1$SPECIES == isolate(reactive_species$species))
             print(paste(isolate(i$i), temp1$SPECIES[isolate(i$i)]))
             
             # Download information with BotanizeR_collect()
@@ -992,7 +992,7 @@ shinyServer(function(input, output, session) {
                     "&")
 
                 ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
-                                            gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
+                                            gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(isolate(reactive_species$species)))))
                 
                 HTML(paste0(paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_floraweb],
                                                  function(x) c(x,"</br></br>"))), collapse=""),
@@ -1022,7 +1022,7 @@ shinyServer(function(input, output, session) {
                 
                 if("Map" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
-                        species_row = species_list_reactive$df_data[isolate(i$i), ], 
+                        species_row = isolate(species_list_reactive$df_data)[isolate(i$i), ], 
                         image_floraweb = FALSE, hints_floraweb = "map",
                         image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,                    
                         hints_custom = NULL, imagelinks_custom = NULL, 
@@ -1050,7 +1050,7 @@ shinyServer(function(input, output, session) {
                     }
                 } else if ("Map UK" %in% input$quiz_options_maps & m$map){
                     random_map <- BotanizeR_collect(
-                        species_row = species_list_reactive$df_data[isolate(i$i), ], 
+                        species_row = isolate(species_list_reactive$df_data)[isolate(i$i), ], 
                         image_floraweb = FALSE, hints_floraweb = NULL,
                         image_ukplantatlas = FALSE, hints_ukplantatlas = "mapuk",                    
                         hints_custom = NULL, imagelinks_custom = NULL, 
@@ -1059,7 +1059,7 @@ shinyServer(function(input, output, session) {
                     if(length(random_map$mapuk)>0){
                         output$random_map_text <- renderUI({
                             ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
-                                                        gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(reactive_species$species))))
+                                                        gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(isolate(reactive_species$species)))))
                             
                             HTML(paste0("Map from <i>New Atlas</i> by the Botanical Society of Britain and Ireland (blue: native, red: introduced). </br>For more details see: <a href='",
                                         ukplantatlas_link, # https://www.brc.ac.uk/,
@@ -1098,7 +1098,7 @@ shinyServer(function(input, output, session) {
             isolate({
                 answer <- as.character(input$sp_answer)
             })
-            if (tolower(answer) == tolower(reactive_species$species)){
+            if (tolower(answer) == tolower(isolate(reactive_species$species))){
                 output$answer_status <- renderUI(
                         HTML(paste0(
                             "<p style='border:3px; border-style:solid;
@@ -1140,8 +1140,8 @@ shinyServer(function(input, output, session) {
                 
             } else { 
                 char_diff <-
-                    paste0(adist(tolower(answer), tolower(reactive_species$species)),
-                           ifelse(adist(tolower(answer), tolower(reactive_species$species)) > 1,
+                    paste0(adist(tolower(answer), tolower(isolate(reactive_species$species))),
+                           ifelse(adist(tolower(answer), tolower(isolate(reactive_species$species))) > 1,
                                   " characters"," character"),
                            " different")
                 
@@ -1165,7 +1165,7 @@ shinyServer(function(input, output, session) {
     
     ### Real answer ----
     observeEvent(input$real_answer, {
-        output$real_answer_print <- renderText(reactive_species$species)
+        output$real_answer_print <- renderText(isolate(reactive_species$species))
         
         if(!answered_reactive$answered){
             answered_reactive$cheated <- TRUE 
@@ -1204,7 +1204,7 @@ shinyServer(function(input, output, session) {
         
         if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered &
            species_list_reactive$df_data$SCORE[
-               which(species_list_reactive$df_data$SPECIES == reactive_species$species)] == 0){
+               which(species_list_reactive$df_data$SPECIES == isolate(reactive_species$species))] == 0){
             no_species_right <- no_species_right + 1
         }
         
