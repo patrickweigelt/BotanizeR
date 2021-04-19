@@ -694,7 +694,7 @@ shinyServer(function(input, output, session) {
         observe({
             output$selected_sp_map <- renderUI({
                 if("Map" %in% input$options_maps){
-                    print(paste("List",input$options_maps))
+                    # print(paste("List",input$options_maps))
                     map <- BotanizeR_collect(
                         species_row = isolate(species_list_reactive$df_data[j, ]), 
                         image_floraweb = FALSE, hints_floraweb = "map",
@@ -722,7 +722,7 @@ shinyServer(function(input, output, session) {
                         "No distribution map for Germany available!"
                     }
                 } else if ("Map UK" %in% input$options_maps){
-                    print(paste("List",input$options_maps))
+                    # print(paste("List",input$options_maps))
                     map <- BotanizeR_collect(
                         species_row = isolate(species_list_reactive$df_data[j, ]), 
                         image_floraweb = FALSE, hints_floraweb = NULL,
@@ -839,7 +839,7 @@ shinyServer(function(input, output, session) {
         
         counts_reactive$omit <- FALSE
         
-        print(paste("SCORE = ",sum(species_list_reactive$df_data$SCORE)))
+        print(paste("SCORE =",sum(species_list_reactive$df_data$SCORE)-isolate(counts_reactive$init_score)))
         
         while (sp_picture == 0 & k <= 10) { # If no picture available => new plant
             
@@ -852,7 +852,7 @@ shinyServer(function(input, output, session) {
                                                prob = ((temp1$COUNT - temp1$SCORE + 1)/
                                                            (temp1$SCORE+1))*temp1$INCLUDE)
             i$i <- which(temp1$SPECIES == isolate(reactive_species$species))
-            print(paste(isolate(i$i), temp1$SPECIES[isolate(i$i)]))
+            print(paste0(isolate(i$i),": ", temp1$SPECIES[isolate(i$i)]))
             
             # Download information with BotanizeR_collect()
             sp_quiz <- BotanizeR_collect(
@@ -887,15 +887,14 @@ shinyServer(function(input, output, session) {
         
         # setting back answer text
         output$real_answer_print <- renderText("")
-        # output$fr_common_name <- renderText("")
-        
+
         # counting
         species_list_reactive$df_data$COUNT[isolate(i$i)] <- species_list_reactive$df_data$COUNT[isolate(i$i)] + 1
-        print(paste("COUNT = ",sum(species_list_reactive$df_data$COUNT)))
+        print(paste("COUNT =",sum(species_list_reactive$df_data$COUNT)-isolate(counts_reactive$init_count)))
         answered_reactive$cheated <- FALSE
-        print(paste("cheated = ", answered_reactive$cheated))
+        # print(paste("cheated =", answered_reactive$cheated))
         answered_reactive$answered <- FALSE
-        print(paste("answered = ", answered_reactive$answered))
+        # print(paste("answered =", answered_reactive$answered))
 
         # setting back checkboxes
         updateCheckboxGroupInput(session,
@@ -1114,7 +1113,7 @@ shinyServer(function(input, output, session) {
                 
                 # Setting answered
                 answered_reactive$answered = TRUE
-                print(paste("answered = ", answered_reactive$answered))
+                print(paste("answered =", answered_reactive$answered))
                 
                 # enable checkboxes
                 updateCheckboxGroupInput(session,
@@ -1167,9 +1166,9 @@ shinyServer(function(input, output, session) {
     observeEvent(input$real_answer, {
         output$real_answer_print <- renderText(isolate(reactive_species$species))
         
-        if(!answered_reactive$answered){
+        if(!answered_reactive$answered & !answered_reactive$cheated){
             answered_reactive$cheated <- TRUE 
-            print(paste("cheated ", answered_reactive$cheated))
+            print(paste("cheated =", answered_reactive$cheated))
             
             # enable checkboxes
             updateCheckboxGroupInput(session,
