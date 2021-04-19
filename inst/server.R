@@ -830,9 +830,34 @@ shinyServer(function(input, output, session) {
         # set map to false to not plot one before radiobuttons are set
         m$map <- FALSE
         
-        sp_picture <- 0
-        k <- 0
+        # setting back checkboxes
+        updateCheckboxGroupInput(session,
+                                 inputId = "quiz_options",
+                                 choices = name_hints(c(hints_floraweb_lookup$show[which(
+                                     hints_floraweb_lookup$variable %in% 
+                                         hints_reactive$hints_floraweb & 
+                                         hints_floraweb_lookup$show != "Map")],
+                                     hints_ukplantatlas_lookup$show[which(
+                                         hints_ukplantatlas_lookup$variable %in% 
+                                             hints_reactive$hints_ukplantatlas & 
+                                             hints_ukplantatlas_lookup$show != "Map UK")],
+                                     hints_reactive$hints_custom)),
+                                 selected = NULL)
         
+        temp_options <- c("Map","Map UK")[which(c("map","mapuk") %in%
+                                                    c(hints_reactive$hints_floraweb,
+                                                      hints_reactive$hints_ukplantatlas))]
+        if(length(temp_options)>0) {
+            temp_options <- c("No map", temp_options)
+        }
+        
+        updateRadioButtons(session,
+                           inputId = "quiz_options_maps",
+                           choices = temp_options,
+                           selected = "No map")
+        
+        
+        # Add score
         if(!counts_reactive$omit & !is.na(isolate(i$i)) & !answered_reactive$cheated){
             species_list_reactive$df_data$SCORE[isolate(i$i)] <- species_list_reactive$df_data$SCORE[isolate(i$i)] + answered_reactive$answered
         }
@@ -840,6 +865,11 @@ shinyServer(function(input, output, session) {
         counts_reactive$omit <- FALSE
         
         print(paste("SCORE =",sum(species_list_reactive$df_data$SCORE)-isolate(counts_reactive$init_score)))
+        
+        
+        # Choose a species
+        sp_picture <- 0
+        k <- 0
         
         while (sp_picture == 0 & k <= 10) { # If no picture available => new plant
             
@@ -876,17 +906,19 @@ shinyServer(function(input, output, session) {
             }
         }
 
-        # answered <- FALSE
+
         output$answer_status <- renderUI({
             HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                        "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
-                        "</br><br>",
-                        "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
+                        "<br>",
+                        "Click 'Answer' or hit 'Arrow down' to retrieve answer.",
+                        "<br>", 
+                        "Click 'New plant' or hit 'Arrow up' for next species."))
         })
+        
         updateTextInput(session, "sp_answer", "Species name", value = "")
         
         # setting back answer text
-        output$real_answer_print <- renderText("")
+        # output$real_answer_print <- renderText("")
 
         # counting
         species_list_reactive$df_data$COUNT[isolate(i$i)] <- species_list_reactive$df_data$COUNT[isolate(i$i)] + 1
@@ -896,31 +928,7 @@ shinyServer(function(input, output, session) {
         answered_reactive$answered <- FALSE
         # print(paste("answered =", answered_reactive$answered))
 
-        # setting back checkboxes
-        updateCheckboxGroupInput(session,
-                                 inputId = "quiz_options",
-                                 choices = name_hints(c(hints_floraweb_lookup$show[which(
-                                     hints_floraweb_lookup$variable %in% 
-                                         hints_reactive$hints_floraweb & 
-                                         hints_floraweb_lookup$show != "Map")],
-                                     hints_ukplantatlas_lookup$show[which(
-                                         hints_ukplantatlas_lookup$variable %in% 
-                                             hints_reactive$hints_ukplantatlas & 
-                                             hints_ukplantatlas_lookup$show != "Map UK")],
-                                     hints_reactive$hints_custom)),
-                                 selected = NULL)
 
-        temp_options <- c("Map","Map UK")[which(c("map","mapuk") %in%
-                                                    c(hints_reactive$hints_floraweb,
-                                                      hints_reactive$hints_ukplantatlas))]
-        if(length(temp_options)>0) {
-            temp_options <- c("No map", temp_options)
-        }
-
-        updateRadioButtons(session,
-                           inputId = "quiz_options_maps",
-                           choices = temp_options,
-                           selected = "No map")
 
         ### Photos ----
         
@@ -1089,9 +1097,10 @@ shinyServer(function(input, output, session) {
     observe({
         output$answer_status <- renderUI({
             HTML(paste0("Mark your answer and click 'Submit' or hit 'Enter'!",
-                        "<br>", "Click 'New plant' or hit 'Arrow up' for next species.",
-                        "</br><br>",
-                        "Click 'Answer' or hit 'Arrow down' to get the answer.", "</br>"))
+                        "<br>",
+                        "Click 'Answer' or hit 'Arrow down' to retrieve answer.",
+                        "<br>", 
+                        "Click 'New plant' or hit 'Arrow up' for next species."))
         })
         observeEvent(input$submit, {
             isolate({
@@ -1112,8 +1121,10 @@ shinyServer(function(input, output, session) {
                         )
                 
                 # Setting answered
-                answered_reactive$answered = TRUE
-                print(paste("answered =", answered_reactive$answered))
+                if(!answered_reactive$answered & !answered_reactive$cheated){
+                    answered_reactive$answered = TRUE
+                    print(paste("answered =", answered_reactive$answered))
+                }
                 
                 # enable checkboxes
                 updateCheckboxGroupInput(session,
@@ -1149,7 +1160,7 @@ shinyServer(function(input, output, session) {
                 if(nchar(answer)>0){
                     genus_correct <- paste0(
                         ifelse(strsplit(tolower(answer), " ")[[1]][1] == tolower(genus),
-                               "Genus correct", ""))
+                               "Genus correct<br>", "<br>"))
                 } else {
                     genus_correct <- "" 
                 }
@@ -1164,7 +1175,8 @@ shinyServer(function(input, output, session) {
     
     ### Real answer ----
     observeEvent(input$real_answer, {
-        output$real_answer_print <- renderText(isolate(reactive_species$species))
+        updateTextInput(session, "sp_answer", "Species name", value = isolate(reactive_species$species))
+        # output$real_answer_print <- renderText(isolate(reactive_species$species))
         
         if(!answered_reactive$answered & !answered_reactive$cheated){
             answered_reactive$cheated <- TRUE 

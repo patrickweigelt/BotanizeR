@@ -127,7 +127,7 @@ tabPanel(
     h1(id = "panel2", "Quiz"),
     fluidRow(#useShinyjs(),  # Set up shinyjs
         column(3,
-               h5(textOutput("Score")),
+               # h5(textOutput("Score")),
                br(),
                uiOutput(outputId = "quiz_options"),
                br(),
@@ -138,11 +138,9 @@ tabPanel(
                                                   });
                                                   '),
                textInput("sp_answer", label = "Species name"),
-               h5(textOutput("nb_tries"), style = "font-weight=500; color: #000000;"),
-               br(),
+               # h5(textOutput("nb_tries"), style = "font-weight=500; color: #000000;"),
                p(htmlOutput("answer_status"), style = "font-weight=500; color: #000000;"),
-               br(),
-               h5(em(textOutput("real_answer_print"), style = "color: green; font-style: bold")),
+               # h5(em(textOutput("real_answer_print"), style = "color: green; font-style: bold")),
                br(),
                tags$head(tags$script(src = "BotanizeR_buttons.js")),
                actionButton("submit", "Submit"),
@@ -164,10 +162,12 @@ tabPanel(
         
         # Third part with other indices
         column(3,
-               htmlOutput("quiz_sp_description"),
-               br(),br(),
+               br(),
                actionButton("sumstats_button", "Statistics"),
                actionButton("upanddown_button", "Upload/Download progress"),
+               br(),br(),br(),
+               htmlOutput("quiz_sp_description"),
+               br(),
                bsModal(id = "upanddown_modal",
                        title = "Up and Download",
                        trigger = "upanddown_button",
@@ -177,8 +177,7 @@ tabPanel(
                        htmlOutput("upload_error_2"),
                        htmlOutput("download_note_2"),
                        br(),
-                       downloadButton("download_2","Download your progress")
-               ),
+                       downloadButton("download_2","Download your progress")),
                br()
         )
     )
