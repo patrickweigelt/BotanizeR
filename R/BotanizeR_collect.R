@@ -355,7 +355,7 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
       }
       
       if(hints_ukplantatlas[i]=="familyuk" & length(infos)>=1){
-        hints[[length(hints)+1]] <- paste("Family:", gsub("(.*›)(.*ceae)(›.*)","\\2", infos[[1]]))
+        hints[[length(hints)+1]] <- paste("Family:", gsub("(.*›)(.*ceae|.*ferae)(›.*)","\\2", infos[[1]]))
         names(hints)[length(hints)] <- hints_ukplantatlas[i]
       }
       
