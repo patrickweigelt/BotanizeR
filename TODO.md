@@ -93,7 +93,7 @@
 * ~~unique species counting too few due to overall table?~~  
 * ~~include == 0 if floraweb down? <- not the case~~  
 * ~~ownhints uncheck when uploading species list in quiz popup~~  
-* Bug: quiz sometimes shows hints of previous species when submitting correct name; Links to floraweb and ukplantatlas are fine though. discrepancy between species and i$i ? Interestingly it first quickly show the hints correctly when loading the new species. Possible solution: Don't have separate reactive vaules for species i and i; or isolate i and species?  <- tried
+* Bug: quiz sometimes shows hints of previous species when submitting correct name; Links to floraweb and ukplantatlas are fine though. discrepancy between species and i$i ? Interestingly it first quickly show the hints correctly when loading the new species. Possible solution: Don't have separate reactive vaules for species i and i; or isolate i and species?  <- tried, did not help
 
 
 
