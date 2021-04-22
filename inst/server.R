@@ -748,7 +748,7 @@ shinyServer(function(input, output, session) {
                         "No distribution map for the UK and Ireland available!"
                     }
                 } else if ("No map" %in% input$options_maps){
-                    m$map <- TRUE
+                    # m$map <- TRUE
                     output$selected_map_text <- renderUI({""})
                     ""
                 }
@@ -825,7 +825,7 @@ shinyServer(function(input, output, session) {
     sp_quiz_reactive <- reactiveValues(sp_quiz=NA)
     
     # Workaround to avoid printing map before radiobuttons are set back to "no map"
-    m <- reactiveValues(map=TRUE)
+    m <- reactiveValues(map=TRUE) #,hints=TRUE)
 
     
     # New plant observe
@@ -833,6 +833,7 @@ shinyServer(function(input, output, session) {
         
         # set map to false to not plot one before radiobuttons are set
         m$map <- FALSE
+        # m$hints <- FALSE
         
         # setting back checkboxes
         updateCheckboxGroupInput(session,
@@ -912,42 +913,42 @@ shinyServer(function(input, output, session) {
                 
                 # Replace Species and genus names in hints
                 sp_quiz[names(sp_quiz) %in% c(isolate(hints_reactive$hints_floraweb),
-                                          isolate(hints_reactive$hints_ukplantatlas))] <- lapply(sp_quiz[
-                    names(sp_quiz) %in% c(isolate(hints_reactive$hints_floraweb),
-                                          isolate(hints_reactive$hints_ukplantatlas))],
-                    function(x){
-                    
-                    x <- gsub(paste0("([\\.\\:\\!\\?])( )(",temp_row$SPECIES,")"), "\\1 This species",x) # ". Fagus sylvatica" <- ". This species"
-                    x <- gsub(paste0(" ",temp_row$SPECIES), " this species",x) # " Fagus sylvatica" <- " this species"
-                    x <- gsub(temp_row$SPECIES, "This species",x) # "Fagus sylvatica" <- "This species"
-                    
-                    x <- gsub(paste0("([\\.\\:\\!\\?])( )(",
-                                     gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
-                                          temp_row$SPECIES),")"), "\\1 This species",x) # ". F. sylvatica" <- ". This species"
-                    
-                    x <- gsub(paste0(" ",
-                                     gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
-                                          temp_row$SPECIES)), " this species",x) # " F. sylvatica" <- " this species"
-                    
-                    x <- gsub(gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
-                                   temp_row$SPECIES),
-                              "This species",x) # "F. sylvatica" <- "This species"
- 
-                    x <- gsub(paste0("([\\.\\:\\!\\?])( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "\\1 This genus\\4",x) # ". Fagus " <- ". This genus "
-                    x <- gsub(paste0("( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), " this genus\\3",x) # " Fagus " <- " this genus "
-                    x <- gsub(paste0("(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "This genus\\2",x) # "Fagus " <- "This genus "
-
-                })
+                                              isolate(hints_reactive$hints_ukplantatlas))] <- lapply(sp_quiz[
+                                                  names(sp_quiz) %in% c(isolate(hints_reactive$hints_floraweb),
+                                                                        isolate(hints_reactive$hints_ukplantatlas))],
+                                                  function(x){
+                                                      
+                                                      x <- gsub(paste0("([\\.\\:\\!\\?])( )(",temp_row$SPECIES,")"), "\\1 This species",x) # ". Fagus sylvatica" <- ". This species"
+                                                      x <- gsub(paste0(" ",temp_row$SPECIES), " this species",x) # " Fagus sylvatica" <- " this species"
+                                                      x <- gsub(temp_row$SPECIES, "This species",x) # "Fagus sylvatica" <- "This species"
+                                                      
+                                                      x <- gsub(paste0("([\\.\\:\\!\\?])( )(",
+                                                                       gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                                                            temp_row$SPECIES),")"), "\\1 This species",x) # ". F. sylvatica" <- ". This species"
+                                                      
+                                                      x <- gsub(paste0(" ",
+                                                                       gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                                                            temp_row$SPECIES)), " this species",x) # " F. sylvatica" <- " this species"
+                                                      
+                                                      x <- gsub(gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                                                     temp_row$SPECIES),
+                                                                "This species",x) # "F. sylvatica" <- "This species"
+                                                      
+                                                      x <- gsub(paste0("([\\.\\:\\!\\?])( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "\\1 This genus\\4",x) # ". Fagus " <- ". This genus "
+                                                      x <- gsub(paste0("( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), " this genus\\3",x) # " Fagus " <- " this genus "
+                                                      x <- gsub(paste0("(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "This genus\\2",x) # "Fagus " <- "This genus "
+                                                      
+                                                  })
                 
                 sp_quiz[names(sp_quiz) %in% isolate(hints_reactive$hints_floraweb)] <- lapply(sp_quiz[
                     names(sp_quiz) %in% isolate(hints_reactive$hints_floraweb)], function(x){
-                    
-                    x <- gsub("This species","Diese Art",x)
-                    x <- gsub("this species","diese Art",x)
-                    x <- gsub("This genus","Diese Gattung",x)
-                    x <- gsub("this genus","diese Gattung",x)
-                    
-                })
+                        
+                        x <- gsub("This species","Diese Art",x)
+                        x <- gsub("this species","diese Art",x)
+                        x <- gsub("This genus","Diese Gattung",x)
+                        x <- gsub("this genus","diese Gattung",x)
+                        
+                    })
                 
                 # Make descriptive hints reactive
                 sp_quiz_reactive$sp_quiz <- sp_quiz[names(sp_quiz) != "images"]
@@ -1032,6 +1033,7 @@ shinyServer(function(input, output, session) {
         ### Description ----
         
         observe({
+            
             temp_hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quiz_options)]
             temp_hints_floraweb <- temp_hints_floraweb[which(temp_hints_floraweb %in% names(sp_quiz))]
             
@@ -1039,7 +1041,8 @@ shinyServer(function(input, output, session) {
             temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas %in% names(sp_quiz))]
             
             temp_hints_custom <- hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quiz_options)]
-            
+
+            # if(m$hints){
             output$quiz_sp_description <- renderUI({
                 floraweb_link <- paste0(
                     "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
@@ -1066,7 +1069,12 @@ shinyServer(function(input, output, session) {
                             paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_custom],
                                                  function(x) c(x,"</br></br>"))), collapse="")
                 ))
-            })
+            }) 
+            # } else {
+            #     m$hints <- TRUE
+            #     output$quiz_sp_description <- renderUI({""})
+            #     #""
+            # } 
         })
         
         output$random_map_text <- renderUI({""})
