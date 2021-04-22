@@ -820,6 +820,10 @@ shinyServer(function(input, output, session) {
     i <- reactiveValues(i=NA)
     reactive_species <- reactiveValues(species=NA)
     
+    
+    # Make hints a reactive object to avoid plotting infos of wrog species
+    sp_quiz_reactive <- reactiveValues(sp_quiz=NA)
+    
     # Workaround to avoid printing map before radiobuttons are set back to "no map"
     m <- reactiveValues(map=TRUE)
 
@@ -877,16 +881,18 @@ shinyServer(function(input, output, session) {
             k <- k + 1
             
             # random species
-            temp1 <- species_list_reactive$df_data
-            reactive_species$species <- sample(temp1$SPECIES, 1, 
-                                               prob = ((temp1$COUNT - temp1$SCORE + 1)/
-                                                           (temp1$SCORE+1))*temp1$INCLUDE)
-            i$i <- which(temp1$SPECIES == isolate(reactive_species$species))
-            print(paste0(isolate(i$i),": ", temp1$SPECIES[isolate(i$i)]))
+            temp_data <- isolate(species_list_reactive$df_data)
+            i$i <- sample(1:nrow(temp_data), 1, prob = ((temp_data$COUNT - temp_data$SCORE + 1)/
+                                                 (temp_data$SCORE+1))*temp_data$INCLUDE)
+            
+            temp_row <- temp_data[isolate(i$i),]
+            
+            reactive_species$species <- temp_row$SPECIES
+            print(paste0(isolate(i$i),": ", isolate(reactive_species$species)))
             
             # Download information with BotanizeR_collect()
             sp_quiz <- BotanizeR_collect(
-                species_row = temp1[isolate(i$i), ], 
+                species_row = temp_row, 
                 image_floraweb = hints_reactive$image_floraweb,
                 hints_floraweb = hints_reactive$hints_floraweb[which(
                     hints_reactive$hints_floraweb!="map")],
@@ -903,6 +909,42 @@ shinyServer(function(input, output, session) {
                 
                 # Randomly reordering pictures for the quiz
                 sp_quiz$images <- sample(sp_quiz$images)
+                
+                # Replace Species and genus names in hints and make reactive hint object
+                # sp_quiz_reactive$sp_quiz <- lapply(sp_quiz[names(sp_quiz) != "images"], function(x){
+
+                sp_quiz[names(sp_quiz) != "images"] <- lapply(sp_quiz[names(sp_quiz) != "images"], function(x){
+                    
+                    x <- gsub(paste0("\\. ",temp_row$SPECIES), ". This species",x) # ". Fagus sylvatica" <- ". This species"
+                    x <- gsub(paste0(" ",temp_row$SPECIES), " this species",x) # " Fagus sylvatica" <- " this species"
+                    x <- gsub(temp_row$SPECIES, "This species",x) # "Fagus sylvatica" <- "This species"
+                    
+                    x <- gsub(paste0("\\. ",
+                                     gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                          temp_row$SPECIES)), ". This species",x) # ". F. sylvatica" <- ". This species"
+                    
+                    x <- gsub(paste0(" ",
+                                     gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                          temp_row$SPECIES)), " this species",x) # " F. sylvatica" <- " this species"
+                    
+                    x <- gsub(gsub(temp_row$GENUS, paste0(substring(temp_row$SPECIES, 1, 1),"."), 
+                                   temp_row$SPECIES),
+                              "This species",x) # "F. sylvatica" <- "This species"
+ 
+                    x <- gsub(paste0("\\. ",temp_row$GENUS," "), ". This genus ",x) # ". Fagus " <- ". This genus "
+                    x <- gsub(paste0("\\. ",temp_row$GENUS,"\\."), ". This genus.",x) # ". Fagus," <- ". This genus."                    
+                    x <- gsub(paste0("\\. ",temp_row$GENUS,"\\,"), ". This genus,",x) # ". Fagus." <- ". This genus,"
+                    x <- gsub(paste0("\\. ",temp_row$GENUS,"\\;"), ". This genus;",x) # ". Fagus;" <- ". This genus;"
+                    x <- gsub(paste0(" ",temp_row$GENUS," "), " this genus ",x) # " Fagus " <- " this genus "
+                    x <- gsub(paste0(" ",temp_row$GENUS,"\\."), " this genus.",x) # " Fagus," <- " this genus."                    
+                    x <- gsub(paste0(" ",temp_row$GENUS,"\\,"), " this genus,",x) # " Fagus." <- " this genus,"
+                    x <- gsub(paste0(" ",temp_row$GENUS,"\\;"), " this genus;",x) # " Fagus;" <- " this genus;"
+                    x <- gsub(paste0(temp_row$GENUS," "), "This genus ",x) # "Fagus " <- "This genus "
+                    x <- gsub(paste0(temp_row$GENUS,"\\."), "This genus.",x) # "Fagus," <- "This genus."                    
+                    x <- gsub(paste0(temp_row$GENUS,"\\,"), "This genus,",x) # "Fagus." <- "This genus,"
+                    x <- gsub(paste0(temp_row$GENUS,"\\;"), "This genus;",x) # "Fagus;" <- "This genus;"
+                    
+                })
             }
         }
 
