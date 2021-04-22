@@ -910,9 +910,7 @@ shinyServer(function(input, output, session) {
                 # Randomly reordering pictures for the quiz
                 sp_quiz$images <- sample(sp_quiz$images)
                 
-                # Replace Species and genus names in hints and make reactive hint object
-                # sp_quiz_reactive$sp_quiz <- lapply(sp_quiz[names(sp_quiz) != "images"], function(x){
-
+                # Replace Species and genus names in hints
                 sp_quiz[names(sp_quiz) %in% c(isolate(hints_reactive$hints_floraweb),
                                           isolate(hints_reactive$hints_ukplantatlas))] <- lapply(sp_quiz[
                     names(sp_quiz) %in% c(isolate(hints_reactive$hints_floraweb),
@@ -936,21 +934,9 @@ shinyServer(function(input, output, session) {
                               "This species",x) # "F. sylvatica" <- "This species"
  
                     x <- gsub(paste0("([\\.\\:\\!\\?])( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "\\1 This genus\\4",x) # ". Fagus " <- ". This genus "
-                    #x <- gsub(paste0("\\. ",temp_row$GENUS," "), ". This genus ",x) # ". Fagus " <- ". This genus "
-                    #x <- gsub(paste0("\\. ",temp_row$GENUS,"\\."), ". This genus.",x) # ". Fagus." <- ". This genus."                    
-                    #x <- gsub(paste0("\\. ",temp_row$GENUS,"\\,"), ". This genus,",x) # ". Fagus," <- ". This genus,"
-                    #x <- gsub(paste0("\\. ",temp_row$GENUS,"\\;"), ". This genus;",x) # ". Fagus;" <- ". This genus;"
                     x <- gsub(paste0("( )(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), " this genus\\3",x) # " Fagus " <- " this genus "
-                    #x <- gsub(paste0(" ",temp_row$GENUS," "), " this genus ",x) # " Fagus " <- " this genus "
-                    #x <- gsub(paste0(" ",temp_row$GENUS,"\\."), " this genus.",x) # " Fagus," <- " this genus."                    
-                    #x <- gsub(paste0(" ",temp_row$GENUS,"\\,"), " this genus,",x) # " Fagus." <- " this genus,"
-                    #x <- gsub(paste0(" ",temp_row$GENUS,"\\;"), " this genus;",x) # " Fagus;" <- " this genus;"
                     x <- gsub(paste0("(",temp_row$GENUS,")([ \\.\\,\\;\\:\\!\\?])"), "This genus\\2",x) # "Fagus " <- "This genus "
-                    #x <- gsub(paste0(temp_row$GENUS," "), "This genus ",x) # "Fagus " <- "This genus "
-                    #x <- gsub(paste0(temp_row$GENUS,"\\."), "This genus.",x) # "Fagus," <- "This genus."                    
-                    #x <- gsub(paste0(temp_row$GENUS,"\\,"), "This genus,",x) # "Fagus." <- "This genus,"
-                    #x <- gsub(paste0(temp_row$GENUS,"\\;"), "This genus;",x) # "Fagus;" <- "This genus;"
-                    
+
                 })
                 
                 sp_quiz[names(sp_quiz) %in% isolate(hints_reactive$hints_floraweb)] <- lapply(sp_quiz[
@@ -963,6 +949,8 @@ shinyServer(function(input, output, session) {
                     
                 })
                 
+                # Make descriptive hints reactive
+                sp_quiz_reactive$sp_quiz <- sp_quiz[names(sp_quiz) != "images"]
             }
         }
 
