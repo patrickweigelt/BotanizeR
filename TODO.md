@@ -39,11 +39,9 @@
 * ~~Only list own hints in setup which have data for species subset~~
 * don't show hints that are not available?
 * ~~remove ownhint_ from checkboxes~~
-  - names of checkboxes vs values is implemented in a more complicated way than necessary 
 * ~~Add ownhint category to hints printout~~
 * ~~previous and next species button in species list tab~~
 * ~~previous and next species working with keyboard~~
-  - this interferes with the next and previous buttons from slickR - maybe remove?
   - **make left and right buttons in quiz switch pictures also when outside slider**
 * ~~don't do adist when "" submitted~~
 * chorology?
@@ -93,15 +91,15 @@
 * ~~unique species counting too few due to overall table?~~  
 * ~~include == 0 if floraweb down? <- not the case~~  
 * ~~ownhints uncheck when uploading species list in quiz popup~~  
-* Bug: quiz sometimes shows hints of previous species when submitting correct name; Links to floraweb and ukplantatlas are fine though. discrepancy between species and i$i ? Interestingly it first quickly show the hints correctly when loading the new species. Possible solution: Don't have separate reactive vaules for species i and i; or isolate i and species?  <- tried, did not help
-
+* Bug: quiz sometimes shows hints of previous species; Links to floraweb and ukplantatlas are fine though. Interestingly it first quickly show the hints correctly when loading the new species. Possible solution: Don't have separate reactive vaules for species i and i; or isolate i and species? Make descriptive hints reactive <- tried
+* ~~replace species names in descriptions be "The species"~~
 
 
 
 ## 2. Package
 * check if cases with more than two images in floraweb exist and write loop for BotanizeR_collect!
 * add flowering time and vegetative/sexual reproduction
-* Replace "." and alike in species namse for finding local pictures
+* ~~Replace "." and alike in species names for finding local pictures~~
 * add content from other websites
   - ~~UK-flora~~
   - Telabotanica
@@ -114,11 +112,9 @@
 * ~~define columns needed for species list~~
 * ~~combine the tables and make columns for UK and GER~~
 * Subspecies in UK-list
-* replace species names in descriptions be "The species"
 * Map floraweb distribution based on api
 * switch entirely to httr to get rid of temp folders
 * jpg, JPG, JPEG, jpeg etc. for own folder
-* **BotanizeR collect needs to also look for own images after replacing . in species names (sp. etc)**
 
 ## 3. Layout
 * ~~center smaller images in slider~~
@@ -126,7 +122,7 @@
   - ~~define min width of middle column or make slickR slider shrink~~
 * ~~Source floraweb is inbetween the hints (above habitat); Make dependent on whether floraweb content is shown or not~~
 * ~~adjust height of panel columns~~
-* move items
+* ~~move items~~
   - ~~download button~~
 * ~~Make correct more prominent and easier to go to next species; info messages~~ 
 * **Make correct easier to go to next species** 

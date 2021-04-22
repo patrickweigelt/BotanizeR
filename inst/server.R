@@ -826,8 +826,8 @@ shinyServer(function(input, output, session) {
     
     # Workaround to avoid printing map before radiobuttons are set back to "no map"
     m <- reactiveValues(map=TRUE) #,hints=TRUE)
-
     
+
     # New plant observe
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         
@@ -1035,10 +1035,10 @@ shinyServer(function(input, output, session) {
         observe({
             
             temp_hints_floraweb <- hints_floraweb_lookup$variable[which(hints_floraweb_lookup$show %in% input$quiz_options)]
-            temp_hints_floraweb <- temp_hints_floraweb[which(temp_hints_floraweb %in% names(sp_quiz))]
+            temp_hints_floraweb <- temp_hints_floraweb[which(temp_hints_floraweb %in% names(isolate(sp_quiz_reactive$sp_quiz)))]
             
             temp_hints_ukplantatlas <- hints_ukplantatlas_lookup$variable[which(hints_ukplantatlas_lookup$show %in% input$quiz_options)]
-            temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas %in% names(sp_quiz))]
+            temp_hints_ukplantatlas <- temp_hints_ukplantatlas[which(temp_hints_ukplantatlas %in% names(isolate(sp_quiz_reactive$sp_quiz)))]
             
             temp_hints_custom <- hints_reactive$hints_custom[which(hints_reactive$hints_custom %in% input$quiz_options)]
 
@@ -1052,21 +1052,21 @@ shinyServer(function(input, output, session) {
                 ukplantatlas_link <- paste0("https://www.brc.ac.uk/plantatlas/plant/",
                                             gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(isolate(reactive_species$species)))))
                 
-                HTML(paste0(paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_floraweb],
+                HTML(paste0(paste0(unlist(sapply(isolate(sp_quiz_reactive$sp_quiz)[names(isolate(sp_quiz_reactive$sp_quiz)) %in% temp_hints_floraweb],
                                                  function(x) c(x,"</br></br>"))), collapse=""),
                             ifelse(length(temp_hints_floraweb)>0,
                                    paste0("<b>Source:</b></br><a href='",
                                           floraweb_link, # https://www.floraweb.de/,
                                           "' target=_blank>FloraWeb</a></br></br>")
                                    ,""),
-                            paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_ukplantatlas],
+                            paste0(unlist(sapply(isolate(sp_quiz_reactive$sp_quiz)[names(isolate(sp_quiz_reactive$sp_quiz)) %in% temp_hints_ukplantatlas],
                                                  function(x) c(x,"</br></br>"))), collapse=""),
                             ifelse(length(temp_hints_ukplantatlas)>0,
                                    paste0("<b>Source:</b></br><a href='",
                                           ukplantatlas_link, # https://www.brc.ac.uk/,
                                           "' target=_blank>UK & Ireland Plant Atlas</a></br></br>")
                                    ,""),
-                            paste0(unlist(sapply(sp_quiz[names(sp_quiz) %in% temp_hints_custom],
+                            paste0(unlist(sapply(isolate(sp_quiz_reactive$sp_quiz)[names(isolate(sp_quiz_reactive$sp_quiz)) %in% temp_hints_custom],
                                                  function(x) c(x,"</br></br>"))), collapse="")
                 ))
             }) 
