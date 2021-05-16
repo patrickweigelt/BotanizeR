@@ -93,6 +93,7 @@
 * ~~ownhints uncheck when uploading species list in quiz popup~~  
 * Bug: quiz sometimes shows hints of previous species; Links to floraweb and ukplantatlas are fine though. Interestingly it first quickly show the hints correctly when loading the new species. Possible solution: Don't have separate reactive vaules for species i and i; or isolate i and species? Make descriptive hints reactive <- tried
 * ~~replace species names in descriptions be "The species"~~
+* Size of right quiz column jumping include something to have a minimum width
 
 
 

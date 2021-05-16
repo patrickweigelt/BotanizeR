@@ -821,7 +821,7 @@ shinyServer(function(input, output, session) {
     reactive_species <- reactiveValues(species=NA)
     
     
-    # Make hints a reactive object to avoid plotting infos of wrog species
+    # Make hints a reactive object to avoid plotting infos of wrong species
     sp_quiz_reactive <- reactiveValues(sp_quiz=NA)
     
     # Workaround to avoid printing map before radiobuttons are set back to "no map"
@@ -967,7 +967,7 @@ shinyServer(function(input, output, session) {
         updateTextInput(session, "sp_answer", "Species name", value = "")
         
         # setting back answer text
-        # output$real_answer_print <- renderText("")
+        output$real_answer_print <- renderText("")
 
         # counting
         species_list_reactive$df_data$COUNT[isolate(i$i)] <- species_list_reactive$df_data$COUNT[isolate(i$i)] + 1
@@ -1231,8 +1231,10 @@ shinyServer(function(input, output, session) {
     
     ### Real answer ----
     observeEvent(input$real_answer, {
-        updateTextInput(session, "sp_answer", "Species name", value = isolate(reactive_species$species))
+        # updateTextInput(session, "sp_answer", "Species name", value = isolate(reactive_species$species))
         # output$real_answer_print <- renderText(isolate(reactive_species$species))
+        output$real_answer_print <- renderText(isolate(species_list_reactive$df_data$TAXONNAME[
+            which(isolate(species_list_reactive$df_data$SPECIES) == isolate(reactive_species$species))]))
         
         if(!answered_reactive$answered & !answered_reactive$cheated){
             answered_reactive$cheated <- TRUE 
