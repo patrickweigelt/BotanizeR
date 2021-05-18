@@ -1271,10 +1271,11 @@ shinyServer(function(input, output, session) {
         no_species_right <- sum(species_list_reactive$df_data$INCLUDE > 0 &
                                 species_list_reactive$df_data$SCORE > 0)
         
-        if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered &
-           species_list_reactive$df_data$SCORE[
-               which(species_list_reactive$df_data$SPECIES == isolate(reactive_species$species))] == 0){
-            no_species_right <- no_species_right + 1
+        if(!counts_reactive$omit & !answered_reactive$cheated & answered_reactive$answered){
+            if(species_list_reactive$df_data$SCORE[
+                which(species_list_reactive$df_data$SPECIES == isolate(reactive_species$species))] == 0){
+                no_species_right <- no_species_right + 1
+            }
         }
         
         total_count <- sum(species_list_reactive$df_data$COUNT)
