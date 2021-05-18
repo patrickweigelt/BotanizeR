@@ -295,7 +295,9 @@ shinyServer(function(input, output, session) {
         HTML(paste0("<i>",
                     nrow(species_list_reactive$df_data),
                     " species; ", 
-                    sum(species_list_reactive$df_data$COUNT),
+                    sum(species_list_reactive$df_data$INCLUDE),
+                    " included; ", 
+                    sum(species_list_reactive$df_data$COUNT>0),
                     " practiced.</i>"))
     })
 
@@ -426,7 +428,15 @@ shinyServer(function(input, output, session) {
         
         if(is.data.frame(species_list_uploaded)){
             output$upload_error <- renderUI("")
-            output$upload_error_2 <- renderUI("")
+            output$upload_error_2 <- renderUI({
+                HTML(paste0("<i>",
+                            nrow(species_list_uploaded),
+                            " species; ", 
+                            sum(species_list_uploaded$INCLUDE),
+                            " included; ", 
+                            sum(species_list_uploaded$COUNT>0),
+                            " practiced.</i>"))
+            })
             
             species_list_reactive$df_data <- species_list_uploaded
             species_list_uploaded_reactive$df_data <- species_list_uploaded
