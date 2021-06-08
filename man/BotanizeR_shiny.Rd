@@ -19,3 +19,4 @@ BotanizeR_shiny()
 
 \examples{
 BotanizeR_shiny(run = FALSE)
+}
