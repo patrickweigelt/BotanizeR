@@ -8,6 +8,7 @@ Runs locally the Shiny application associated to BotanizeR package.
 BotanizeR_shiny()
 }
 \arguments{
+\item{run}{a binary, runs the Shiny application when set to TRUE.}
 }
 \details{
 }
@@ -17,4 +18,4 @@ BotanizeR_shiny()
 \section{Note}{}
 
 \examples{
-BotanizeR_shiny()
+BotanizeR_shiny(run = FALSE)
