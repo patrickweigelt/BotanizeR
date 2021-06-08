@@ -1,12 +1,21 @@
+
+# BotanizeR <img src="figures/biodiv_gottingen_logo.png" align="right" alt="" width="200" />
+
 # BotanizeR
 A quiz game to memorize plant species names and characteristics
 
-```
+[![licence](https://img.shields.io/badge/Licence-GPL--3-blue.svg)](https://www.r-project.org/Licenses/GPL-3)
+
+## 1. Installation
+``` r
 library(devtools)
 install_github("https://github.com/patrickweigelt/BotanizeR")
 
 library(BotanizeR)
+```
 
+## 2. Tutorial
+``` r
 # Species list for Germany with IDs from floraweb.de
 data(floraweb_species)
 
@@ -54,6 +63,16 @@ custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_fl
                                          image_folders = NULL, case_sensitive = FALSE)
                                     
 ```
+
+## 3. Shiny application
+You can start the application with the function `BotanizeR_shiny()`.
+
+``` r
+BotanizeR_shiny()
+```
+
+## 4. References and dependencies
+`BotanizeR` depends on `htmltools`, `httr`, `imager`, `magick`, `sf`, `shiny`, `shinyBS`, `shinyFiles`, `shinythemes`, `slickR` and `XML`.
 
 Sources  
 Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
