@@ -1,5 +1,5 @@
 
-BotanizeR_shiny <- function() {
+BotanizeR_shiny <- function(run = FALSE) {
   require(shiny)
   
   appDir <- system.file(package = "BotanizeR")
@@ -8,5 +8,9 @@ BotanizeR_shiny <- function() {
          call. = FALSE)
   }
   
+  if(run){
   shiny::runApp(appDir, display.mode = "normal")
+  } else{
+    message("If you want to run the application, set 'run = TRUE'")
+  }
 }
