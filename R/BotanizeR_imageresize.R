@@ -40,7 +40,7 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
             dir.create(file.path(paste(image_folders[k],image_width,  sep="_"), gsub("(^.*/)([^/]*)$","\\1",image_files[i])))
           }
           imager::save.image(image_i, file.path(paste(image_folders[k],image_width,  sep="_"),
-                                                gsub("\\.JPG$|\\.JPEG$|\\.PNG$","\\.jpg",image_files[i])), quality = quality)
+                                                gsub("\\.JPG$|\\.JPEG$|\\.PNG$|\\.png$","\\.jpg",image_files[i])), quality = quality)
         }
       }
     }
