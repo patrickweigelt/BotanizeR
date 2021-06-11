@@ -47,5 +47,3 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_he
   }
   message("completed")
 }
-
-"\\.jpg|\\.jpeg|\\.png|\\.JPG|\\.JPEG|\\.PNG"
