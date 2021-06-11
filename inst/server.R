@@ -314,7 +314,7 @@ shinyServer(function(input, output, session) {
                 
                 header <- ifelse(header, NA, "NULL")
                 
-                species_list_clean <- read.csv(x, colClasses = header, nrows = 6000)
+                species_list_clean <- unique(read.csv(x, colClasses = header, nrows = 6000))
                 
                 if(nrow(species_list_clean)>0){
                     
@@ -323,11 +323,11 @@ shinyServer(function(input, output, session) {
                         if(length(which(duplicated(species_list_clean$SPECIES))) == 0){
                             
                             
-                            if(!"NAMNR" %in% names(species_list)) species_list$NAMNR <- NA
-                            if(!"COUNT" %in% names(species_list)) species_list$COUNT <- 0
-                            if(!"SCORE" %in% names(species_list)) species_list$NAMNR <- 0
-                            if(!"ATTEMPTS" %in% names(species_list)) species_list$NAMNR <- 0
-                            if(!"INCLUDE" %in% names(species_list)) species_list$NAMNR <- 1
+                            if(!"NAMNR" %in% names(species_list_clean)) species_list_clean$NAMNR <- NA
+                            if(!"COUNT" %in% names(species_list_clean)) species_list_clean$COUNT <- 0
+                            if(!"SCORE" %in% names(species_list_clean)) species_list_clean$SCORE <- 0
+                            if(!"ATTEMPTS" %in% names(species_list_clean)) species_list_clean$ATTEMPTS <- 0
+                            if(!"INCLUDE" %in% names(species_list_clean)) species_list_clean$INCLUDE <- 1
                             
                             species_list_clean <- species_list_clean[order(species_list_clean$SPECIES),]
                             
