@@ -1,5 +1,6 @@
-### BotanizeR_collect
-BotanizeR_imageresize <- function(long = NA, lat = NA, radius = 1, backbone_list = NA){
+
+BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
+                                   backbone_list = NA){
   
   # 1. Controls ----
   # Package dependencies
@@ -22,7 +23,8 @@ BotanizeR_imageresize <- function(long = NA, lat = NA, radius = 1, backbone_list
   sp_polygon <- rgeos::writeWKT(sp_polygon, byid = FALSE)
   
   # as.data.frame(name_lookup("Tracheophyta")$data)
-  species <- rgbif::occ_data(taxonKey=7707728, geometry = sp_polygon)$data$species
+  species <- rgbif::occ_data(taxonKey = 7707728,
+                             geometry = sp_polygon)$data$species
   
   species <- as.data.frame.table(table(species))
   names(species) <- toupper(names(species))
@@ -30,7 +32,7 @@ BotanizeR_imageresize <- function(long = NA, lat = NA, radius = 1, backbone_list
   if(is.na(backbone_list)){
     
   } else {
-    species <- inner_join(backbone_list, species, by="SPECIES")
+    species <- inner_join(backbone_list, species, by = "SPECIES")
   }
 }
 
