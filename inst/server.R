@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
     species_list <- species_list[order(species_list$SPECIES),]
     
     # Make species list a reactive object
-    species_list_reactive <- reactiveValues(df_data = species_list)
+    species_list_reactive <- reactiveValues(df_data = species_list, df_data_0 = species_list)
     species_list_uploaded_reactive <- reactiveValues(df_data = NULL)
     
     # Set reactive initial counts
@@ -268,7 +268,11 @@ shinyServer(function(input, output, session) {
             temp_species_list <- BotanizeR_species[which(BotanizeR_species[,input$select_specieslist]==1),]
         } 
         
+        output$upload_error <- renderUI("")
+        output$local_list_error <- renderUI("")
+        
         species_list_reactive$df_data <- temp_species_list[order(temp_species_list$SPECIES),]
+        species_list_reactive$df_data_0 <- temp_species_list[order(temp_species_list$SPECIES),]
         counts_reactive$init_count <- sum(temp_species_list$COUNT)
         counts_reactive$init_score <- sum(temp_species_list$SCORE)
         counts_reactive$init_count_species <- sum(temp_species_list$COUNT > 0)
@@ -362,7 +366,8 @@ shinyServer(function(input, output, session) {
         HTML(paste0("<br>",upload_text))
     })
     output$upload_error <- renderUI("")
-
+    output$local_list_error <- renderUI("")
+    
     # The second upload note in the quiz pop-up only works with its own output
     output$upload_note_2 <- renderUI({
         HTML(paste0("<br>",upload_text))
@@ -384,6 +389,7 @@ shinyServer(function(input, output, session) {
             counts_reactive$omit <- TRUE
             
             species_list_reactive$df_data <- species_list_uploaded
+            species_list_reactive$df_data_0 <- species_list_uploaded
             species_list_uploaded_reactive$df_data <- species_list_uploaded
             counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
             counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
@@ -439,6 +445,7 @@ shinyServer(function(input, output, session) {
             })
             
             species_list_reactive$df_data <- species_list_uploaded
+            species_list_reactive$df_data_0 <- species_list_uploaded
             species_list_uploaded_reactive$df_data <- species_list_uploaded
             counts_reactive$init_count <- sum(species_list_uploaded$COUNT)
             counts_reactive$init_score <- sum(species_list_uploaded$SCORE)
@@ -481,6 +488,30 @@ shinyServer(function(input, output, session) {
         }
     })
     
+    ### Subset species list based on GBIF records for defined coordinates ----
+    observeEvent(input$local_list, {
+        #print(paste("Longitude:",input$longitude))
+        #print(paste("Latitude:",input$latitude))
+        
+        output$local_list_error <- renderUI("")
+        
+        counts_reactive$omit <- TRUE
+        
+        try(species_list_local <- BotanizeR_getlocallist(lat = input$latitude, long = input$longitude, backbone_list = isolate(species_list_reactive$df_data_0)))
+
+        if(nrow(species_list_local)>0){
+            species_list_reactive$df_data <- species_list_local
+            counts_reactive$init_count <- sum(species_list_local$COUNT)
+            counts_reactive$init_score <- sum(species_list_local$SCORE)
+            counts_reactive$init_count_species <- sum(species_list_local$COUNT > 0)
+            counts_reactive$init_score_species <- sum(species_list_local$SCORE > 0)
+        } else {
+            output$local_list_error <- renderUI({
+                HTML("<i>No species from backbone list found for given coordinates!</i>")
+            })
+        }
+    })
+        
     ### Download a species list ----
     output$download <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 
