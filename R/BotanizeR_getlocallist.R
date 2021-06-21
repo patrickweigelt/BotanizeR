@@ -29,10 +29,11 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   species <- as.data.frame.table(table(species))
   names(species) <- toupper(names(species))
   
-  if(is.na(backbone_list)){
-    
+  if(all(is.na(backbone_list))){
+    return(species)
   } else {
     species <- inner_join(backbone_list, species, by = "SPECIES")
+    return(species)
   }
 }
 
