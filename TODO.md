@@ -116,6 +116,8 @@
 * Map floraweb distribution based on api
 * switch entirely to httr to get rid of temp folders
 * jpg, JPG, JPEG, jpeg etc. for own folder
+* Control for coordinates outside -180:180; -89:89  
+
 
 ## 3. Layout
 * ~~center smaller images in slider~~
