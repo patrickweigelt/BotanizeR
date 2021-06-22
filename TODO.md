@@ -55,26 +55,17 @@
 * ~~Summary statistics~~
   - ~~number of species practiced, number correct as bar plot? (quiz page popup)~~
   - ~~number of species in currently loaded species list (setup page)~~
-* Make some of the elements in the about page dependent on the resources used
-  - If floraweb used: Floraweb credits
-  - If own images used load file with image credits
 * ~~Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?~~
 * ~~App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture~~
 * ~~Why does species list page update immediately after setup changes and quiz doesn't?~~
 * ~~Only 1000 entries in species list dropdown. Use Selectize~~
 * ~~Some UK pictures don't exist as large pictures and hence don't show up~~
-  - ~~now that the images scale properly we could load the larger ones for these cases. Need control for this~~  
+  - ~~now that the images scale properly we could load the larger ones for these cases. Need control for this~~
 * ~~Make images scale automatically in slickR slider~~
-* ~~Add image credits below slider~~
-  - **modify BotanizeR_collect to keep track of image source** <- started  
 * ~~Map legend and credits~~
 * ~~separate UK and DE credits in quiz hints~~
 * Allow defining images not used in quiz
 * ~~no map text~~
-* **redo message images (harmonize)**
-* instructions
-  - how does table for upload have to look like
-  - About tab: more details; dynamic depending on what is shown
 * ~~if map is checked, going to next species is slow because new map loads (uncheck first)~~
 * ~~make whether setup tab is shown a variable in config~~
   - ~~include upload and download of species list in quiz if setup tab is disabled~~
@@ -87,13 +78,25 @@
 * Think about the draggable popup (already implemented but commented out)
 * Multiple Choice
 * ~~Stats, counting last one if identified?~~
-* Flora Incognita images?  
-* ~~unique species counting too few due to overall table?~~  
-* ~~include == 0 if floraweb down? <- not the case~~  
-* ~~ownhints uncheck when uploading species list in quiz popup~~  
+* Flora Incognita images?
+* ~~unique species counting too few due to overall table?~~
+* ~~include == 0 if floraweb down? <- not the case~~
+* ~~ownhints uncheck when uploading species list in quiz popup~~
 * ~~Quiz sometimes shows hints of previous species; Links to floraweb and ukplantatlas are fine though~~
 * ~~replace species names in descriptions be "The species"~~
-* Size of right quiz column jumping include something to have a minimum width
+* Size of right quiz column jumping include something to have a minimum width (scrollbar)
+* ~~Add image credits below slider~~
+  - **modify BotanizeR_collect to keep track of image source** <- started
+* Make some of the elements in the about page dependent on the resources used
+  - If floraweb used: Floraweb credits
+  - If own images used load file with image credits
+* instructions
+  - how does table for upload have to look like
+  - About tab: more details; dynamic depending on what is shown
+* **redo message images (harmonize)**
+* ~~button to disable dynamic probabilities~~
+* Hints are visible for a short moment when going on to next species
+* ~~check/uncheck all button for hints~~
 
 
 
@@ -107,7 +110,7 @@
 * plot first image before map is loaded to safe time.
 * loading bar for map
 * add synonyms
-* species list Göttingen
+* ~~species list Göttingen~~  
 * ~~check image folder path in local shiny app~~
 * make error messages in case floraweb is not available
 * ~~define columns needed for species list~~
@@ -128,8 +131,8 @@
 * ~~move items~~
   - ~~download button~~
 * ~~Make correct more prominent and easier to go to next species; info messages~~ 
-* **Make correct easier to go to next species** 
-* **Clean info messages** 
+* ~~Make correct easier to go to next species~~ 
+* ~~Clean info messages~~ 
 * Make online resources in Setup collapsable  
 
 ## 4. Server

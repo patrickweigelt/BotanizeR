@@ -48,7 +48,8 @@ shinyServer(function(input, output, session) {
                                       init_score = 0,
                                       init_count_species = 0,
                                       init_score_species = 0,
-                                      omit = FALSE)
+                                      omit = FALSE,
+                                      dynamic = dynamic_probabilities)
     
     # Define lookup tables for hint variables and their labels
     hints_floraweb_lookup <- data.frame(variable = c("German name","family","status","description","habitat","map"),
@@ -87,6 +88,13 @@ shinyServer(function(input, output, session) {
     
     # 1. Setup ----
     
+    ## Quiz Controls ----
+    
+    ### Probabilities
+    observeEvent(input$quiz_probs, ignoreInit = TRUE, {
+        counts_reactive$dynamic <- (input$quiz_probs == "dynamic")
+    })
+    
     ## Online resources ----
     
     ### Render checkboxes ----
@@ -108,7 +116,7 @@ shinyServer(function(input, output, session) {
                            choices = c("Chorology"),
                            selected = c("Chorology")[(chorology == "chorology")])
     })
-
+    
     # UK Plant Atlas
     output$ukplantatlas_images <- renderUI({
         checkboxGroupInput(inputId = "ukplantatlas_images", label = "UK & Ireland Plant Atlas",
@@ -121,7 +129,63 @@ shinyServer(function(input, output, session) {
                            selected = hints_ukplantatlas_lookup$show[which(
                                hints_ukplantatlas_lookup$variable %in% hints_ukplantatlas)])
     })
+    
+    
+    ### Select/Unselect all ----
+    
+    # Floraweb
+    observeEvent(input$selectall_fw, {
+        
+        updateCheckboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
+                                 choices = c("Images"),
+                                 selected = c("Images"))
+        
+        updateCheckboxGroupInput(inputId = "floraweb_hints", label = NULL,
+                                 choices = hints_floraweb_lookup$show,
+                                 selected = hints_floraweb_lookup$show)
+        
+        
+        updateCheckboxGroupInput(inputId = "chorology_hint", label = NULL,
+                                 choices = c("Chorology"),
+                                 selected = c("Chorology"))
+    })
 
+    observeEvent(input$unselectall_fw, {
+        
+        updateCheckboxGroupInput(inputId = "floraweb_images", label = "Germany Floraweb",
+                                 choices = c("Images"))
+        
+        updateCheckboxGroupInput(inputId = "floraweb_hints", label = NULL,
+                                 choices = hints_floraweb_lookup$show)
+        
+        
+        updateCheckboxGroupInput(inputId = "chorology_hint", label = NULL,
+                                 choices = c("Chorology"))
+    })
+    
+        
+    # UK Plant Atlas
+    observeEvent(input$selectall_uk, {
+        
+        updateCheckboxGroupInput(inputId = "ukplantatlas_images", label = "UK & Ireland Plant Atlas",
+                                 choices = c("Images"),
+                                 selected = c("Images"))
+        
+        updateCheckboxGroupInput(inputId = "ukplantatlas_hints", label = NULL,
+                                 choices = hints_ukplantatlas_lookup$show,
+                                 selected = hints_ukplantatlas_lookup$show)
+    })
+
+    observeEvent(input$unselectall_uk, {
+        
+        updateCheckboxGroupInput(inputId = "ukplantatlas_images", label = "UK & Ireland Plant Atlas",
+                                 choices = c("Images"))
+        
+        updateCheckboxGroupInput(inputId = "ukplantatlas_hints", label = NULL,
+                                 choices = hints_ukplantatlas_lookup$show)
+    })
+    
+    
     ### Change content of reactive hints ----
     observeEvent(input$floraweb_images, ignoreNULL = FALSE, ignoreInit = TRUE, {
         hints_reactive$image_floraweb <- ("Images" %in% input$floraweb_images)
@@ -834,7 +898,7 @@ shinyServer(function(input, output, session) {
     name_hints <- function(x) {
         setNames(x, gsub("_"," ",gsub("ownhint_","",x)))
     }
-    
+
     output$quiz_options <- renderUI({
         checkboxGroupInput(inputId = "quiz_options", label = "Show:",
                            choices = name_hints(c(hints_floraweb_lookup$show[which(
@@ -876,7 +940,7 @@ shinyServer(function(input, output, session) {
     m <- reactiveValues(map=TRUE) #,hints=TRUE)
     
 
-    # New plant observe
+    ### New plant observe ----
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         
         # set map to false to not plot one before radiobuttons are set
@@ -931,8 +995,13 @@ shinyServer(function(input, output, session) {
             
             # random species
             temp_data <- isolate(species_list_reactive$df_data)
-            i$i <- sample(1:nrow(temp_data), 1, prob = ((temp_data$COUNT - temp_data$SCORE + 1)/
-                                                 (temp_data$SCORE+1))*temp_data$INCLUDE)
+            
+            if(isolate(counts_reactive$dynamic)){
+                i$i <- sample(1:nrow(temp_data), 1, prob = ((temp_data$COUNT - temp_data$SCORE + 1)/
+                                                                (temp_data$SCORE+1))*temp_data$INCLUDE)
+            } else {
+                i$i <- sample(1:nrow(temp_data), 1, prob = temp_data$INCLUDE)
+            }
             
             temp_row <- temp_data[isolate(i$i),]
             

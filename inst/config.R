@@ -11,6 +11,8 @@ setup = TRUE
 online_ressources = TRUE
 # online_ressources = FALSE
 
+# Shall species be drawn using probabilities updated depending on practicing success or with uniform probabilities?
+dynamic_probabilities <- TRUE
 
 ### Include Google analytics
 # Default

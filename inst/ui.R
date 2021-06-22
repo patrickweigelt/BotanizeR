@@ -217,10 +217,16 @@ if(setup){tabPanel(
                br(),
                uiOutput(outputId = "own_links"),
                br(),
-               h5("Image folders"),
+               HTML("<b>Image folders</b>"), br(),
                shinyDirButton('image_folder', 'Select a folder', 'Please select a folder', FALSE),
                actionButton("remove_folder", "Remove last"),
                htmlOutput("list_imagefolders"),
+               br(),
+               h4("Quiz Controls"),
+               br(),
+               radioButtons("quiz_probs", "Species sample probabilities",
+                            choices = c("dynamic","uniform"),
+                            selected = ifelse(dynamic_probabilities, "dynamic", "uniform")),
                br()
         ),
         if(online_ressources) {column(4,
@@ -229,8 +235,13 @@ if(setup){tabPanel(
                uiOutput(outputId = "floraweb_images"),
                uiOutput(outputId = "floraweb_hints"),
                uiOutput(outputId = "chorology_hint"),
+               actionLink("selectall_fw","Select all"), HTML(" / "), actionLink("unselectall_fw","Unselect all"),
+               br(),
+               br(),
                uiOutput(outputId = "ukplantatlas_images"),
                uiOutput(outputId = "ukplantatlas_hints"),
+               actionLink("selectall_uk","Select all"), HTML(" / "), actionLink("unselectall_uk","Unselect all"),
+               br(),
                br()
         )}
     )
