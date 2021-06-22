@@ -498,20 +498,27 @@ shinyServer(function(input, output, session) {
         counts_reactive$omit <- TRUE
         
         try(species_list_local <- BotanizeR_getlocallist(lat = input$latitude, long = input$longitude, backbone_list = isolate(species_list_reactive$df_data_0)))
-
-        if(nrow(species_list_local)>0){
-            species_list_reactive$df_data <- species_list_local
-            counts_reactive$init_count <- sum(species_list_local$COUNT)
-            counts_reactive$init_score <- sum(species_list_local$SCORE)
-            counts_reactive$init_count_species <- sum(species_list_local$COUNT > 0)
-            counts_reactive$init_score_species <- sum(species_list_local$SCORE > 0)
+        
+        if(exists("species_list_local")){
+            if(nrow(species_list_local)>0){
+                species_list_reactive$df_data <- species_list_local
+                counts_reactive$init_count <- sum(species_list_local$COUNT)
+                counts_reactive$init_score <- sum(species_list_local$SCORE)
+                counts_reactive$init_count_species <- sum(species_list_local$COUNT > 0)
+                counts_reactive$init_score_species <- sum(species_list_local$SCORE > 0)
+            } else {
+                output$local_list_error <- renderUI({
+                    HTML("<i>No species from backbone list found for given coordinates!</i>")
+                })
+            }
         } else {
             output$local_list_error <- renderUI({
-                HTML("<i>No species from backbone list found for given coordinates!</i>")
+                HTML("<i>GBIF occurrences could not be loaded. Check coordinates!</i>")
             })
+            
         }
     })
-        
+    
     ### Download a species list ----
     output$download <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 

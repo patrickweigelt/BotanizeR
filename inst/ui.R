@@ -201,7 +201,7 @@ if(setup){tabPanel(
                br(),
                h5("Subset by local GBIF occurrences:"),
                numericInput("longitude", "Longitude:", 9.905548, min = -180, max = 180),
-               numericInput("latitude", "Latitude:", 51.545483, min = -90, max = 90),
+               numericInput("latitude", "Latitude:", 51.545483, min = -89, max = 89),
                actionButton("local_list", "Subset list"),
                br(),br(),
                htmlOutput("local_list_error"),
