@@ -30,3 +30,4 @@ Imports:
   slickR,
   sp,
   XML
+RoxygenNote: 7.1.1
