@@ -7,17 +7,6 @@ BotanizeR_collect <- function(species_row, image_floraweb=TRUE, hints_floraweb =
   # Information can come from floraweb and/or from own resources
   
   # 1. Controls ----
-  # Package dependencies
-  library(httr)
-  require(imager)
-  require(XML)
-  if("map" %in% hints_floraweb){
-    require(sf)
-  }
-  if("mapuk" %in% hints_ukplantatlas & !only_links){
-    require(magick)
-  }
-  
   # Arguments
   if(!all(hints_floraweb %in% c("map","description","status","habitat","family","German name"))){
     stop('"hints_floraweb" must be a subset of c("map","description","status","habitat","family","German name")')

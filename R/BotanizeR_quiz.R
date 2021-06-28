@@ -8,19 +8,7 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
                            image_width = 500){
   
   # 1. Controls ----
-  # Package dependencies
-  require(imager)
-  require(XML)
-  if("map" %in% hints_floraweb){
-    require(sf)
-  }
-  if("mapuk" %in% hints_ukplantatlas){
-    require(magick)
-  }
-  
   # Arguments
-  
-  
 
   # 2. Prep ----
   init_count <- init_count
@@ -179,7 +167,4 @@ BotanizeR_quiz <- function(species_list, image_floraweb=TRUE,
                    init_attempts = init_attempts, max_attempts, image_width)
   }
 }
-
-
-
 

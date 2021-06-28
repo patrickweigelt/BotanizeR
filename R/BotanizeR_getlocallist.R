@@ -3,12 +3,6 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
                                    backbone_list = NA){
   
   # 1. Controls ----
-  # Package dependencies
-  library(sp)
-  library(rgeos)
-  library(rgbif)
-  library(dplyr)
-  
   # Arguments
 
   # 2. Code ----

@@ -2,9 +2,6 @@
 BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA, max_height = NA, int_type = 1, quality = 1){
   
   # 1. Controls ----
-  # Package dependencies
-  require(imager)
-
   # Arguments
 
   
