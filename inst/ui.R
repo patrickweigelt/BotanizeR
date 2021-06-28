@@ -2,6 +2,10 @@
 
 # Packages
 library(BotanizeR)
+library(shinythemes)
+library(slickR)
+library(shinyFiles)
+library(shinyBS)
 
 # Load starting configuration
 source("config.R")
@@ -193,7 +197,7 @@ tabPanel(
 if(setup){tabPanel(
   h1(id = "panel3", "Setup"),
   fluidRow(
-    column(4, style="padding-right: 8%;",
+    column(4, style="padding-right: 7%;",
            h4("Species list"),
            br(),
            HTML("<b>Select a species list</b>"),
@@ -213,19 +217,19 @@ if(setup){tabPanel(
            if(gbif)br(),
            if(gbif){
              fluidRow(
-               column(width = 3, style="min-width: 125px",
+               column(width = 3, style="min-width: 100px",
                       numericInput("longitude", "Longitude:", 9.93558, 
                                    step = 0.00001, min = -180, max = 180)
                ),
-               column(width = 3, style="min-width: 125px",
+               column(width = 3, style="min-width: 100px",
                       numericInput("latitude", "Latitude:", 51.53290, 
                                    step = 0.00001, min = -89, max = 89)
                ),
-               column(width = 3, style="min-width: 125px",
+               column(width = 3, style="min-width: 100px",
                       numericInput("radius", "Radius:", 1, 
                                    step = 0.01, min = 0.01, max = 100)
                ),
-               column(width = 3, style="min-width: 125px; margin-top: 25px;",
+               column(width = 3, style="min-width: 100px; margin-top: 25px;",
                       actionButton("local_list", "Subset list")
                )
              )},
@@ -238,7 +242,7 @@ if(setup){tabPanel(
            downloadButton("download","Download your progress"),
            br()
     ),
-    column(4, style="padding-right: 8%;",
+    column(4, style="padding-right: 7%;",
            h4("Custom material"),
            br(),
            HTML("Choose here which of the species characteristics and image 
@@ -272,7 +276,7 @@ if(setup){tabPanel(
            br()
     ),
     if(online_ressources) {
-      column(4, style="padding-right: 8%;",
+      column(4, style="padding-right: 7%;",
              h4("Online resources"),
              br(),
              HTML(
