@@ -1,16 +1,6 @@
 
 # Packages
-library(shiny)
 library(BotanizeR)
-# library(imager)
-library(XML)
-library(sf)
-library(slickR)
-library(htmltools)
-library(shinyFiles)
-library(httr)
-# library(shinyjqui)
-# library(shinyjs)
 
 shinyServer(function(input, output, session) {
     
@@ -225,16 +215,8 @@ shinyServer(function(input, output, session) {
                                                                   value = TRUE))])
     })
 
-    # output$own_hints <- renderUI({
-    #     checkboxGroupInput(inputId = "own_hints", label = "Own hints",
-    #                        choices = grep("ownhint", colnames(species_list),
-    #                                               value = TRUE),
-    #                        selected = hints_custom[which(hints_custom %in%
-    #                                                          grep("ownhint", colnames(species_list),
-    #                                                               value = TRUE))])
-    # })
-    
-    observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
+
+    observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { 
         hints_reactive$hints_custom <- input$own_hints
     })
 
@@ -248,16 +230,8 @@ shinyServer(function(input, output, session) {
                                                                        value = TRUE))])
     })
 
-    # output$own_links <- renderUI({
-    #     checkboxGroupInput(inputId = "own_links", label = "Own images",
-    #                        choices = grep("imagelink", colnames(species_list),
-    #                                               value = TRUE),
-    #                        selected = imagelinks_custom[which(imagelinks_custom %in%
-    #                                                               grep("imagelink", colnames(species_list),
-    #                                                                    value = TRUE))])
-    # })
-    
-    observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, { # OR ignoreInit = FALSE?
+
+    observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, { 
         hints_reactive$imagelinks_custom <- input$own_links
     })
     
@@ -297,8 +271,7 @@ shinyServer(function(input, output, session) {
     
     # Text note
     output$selectlist_note <- renderUI({
-        HTML(paste0("<br>",
-                    "Select a species list:"))
+        HTML("Choose one of the available predefined species lists for practicing.")
     })
     
     # Render drop down
@@ -310,12 +283,7 @@ shinyServer(function(input, output, session) {
                     selected = ifelse(length(species_list_uploaded_reactive$df_data) > 0, "uploaded", species_list_selected))
     })
 
-    # output$select_specieslist <- renderUI({
-    #     selectInput("select_specieslist", label = NULL,
-    #                 choices = species_list_filter,
-    #                 selected = species_list_selected)
-    # })
-    
+
     # Make condition that input is needed to initialize drop_down
     y <- reactive({
         req(input$select_specieslist)
@@ -360,13 +328,13 @@ shinyServer(function(input, output, session) {
     
     # Species list summary note
     output$summary_note <- renderUI({
-        HTML(paste0("<i>",
+        HTML(paste0("<p style='color:green';><i>",
                     nrow(species_list_reactive$df_data),
                     " species; ", 
                     sum(species_list_reactive$df_data$INCLUDE),
                     " included; ", 
                     sum(species_list_reactive$df_data$COUNT>0),
-                    " practiced.</i>"))
+                    " practiced.</i><p>"))
     })
 
     ### Upload a species list ----
@@ -422,19 +390,23 @@ shinyServer(function(input, output, session) {
     }
     
     
-    upload_text <- "If you ran the quiz in a previous session and you saved your progress, 
+    upload_text <- paste0("<br>",
+                    "If you ran the quiz in a previous session and you saved your progress, 
                     you can upload your current scores as a .csv file here. You can also upload 
-                    a modified species list with another set of species or your own hints."
+                    a modified species list with another subset of species or your own hints and image links. 
+                    Stick to the structure of the downloaded species list or check the package ",
+                    "<a target='_blank' href='https://github.com/patrickweigelt/BotanizeR'>vignette</a>",
+                    " for more details.")
 
     output$upload_note <- renderUI({
-        HTML(paste0("<br>",upload_text))
+        HTML(upload_text)
     })
     output$upload_error <- renderUI("")
     output$local_list_error <- renderUI("")
     
     # The second upload note in the quiz pop-up only works with its own output
     output$upload_note_2 <- renderUI({
-        HTML(paste0("<br>",upload_text))
+        HTML(upload_text)
     })
     output$upload_error_2 <- renderUI("")
     
@@ -480,9 +452,9 @@ shinyServer(function(input, output, session) {
             
         } else if (is.character(species_list_uploaded)){
             output$upload_error <- renderUI({
-                HTML(paste0("<i>Species list could not be loaded. ",
+                HTML(paste0("<p style='color:#CD2626';><i>Species list could not be loaded. ",
                             species_list_uploaded,
-                            "</i>"))
+                            "</i><p>"))
             })
         }
     })
@@ -499,13 +471,13 @@ shinyServer(function(input, output, session) {
         if(is.data.frame(species_list_uploaded)){
             output$upload_error <- renderUI("")
             output$upload_error_2 <- renderUI({
-                HTML(paste0("<i>",
+                HTML(paste0("<p style='color:green';><i>",
                             nrow(species_list_uploaded),
                             " species; ", 
                             sum(species_list_uploaded$INCLUDE),
                             " included; ", 
                             sum(species_list_uploaded$COUNT>0),
-                            " practiced.</i>"))
+                            " practiced.</i></p>"))
             })
             
             species_list_reactive$df_data <- species_list_uploaded
@@ -545,14 +517,25 @@ shinyServer(function(input, output, session) {
             # click("newplant", asis = TRUE) # gets executed before hints are updated and may cause error due to missing columns
         } else if (is.character(species_list_uploaded)){
             output$upload_error_2 <- renderUI({
-                HTML(paste0("<i>Species list could not be loaded. ",
+                HTML(paste0("<p style='color:#CD2626';><i>Species list could not be loaded. ",
                             species_list_uploaded,
-                            "</i>"))
+                            "</i><p>"))
             })
         }
     })
     
-    ### Subset species list based on GBIF records for defined coordinates ----
+    ### Local GBIF list ----
+    
+    # Subset species list based on GBIF records for defined coordinates
+    
+    output$locallist_note <- renderUI({
+        HTML(paste0("Subset the chosen species list here for those species found in ",
+                   "<a target='_blank' href= 'https://www.gbif.org/'>GBIF</a>", 
+                   " for a defined radius around your desired location. Longitude 
+                   and latitude values should not exceed +/- 180° and +/- 90° after 
+                   adding the radius."))
+    })
+    
     observeEvent(input$local_list, {
         #print(paste("Longitude:",input$longitude))
         #print(paste("Latitude:",input$latitude))
@@ -561,7 +544,11 @@ shinyServer(function(input, output, session) {
         
         counts_reactive$omit <- TRUE
         
-        try(species_list_local <- BotanizeR_getlocallist(lat = input$latitude, long = input$longitude, backbone_list = isolate(species_list_reactive$df_data_0)))
+        try(species_list_local <- 
+                BotanizeR_getlocallist(lat = input$latitude, 
+                                       long = input$longitude, 
+                                       radius = input$radius,
+                                       backbone_list = isolate(species_list_reactive$df_data_0)))
         
         if(exists("species_list_local")){
             if(nrow(species_list_local)>0){
@@ -572,12 +559,12 @@ shinyServer(function(input, output, session) {
                 counts_reactive$init_score_species <- sum(species_list_local$SCORE > 0)
             } else {
                 output$local_list_error <- renderUI({
-                    HTML("<i>No species from backbone list found for given coordinates!</i>")
+                    HTML("<p style='color:#CD2626';><i>No species from backbone list found for given coordinates!</i></p>")
                 })
             }
         } else {
             output$local_list_error <- renderUI({
-                HTML("<i>GBIF occurrences could not be loaded. Check coordinates!</i>")
+                HTML("<p style='color:#CD2626';><i>GBIF occurrences could not be loaded. Check coordinates and radius!</i></p>")
             })
             
         }

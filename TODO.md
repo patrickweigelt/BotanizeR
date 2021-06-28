@@ -121,6 +121,7 @@
 * switch entirely to httr to get rid of temp folders
 * jpg, JPG, JPEG, jpeg etc. for own folder
 * ~~Control for coordinates outside -180:180; -89:89~~  
+* Consider getting rid of magick::read_image to simplify installation for Ubuntu users
 
 
 ## 3. Layout
