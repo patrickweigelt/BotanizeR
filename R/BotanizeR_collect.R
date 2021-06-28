@@ -1,15 +1,21 @@
+
+#' @export
 ### BotanizeR_collect
 BotanizeR_collect <-
-  function(species_row, image_floraweb=TRUE, hints_floraweb = NULL,
-           image_ukplantatlas=FALSE, hints_ukplantatlas = NULL,
+  function(species_row, image_floraweb = TRUE, hints_floraweb = NULL,
+           image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,
            hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
-           file_location="temporary", only_links = FALSE,
+           file_location = "temporary", only_links = FALSE,
            image_required = FALSE, image_width = NA){
     
     # Information can come from floraweb and/or from own resources
     
     # 1. Controls ----
     # Arguments
+    if(!is.data.frame(species_row)){
+      stop(".")
+    }
+    
     if(!all(hints_floraweb %in% c("map", "description", "status", "habitat",
                                   "family", "German name"))){
       stop('"hints_floraweb" must be a subset of c("map", "description",
