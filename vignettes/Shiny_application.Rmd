@@ -8,7 +8,7 @@ output:
     toc_depth: 2
     number_sections: true
 vignette: >
- %\VignetteIndexEntry{BotanizeR tutorial}
+ %\VignetteIndexEntry{BotanizeR Shiny application}
  %\VignetteEncoding{UTF-8} 
  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
