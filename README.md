@@ -69,13 +69,15 @@ custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_fl
 You can start the application with the function `BotanizeR_shiny()`.
 
 ``` r
-BotanizeR_shiny()
+BotanizeR_shiny(run = TRUE)
 ```
 
 ## 4. References and dependencies
-`BotanizeR` depends on `htmltools`, `httr`, `imager`, `magick`, `sf`, `shiny`, `shinyBS`, `shinyFiles`, `shinythemes`, `slickR` and `XML`.
+`BotanizeR` depends on `dplyr`, `htmltools`, `httr`, `imager`, `magick`,
+`rgbif`, `rgeos`, `sf`, `shiny`, `shinyBS`, `shinyFiles`, `shinythemes`,
+`slickR`, `sp` and `XML`.
 
-Sources  
+**Sources**  
 Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
 Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
 
