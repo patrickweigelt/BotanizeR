@@ -22,8 +22,8 @@ BotanizeR_collect(
 \arguments{
 \item{species_row}{a data.frame with the species for which we want to
 retrieve information. **It should contain the following columns**: 
-*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT* and
-*SCORE*}
+*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
+*SCORE* and *ATTEMPTS*}
 
 \item{image_floraweb}{logical that defines if images from
 [FloraWeb](https://www.floraweb.de) should be retrieved}
