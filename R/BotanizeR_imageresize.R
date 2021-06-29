@@ -1,3 +1,34 @@
+#' Resizing images
+#'
+#' Batch resize images for plotting in BotanizeR quiz.
+#'
+#' @param image_folders character vector that defines a specific folder from
+#' which the user wants to retrieve images
+#' 
+#' @param image_width number to define the width of the images.
+#' 
+#' @param max_height number to define the height of the images.
+#' 
+#' @param int_type number to define the type of the images.
+#' 
+#' @param quality number to define the quality of the images.
+#' 
+#' @return
+#' Resized images.
+#'
+#' @details Resizing images so they fit in the Shiny application.
+#'
+#' @references
+#'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+#'     R-package with Shiny-App for practicing plant identification in times of
+#'     online teaching and beyond. Plants, People, Planet.
+#'
+#' @seealso [imager::resize()]
+#'
+#' @examples
+#' # Example
+#' 
+#' @export
 
 BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
                                   max_height = NA, int_type = 1, quality = 1){
