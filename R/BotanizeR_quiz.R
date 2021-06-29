@@ -129,7 +129,6 @@
 #' 
 #' @export
 
-### BotanizeR ----
 BotanizeR_quiz <- function(
   species_list, image_floraweb = TRUE, 
   hints_floraweb = c("description", "status", "habitat", "family",
