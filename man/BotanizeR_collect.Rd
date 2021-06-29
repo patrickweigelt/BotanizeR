@@ -59,8 +59,7 @@ not loaded.}
 \item{image_width}{number to define the width of the images.}
 }
 \value{
-A functional distance matrix, **column** and **row** names follow
-**species name** from `traits_table` row names.
+Hints for the selected species.
 }
 \description{
 Collects information from [FloraWeb](https://www.floraweb.de) 

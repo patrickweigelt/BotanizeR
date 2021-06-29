@@ -45,8 +45,7 @@
 #' @param image_width number to define the width of the images.
 #' 
 #' @return
-#' A functional distance matrix, **column** and **row** names follow
-#' **species name** from `traits_table` row names.
+#' Hints for the selected species.
 #'
 #'
 #' @details This function combines with [BotanizeR::BotanizeR_quiz()]
@@ -137,11 +136,37 @@ BotanizeR_collect <-
     if(!is.data.frame(species_row)){
       stop(".")
     }
+    # nrow(species_row) == 1
+    
+    if(!is.logical(image_floraweb)){
+      stop("'image_floraweb' must be a logical that defines if images from
+      https://www.floraweb.de should be retrieved")
+    }
+    
+    if(!is.null(hints_floraweb)){
+      if(!is.character(hints_floraweb)){
+        stop("'hints_floraweb' must be either NULL or a character string with
+        the wanted hints.")
+      }
+    }
     
     if(!all(hints_floraweb %in% c("map", "description", "status", "habitat",
                                   "family", "German name"))){
       stop('"hints_floraweb" must be a subset of c("map", "description",
            "status", "habitat", "family", "German name")')
+    }
+    
+    
+    if(!is.logical(image_ukplantatlas)){
+      stop("'image_ukplantatlas' must be a logical that defines if images from
+      https://www.brc.ac.uk/plantatlas/ should be retrieved.")
+    }
+    
+    if(!is.null(hints_ukplantatlas)){
+      if(!is.character(hints_ukplantatlas)){
+        stop("'hints_ukplantatlas' must be either NULL or a character string
+        with the wanted hints.")
+      }
     }
     
     if(!all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
@@ -152,12 +177,56 @@ BotanizeR_collect <-
            "woodiness", "clonality")')
     }
     
-    # nrow(species_row) == 1
+    if(!is.null(imagelinks_custom)){
+      if(!is.character(imagelinks_custom)){
+        stop("'imagelinks_custom' must be either NULL or a character string
+        with the links for images.")
+      }
+    }
     
-    # all(hints_custom %in% colnames(species_row))
+    if(!all(imagelinks_custom %in% colnames(species_row))){
+      stop('"imagelinks_custom" must be present in the column names of
+           "species_row"')
+    }
     
-    # all(imagelinks_custom %in% colnames(species_row))
-
+    if(!is.character(image_folders)){
+      stop("'image_folders' must be a character vector that defines a specific
+      folder from which the user wants to retrieve images.")
+    }
+    
+    if(!is.null(hints_custom)){
+      if(!is.character(hints_custom)){
+        stop("'hints_custom' must be either NULL or a character string
+        with the wanted hints.")
+      }
+    }
+    
+    if(!all(hints_custom %in% colnames(species_row))){
+      stop('"hints_custom" must be present in the column names of
+           "species_row"')
+    }
+    
+    if(!is.character(file_location)){
+      stop("'file_location' must be a character vector that defines a specific
+      folder from which the user wants to retrieve images.")
+    }
+    
+    if(!is.logical(only_links)){
+      stop("'only_links' must be a logical that defines whether images should
+           be loaded into the R session.")
+    }
+    
+    if(!is.logical(image_required)){
+      stop("'image_required' must be a logical.")
+    }
+    
+    if(!is.na(image_width)){
+      if(!is.numeric(image_width)){
+        stop("'image_width' must be either NA or a numeric setting the width
+           of the images.")
+      }
+    }
+    
     # 2. Prep ----
     if(file_location == "temporary"){
       # Create folder for temp files
@@ -234,7 +303,8 @@ BotanizeR_collect <-
               floraweb_image <- TRUE       
               }, silent = TRUE)
             }
-            if (length(photolinks) > 1){ # check for cases with more than two images and put loop here
+            if (length(photolinks) > 1){ # check for cases with more than two
+              # images and put loop here
               if(only_links){
                 hints[[1]][[2]] <- paste0("https://www.floraweb.de",
                                           gsub("\\.\\.", "",
@@ -243,7 +313,8 @@ BotanizeR_collect <-
               } else {
                 try(hints[[1]][[2]] <- load.image(
                   paste0("https://www.floraweb.de",
-                         gsub("\\.\\.", "", gsub("\\.tmb", "", photolinks[2])))),
+                         gsub("\\.\\.", "", gsub("\\.tmb", "",
+                                                 photolinks[2])))),
                   silent = TRUE)
               }
             }
@@ -307,7 +378,6 @@ BotanizeR_collect <-
       }
     }
     
-    
     # 3.3 Images from own image link ----
     if(length(imagelinks_custom) > 0){
       for(i in 1:length(imagelinks_custom)){
@@ -337,7 +407,8 @@ BotanizeR_collect <-
         if(length(image_files) > 0){
           if(only_links){
             # WWW/image_folder in local shiny needs to be image_folder
-            # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to be image_folder
+            # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to
+            # be image_folder
             for(i in 1:length(image_files)){
               hints[[1]][[length(hints[[1]])+1]] <-
                 file.path(gsub(".*[wwwWWW]/(.+)$", ("\\1"), image_folders[k]),
@@ -530,7 +601,8 @@ BotanizeR_collect <-
                                       xmlAttrs)
         # mapuk <- unlist(mapuk[sapply(mapuk, function(x) any(grepl("\\.png", x)))])[1]
         mapuk_temp <- unlist(mapuk_temp[sapply(mapuk_temp,
-                                               function(x) any(grepl("atlas_maps", x)))])[1]
+                                               function(x){
+                                                 any(grepl("atlas_maps", x))})])[1]
         mapuk <- paste0("https://www.brc.ac.uk/plantatlas",
                         gsub("\\.\\.", "", mapuk_temp))
         if (!only_links){
