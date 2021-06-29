@@ -1,0 +1,59 @@
+---
+title: "BotanizeR Shiny application"
+author: "Patrick Weigelt, Pierre Denelle"
+date: "`r Sys.Date()`"
+output: 
+  html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+vignette: >
+ %\VignetteIndexEntry{BotanizeR tutorial}
+ %\VignetteEncoding{UTF-8} 
+ %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+ chunk_output_type: console
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 8, fig.height = 8)
+# Packages --------------------------------------------------------------------
+suppressPackageStartupMessages({
+  suppressWarnings({
+    library(BotanizeR)
+  })
+})
+
+options(tinytex.verbose = TRUE)
+```
+
+
+# Overview
+
+BotanizeR.
+
+\newpage
+
+# Main function
+## BotanizeR_shiny
+
+# Setup tab
+
+# Quiz tab
+
+# Species tab
+
+# References
+
+Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
+
+Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
+
+
+
