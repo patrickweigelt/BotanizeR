@@ -35,7 +35,34 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
   
   # 1. Controls ----
   # Arguments
+  if(!is.null(image_folders)){
+    if(!is.character(image_folders)){
+      stop("'image_folders' must be either NULL or a character vector that
+      defines a specific folder from which the user wants to retrieve images.")
+    }
+  }
   
+  if(!is.na(image_width)){
+    if(!is.character(image_width)){
+      stop("'image_width' must be either NA or a number defining the width of
+           the resized images.")
+    }
+  }
+  
+  if(!is.na(max_height)){
+    if(!is.character(max_height)){
+      stop("'max_height' must be either NA or a number defining the height of
+           the resized images.")
+    }
+  }
+  
+  if(!is.numeric(int_type)){
+    stop("'int_type' must be a numeric defining the type of the image.")
+  }
+  
+  if(!is.numeric(quality)){
+    stop("'quality' must be a numeric defining the quality of the images.")
+  }
   
   # 2. Prep ----
   
