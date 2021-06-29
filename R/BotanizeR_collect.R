@@ -1,10 +1,132 @@
 
+#' Collect information for quiz
+#'
+#' Collects information from [FloraWeb](https://www.floraweb.de) 
+#' (images, map and species descriptions) and from user defined image folders
+#' and columns in the species_list data.frame to show them as hints in
+#' [BotanizeR::BotanizeR_quiz()]
+#'
+#' @param species_row a data.frame with the species for which we want to
+#' retrieve information. **It should contain the following columns**: 
+#' *NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT* and
+#' *SCORE*
+#'
+#' @param image_floraweb logical that defines if images from
+#' [FloraWeb](https://www.floraweb.de) should be retrieved
+#'
+#' @param hints_floraweb character vector that defines what hints the user
+#' wants to retrieve from [FloraWeb](https://www.floraweb.de)
+#'
+#' @param image_ukplantatlas logical that defines if images from the
+#' [Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
+#' should be retrieved
+#'
+#' @param hints_ukplantatlas character vector that defines what hints the user
+#' wants to retrieve from the
+#' [Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
+#'
+#' @param imagelinks_custom character vector that defines a custom link to
+#' retrieve images
+#'
+#' @param image_folders character vector that defines a specific folder from
+#' which the user wants to retrieve images
+#' 
+#' @param hints_custom character vector that defines personal hints the user
+#' wants to use. **Note:** in that case, these hints should be present as
+#' columns in the `species_row` table.
+#' 
+#' @param file_location character vector that defines 
+#' 
+#' @param only_links logical, if `TRUE`, then the images behind the links are
+#' not loaded.
+#' 
+#' @param image_required logical.
+#' 
+#' @param image_width number to define the width of the images.
+#' 
+#' @return
+#' A functional distance matrix, **column** and **row** names follow
+#' **species name** from `traits_table` row names.
+#'
+#'
+#' @details This function combines with [BotanizeR::BotanizeR_quiz()]
+#'
+#' @references
+#'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+#'     R-package with Shiny-App for practicing plant identification in times of
+#'     online teaching and beyond. Plants, People, Planet.
+#'
+#' @seealso [BotanizeR::BotanizeR_quiz()]
+#'
+#' @examples
+#' # Species list for Germany with IDs from floraweb.de
+#' data(floraweb_species)
+#'
+#' # Select Acer campestre
+#' species_row = floraweb_species[which(floraweb_species$SPECIES ==
+#' "Acer campestre"),]
+#'
+#' # Some self-made hints
+#' species_row$ownhint_1 <- "very nice species"
+#' species_row$ownhint_2 <- "tree"
+#' species_row$ownhint_3 <- NA
+#' 
+#' # Image links from Wikipedia
+#' species_row$imagelink_1 <- "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Acer_campestre_005.jpg/1280px-Acer_campestre_005.jpg"
+#' species_row$imagelink_2 <- "https://upload.wikimedia.org/wikipedia/commons/f/f5/237_Acer_campestre.jpg"
+#' species_row$imagelink_3 <- ""
+#' 
+#' # only floraweb image + description + map
+#' hints <- BotanizeR_collect(
+#' species_row, image_floraweb = TRUE, hints_floraweb = c("map",
+#' "description", "status", "habitat", "family", "German name"),
+#' hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
+#' file_location="temporary")
+#' 
+#' par(oma = c(0, 0, 0, 10.5))
+#' plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
+#' 
+#' par(mar = rep(0.5, 4), oma = rep(0, 4))
+#' plot(hints$image[[1]], axes = FALSE)
+#' 
+#' message(hints$habitat)
+#' 
+#' # only custom image links + floraweb descriptions
+#' hints <- BotanizeR_collect(species_row, image_floraweb = FALSE,
+#' hints_floraweb = c("description", "status", "habitat", "family",
+#' "German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
+#' "imagelink_2", "imagelink_3"), image_folders = NULL,
+#' file_location = "temporary")
+#' 
+#' # floraweb + custom images + floraweb descriptions
+#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
+#' hints_floraweb = c("description", "status", "habitat", "family",
+#' "German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
+#' "imagelink_2", "imagelink_3"), image_folders = NULL,
+#' file_location = "temporary")
+#' 
+#' # floraweb + custom images + floraweb descriptions + custom description
+#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
+#' hints_floraweb = c("description", "status", "habitat", "family",
+#' "German name"), hints_custom = c("ownhint_1", "ownhint_2", "ownhint_3"),
+#' imagelinks_custom = c("imagelink_1", "imagelink_2", "imagelink_3"), 
+#' image_folders = NULL, file_location="temporary")
+#' 
+#' # floraweb + custom images + only custom description
+#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
+#' hints_floraweb = NULL, hints_custom = c("ownhint_1", "ownhint_2",
+#' "ownhint_3"), imagelinks_custom = c("imagelink_1", "imagelink_2",
+#' "imagelink_3"), image_folders = NULL, file_location = "temporary")
+#' 
+#' # To load images from your local computer, specify an image folder with
+#' pictures included. File names need to include the species names.
+#' 
 #' @export
-### BotanizeR_collect
+
 BotanizeR_collect <-
   function(species_row, image_floraweb = TRUE, hints_floraweb = NULL,
            image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,
-           hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
+           imagelinks_custom = NULL, image_folders = NULL, hints_custom = NULL,
            file_location = "temporary", only_links = FALSE,
            image_required = FALSE, image_width = NA){
     
@@ -35,8 +157,7 @@ BotanizeR_collect <-
     # all(hints_custom %in% colnames(species_row))
     
     # all(imagelinks_custom %in% colnames(species_row))
-    
-    
+
     # 2. Prep ----
     if(file_location == "temporary"){
       # Create folder for temp files
