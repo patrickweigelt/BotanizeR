@@ -1,4 +1,3 @@
-
 #' Collect information for quiz
 #'
 #' Collects information from [FloraWeb](https://www.floraweb.de) 
