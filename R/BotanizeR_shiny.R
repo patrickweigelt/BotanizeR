@@ -1,3 +1,22 @@
+#' Shiny application
+#'
+#' Running the Shiny application of BotanizeR.
+#'
+#' @param run a logical, when TRUE, the Shiny application is lauched
+#' 
+#' @return
+#' Shiny application.
+#'
+#' @references
+#'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+#'     R-package with Shiny-App for practicing plant identification in times of
+#'     online teaching and beyond. Plants, People, Planet.
+#'
+#' @examples
+#' # Example
+#' BotanizeR_shiny(run = FALSE)
+#' 
+#' @export
 
 BotanizeR_shiny <- function(run = FALSE) {
   appDir <- system.file(package = "BotanizeR")
