@@ -143,6 +143,109 @@ BotanizeR_quiz <- function(
   
   # 1. Controls ----
   # Arguments
+  if(!is.data.frame(species_list)){
+    stop(".")
+  }
+  
+  if(!is.logical(image_floraweb)){
+    stop("'image_floraweb' must be a logical that defines if images from
+      https://www.floraweb.de should be retrieved")
+  }
+  
+  if(!is.null(hints_floraweb)){
+    if(!is.character(hints_floraweb)){
+      stop("'hints_floraweb' must be either NULL or a character string with
+        the wanted hints.")
+    }
+  }
+  
+  if(!all(hints_floraweb %in% c("map", "description", "status", "habitat",
+                                "family", "German name"))){
+    stop('"hints_floraweb" must be a subset of c("map", "description",
+           "status", "habitat", "family", "German name")')
+  }
+  
+  if(!is.logical(image_ukplantatlas)){
+    stop("'image_ukplantatlas' must be a logical that defines if images from
+      https://www.brc.ac.uk/plantatlas/ should be retrieved.")
+  }
+  
+  if(!is.null(hints_ukplantatlas)){
+    if(!is.character(hints_ukplantatlas)){
+      stop("'hints_ukplantatlas' must be either NULL or a character string
+        with the wanted hints.")
+    }
+  }
+  
+  if(!all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
+                                    "statusuk", "trends", "perennation",
+                                    "lifeform", "woodiness", "clonality"))){
+    stop('"hints_ukplantatlas" must be a subset of c("mapuk", "familyuk",
+           "ecology", "statusuk", "trends", "perennation", "lifeform",
+           "woodiness", "clonality")')
+  }
+  
+  if(!is.null(imagelinks_custom)){
+    if(!is.character(imagelinks_custom)){
+      stop("'imagelinks_custom' must be either NULL or a character string
+        with the links for images.")
+    }
+  }
+  
+  if(!all(imagelinks_custom %in% colnames(species_row))){
+    stop('"imagelinks_custom" must be present in the column names of
+           "species_row"')
+  }
+  
+  if(!is.character(image_folders)){
+    stop("'image_folders' must be a character vector that defines a specific
+      folder from which the user wants to retrieve images.")
+  }
+  
+  if(!is.null(hints_custom)){
+    if(!is.character(hints_custom)){
+      stop("'hints_custom' must be either NULL or a character string
+        with the wanted hints.")
+    }
+  }
+  
+  if(!all(hints_custom %in% colnames(species_row))){
+    stop('"hints_custom" must be present in the column names of
+           "species_row"')
+  }
+  
+  if(!is.logical(case_sensitive)){
+    stop("'case_sensitive' must be a logical.")
+  }
+  
+  if(!is.character(file_location)){
+    stop("'file_location' must be a character vector that defines a specific
+      folder from which the user wants to retrieve images.")
+  }
+  
+  if(!is.numeric(startat)){
+    stop("'startat' must be a numeric")
+  }
+  
+  if(!is.numeric(init_count)){
+    stop("'init_count' must be a numeric")
+  }
+  
+  if(!is.numeric(init_score)){
+    stop("'init_score' must be a numeric")
+  }
+  
+  if(!is.numeric(init_attempts)){
+    stop("'init_attempts' must be a numeric")
+  }
+  
+  if(!is.numeric(max_attempts)){
+    stop("'max_attempts' must be a numeric")
+  }
+  
+  if(!is.numeric(image_width)){
+    stop("'image_width' must be a numeric")
+  }
   
   # 2. Prep ----
   init_count <- init_count
