@@ -1,18 +1,41 @@
+#' GBIF species list
+#'
+#' Using coordinates and a buffer radius, this function retrieves a certain
+#' species list from [GBIF](https://www.gbif.org/) database.
+#'
+#' @param long a numeric, defining the longitude of the wanted location.
+#' 
+#' @param lat a numeric, defining the latitude of the wanted location.
+#' 
+#' @param radius a numeric, defining the radius of the buffer around the
+#' wanted location.
+#' 
+#' @param backbone_list .
+#' 
+#' @return
+#' A species list.
+#'
+#' @references
+#'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+#'     R-package with Shiny-App for practicing plant identification in times of
+#'     online teaching and beyond. Plants, People, Planet.
+#'
+#' @examples
+#' # Example
+#' 
+#' @export
 
 BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
                                    backbone_list = NA){
   
   # 1. Controls ----
   # Arguments
-
-  # 2. Code ----
-  #lat	= 51.545483
-  #long = 9.905548
   
+  
+  # 2. Code ----
   sp_point <- sp::SpatialPoints(coords = matrix(c(long, lat), 1, 2))
   
   sp_polygon <- rgeos::gBuffer(sp_point, width = radius)
-  #plot(sp_polygon)
   
   sp_polygon <- rgeos::writeWKT(sp_polygon, byid = FALSE)
   
@@ -26,15 +49,11 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   if(all(is.na(backbone_list))){
     return(species)
   } else {
-    if(nrow(species)>0){
-      species <- inner_join(backbone_list, species, by = "SPECIES")
+    if(nrow(species) > 0){
+      species <- dplyr::inner_join(backbone_list, species, by = "SPECIES")
       return(species)
     } else {
-      return(backbone_list[0,])
+      return(backbone_list[0, ])
     }
   }
 }
-
-
-
- 
