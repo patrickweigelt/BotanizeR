@@ -1,7 +1,8 @@
 
 # BotanizeR <img src="figures/biodiv_gottingen_logo.png" align="right" alt="" width="200" />
 
-# BotanizeR
+The package website is **[here](https://patrickweigelt.github.io/BotanizeR/index.html)**.
+
 A quiz game to memorize plant species names and characteristics
 
 [![licence](https://img.shields.io/badge/Licence-GPL--3-blue.svg)](https://www.r-project.org/Licenses/GPL-3)
