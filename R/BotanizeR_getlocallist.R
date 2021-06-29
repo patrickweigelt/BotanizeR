@@ -30,7 +30,26 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   
   # 1. Controls ----
   # Arguments
+  if(!is.numeric(long)){
+    stop("'long' must be a numeric corresponding to the longitude of the wanted
+         location.")
+  }
   
+  if(!is.numeric(lat)){
+    stop("'lat' must be a numeric corresponding to the latitude of the wanted
+         location.")
+  }
+  
+  if(!is.numeric(radius)){
+    stop("'radius' must be a numeric corresponding to the radius of the buffer
+         around the wanted location.")
+  }
+  
+  # if(!is.na(backbone_list)){
+  #   if(!is.data.frame(backbone_list)){
+  #     stop("'backbone_list' must be a .")
+  #   }
+  # }
   
   # 2. Code ----
   sp_point <- sp::SpatialPoints(coords = matrix(c(long, lat), 1, 2))
