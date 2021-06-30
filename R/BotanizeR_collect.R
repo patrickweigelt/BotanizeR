@@ -188,9 +188,11 @@ BotanizeR_collect <-
            "species_row"')
     }
     
-    if(!is.character(image_folders)){
-      stop("'image_folders' must be a character vector that defines a specific
+    if(!is.null(image_folders)){
+      if(!is.character(image_folders)){
+        stop("'image_folders' must be a character vector that defines a specific
       folder from which the user wants to retrieve images.")
+      }
     }
     
     if(!is.null(hints_custom)){
@@ -251,15 +253,18 @@ BotanizeR_collect <-
       # I need this step because of an error in RCURL when getting the url
       try({
         download.file(paste0(
-          "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+          # "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
+          "https://www.floraweb.de/xsql/artenhome.xsql?suchnr=",
           species_row$NAMNR, "&"), 
           destfile = file.path(dir,"main.txt"), quiet = TRUE)
         html_main <- XML::htmlTreeParse(file = file.path(dir, "main.txt"),
                                         isURL = FALSE, isHTML = TRUE,
                                         useInternalNodes = TRUE)
-        infos_main <- XML::xpathApply(html_main, "//div[@id='content']//p",
-                                      xmlValue)})
-      
+        #infos_main <- XML::xpathApply(html_main, "//div[@id='content']//p",
+        #                              XML::xmlValue)})
+      infos_main <- XML::xpathApply(html_main, "//section//p",
+                                    XML::xmlValue)})
+
       if(image_floraweb & exists("html_main")){
         
         # download.file(
@@ -269,27 +274,30 @@ BotanizeR_collect <-
         
         # Photo
         if(length(XML::xpathApply(html_main, "//a[@class='imglink']",
-                                  xmlAttrs)) > 0 & 
+                                  XML::xmlAttrs)) > 0 & 
            grepl("foto\\.xsql",
                  XML::xpathApply(html_main, "//a[@class='imglink']",
-                                 xmlAttrs))[1]){
+                                 XML::xmlAttrs))[1]){
           
           download.file(
-            paste0("https://www.floraweb.de/pflanzenarten/",
+            # paste0("https://www.floraweb.de/pflanzenarten/",
+            paste0("https://www.floraweb.de/xsql/",
                    grep("foto\\.xsql",
                         XML::xpathApply(html_main, "//a[@class='imglink']",
-                                        xmlAttrs)[[1]], value = TRUE)), 
+                                        XML::xmlAttrs)[[1]], value = TRUE)), 
             destfile = file.path(dir, "photo.txt"), quiet = TRUE)
           html_photo <- XML::htmlTreeParse(file = file.path(dir, "photo.txt"),
                                            isURL = FALSE, isHTML = TRUE,
                                            useInternalNodes = TRUE)
-          infos_photo <- XML::xpathApply(html_photo, "//div[@id='content']//p",
-                                         xmlValue)
+          # infos_photo <- XML::xpathApply(html_photo, "//div[@id='content']//p",
+          #                                XML::xmlValue)
+          infos_photo <- XML::xpathApply(html_photo, "//section//p",
+                                         XML::xmlValue)
           # photolink <- XML::xpathApply(html_photo, "//div[@id='content']//img",
-          # xmlAttrs)[[1]][3]
+          # XML::xmlAttrs)[[1]][3]
           photolinks <- sapply(XML::xpathApply(html_photo,
-                                               "//div[@id='content']//img",
-                                               xmlAttrs),
+                                               "//section//img",
+                                               XML::xmlAttrs),
                                function(x) grep("bilder", x, value = TRUE))
           
           if(photolinks[1] != "../bilder/arten/"){
@@ -328,7 +336,7 @@ BotanizeR_collect <-
     
     if((length(hints_ukplantatlas) > 0) | image_ukplantatlas){
       try({
-        species_main <- GET(paste0("https://www.brc.ac.uk/plantatlas/plant/",
+        species_main <- httr::GET(paste0("https://www.brc.ac.uk/plantatlas/plant/",
                                    gsub("[\\.\\(\\)]", "",
                                         gsub(" ", "-",
                                              tolower(species_row$SPECIES)))))
@@ -339,7 +347,7 @@ BotanizeR_collect <-
       
       if(image_ukplantatlas & exists("species_main")){
         imagelinks <- XML::xpathApply(species_main, "//img[@class='img-responsive']",
-                                      xmlAttrs)
+                                      XML::xmlAttrs)
         
         if(length(imagelinks) > 0){
           imagelinks <- imagelinks[sapply(imagelinks,
@@ -364,7 +372,7 @@ BotanizeR_collect <-
           imagecredits <- unlist(
             XML::xpathApply(species_main,
                             "//div[@class='views-field views-field-field-acknowledgement']",
-                            xmlValue))
+                            XML::xmlValue))
           imagecredits <- imagecredits[2:length(imagecredits)]
           imagecredits <- gsub(" +", " ", imagecredits)
           
@@ -433,7 +441,7 @@ BotanizeR_collect <-
        only_links == FALSE){
       hints$images <- lapply(hints$images, function(x) {
         if(nrow(x) > image_width){
-          resize(x, size_x = image_width, size_y = image_width/nrow(x)*ncol(x))
+          imager::resize(x, size_x = image_width, size_y = image_width/nrow(x)*ncol(x))
         } else {
           x
         }
@@ -454,22 +462,22 @@ BotanizeR_collect <-
       # ecology
       if("habitat" %in% hints_floraweb){
         try({download.file(
-          paste0("https://www.floraweb.de/pflanzenarten/oekologie.xsql?suchnr=",
+          paste0("https://www.floraweb.de/xsql/oekologie.xsql?suchnr=",
                  species_row$NAMNR, "&"), 
           destfile = file.path(dir,"ecology.txt"), quiet = TRUE)
           html_ecology <- XML::htmlTreeParse(file = file.path(dir,"ecology.txt"),
                                              isURL = FALSE, isHTML = TRUE,
                                              useInternalNodes = TRUE)
           infos_ecology <- XML::xpathApply(html_ecology,
-                                           "//div[@id='content']//p",
-                                           xmlValue)
+                                           "//section//p",
+                                           XML::xmlValue)
         })
       }
       
       # biology
       if("description" %in% hints_floraweb & floraweb_image == FALSE){
         try({download.file(
-          paste0("https://www.floraweb.de/pflanzenarten/biologie.xsql?suchnr=",
+          paste0("https://www.floraweb.de/xsql/biologie.xsql?suchnr=",
                  species_row$NAMNR, "&"),
           destfile = file.path(dir, "biology.txt"), quiet = TRUE)
           html_biology <- XML::htmlTreeParse(file = file.path(dir,
@@ -477,8 +485,8 @@ BotanizeR_collect <-
                                              isURL = FALSE, isHTML = TRUE,
                                              useInternalNodes = TRUE)
           infos_biology <- XML::xpathApply(html_biology,
-                                           "//div[@id='content']//p",
-                                           xmlValue)
+                                           "//section//p",
+                                           XML::xmlValue)
         })
       }
       
@@ -486,10 +494,10 @@ BotanizeR_collect <-
       map <- NA
       if("map" %in% hints_floraweb & exists("html_main")){
         if(length(XML::xpathApply(html_main,
-                                  "//a[@class='imglink']", xmlAttrs)) > 0 & 
+                                  "//a[@class='imglink']", XML::xmlAttrs)) > 0 & 
            any(grepl("webkarten", XML::xpathApply(html_main,
                                                   "//a[@class='imglink']",
-                                                  xmlAttrs)))){
+                                                  XML::xmlAttrs)))){
           
           if(!exists("CGRS_Germany")){
             data(CGRS_Germany)
@@ -501,11 +509,11 @@ BotanizeR_collect <-
               grep(
                 "webkarten",
                 XML::xpathApply(html_main, "//a[@class='imglink']",
-                                xmlAttrs)[[which(grepl("webkarten",
+                                XML::xmlAttrs)[[which(grepl("webkarten",
                                                        XML::xpathApply(
                                                          html_main,
                                                          "//a[@class='imglink']",
-                                                         xmlAttrs)))]],
+                                                         XML::xmlAttrs)))]],
                 value = TRUE))
             
             download.file(
@@ -567,21 +575,21 @@ BotanizeR_collect <-
         }
         
         if(hints_floraweb[i] == "status" & exists("infos_main")){
-          hints[[i+1]] <- paste0(infos_main[[7]],"; \n",infos_main[[8]])
+          hints[[i+1]] <- paste0(infos_main[[5]],"; \n",infos_main[[6]])
         }
         
         if(hints_floraweb[i] == "family" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[6]])
+          hints[[i+1]] <- paste(infos_main[[4]])
         }
         
         if(hints_floraweb[i] == "German name" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[5]])
+          hints[[i+1]] <- paste(infos_main[[3]])
         }
         
         if(hints_floraweb[i] == "habitat" & exists("infos_ecology")){
-          if(infos_ecology[[3]] !=
+          if(infos_ecology[[2]] !=
              "Formation: \r\nTaxon keiner Formation zugeordnet "){
-            hints[[i+1]] <- paste(infos_ecology[[3]])
+            hints[[i+1]] <- paste(infos_ecology[[2]])
           }
         }
         
@@ -601,14 +609,14 @@ BotanizeR_collect <-
     if(length(hints_ukplantatlas) > 0 & exists("species_main")) { 
       
       infos <- XML::xpathApply(species_main, "//div[@class='field-items']",
-                               xmlValue)
+                               XML::xmlValue)
       
       # Map
       mapuk <- NA
       if("mapuk" %in% hints_ukplantatlas){
         try({mapuk_temp <- XML::xpathApply(species_main,
                                            "//img[@class='img-responsive']",
-                                           xmlAttrs)
+                                           XML::xmlAttrs)
         # mapuk <- unlist(mapuk[sapply(mapuk,
         #                              function(x) any(grepl("\\.png", x)))])[1]
         mapuk_temp <- unlist(mapuk_temp[sapply(mapuk_temp,
