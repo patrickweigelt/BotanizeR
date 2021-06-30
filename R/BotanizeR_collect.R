@@ -262,9 +262,9 @@ BotanizeR_collect <-
                                         useInternalNodes = TRUE)
         #infos_main <- XML::xpathApply(html_main, "//div[@id='content']//p",
         #                              XML::xmlValue)})
-      infos_main <- XML::xpathApply(html_main, "//section//p",
-                                    XML::xmlValue)})
-
+        infos_main <- XML::xpathApply(html_main, "//section//p",
+                                      XML::xmlValue)})
+      
       if(image_floraweb & exists("html_main")){
         
         # download.file(
@@ -300,7 +300,7 @@ BotanizeR_collect <-
                                                XML::xmlAttrs),
                                function(x) grep("bilder", x, value = TRUE))
           
-          if(photolinks[1] != "../bilder/arten/"){
+          if(photolinks[1] != "/bilder/arten/"){
             if(only_links){
               hints[[1]][[1]] <- paste0("https://www.floraweb.de",
                                         gsub("\\.\\.", "", photolinks[1]))
