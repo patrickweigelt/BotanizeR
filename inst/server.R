@@ -168,7 +168,7 @@ shinyServer(function(input, output, session) {
                                  choices = c("Chorology"),
                                  selected = c("Chorology"))
     })
-
+    
     observeEvent(input$unselectall_fw, {
         
         updateCheckboxGroupInput(inputId = "floraweb_images", 
@@ -183,7 +183,7 @@ shinyServer(function(input, output, session) {
                                  choices = c("Chorology"))
     })
     
-        
+    
     # UK Plant Atlas
     observeEvent(input$selectall_uk, {
         
@@ -196,7 +196,7 @@ shinyServer(function(input, output, session) {
                                  choices = hints_ukplantatlas_lookup$show,
                                  selected = hints_ukplantatlas_lookup$show)
     })
-
+    
     observeEvent(input$unselectall_uk, {
         
         updateCheckboxGroupInput(inputId = "ukplantatlas_images", 
@@ -229,28 +229,28 @@ shinyServer(function(input, output, session) {
     
     observeEvent(input$ukplantatlas_images, ignoreNULL = FALSE, 
                  ignoreInit = TRUE, {
-        hints_reactive$image_ukplantatlas <- 
-            ("Images" %in% input$ukplantatlas_images)
-    })
+                     hints_reactive$image_ukplantatlas <- 
+                         ("Images" %in% input$ukplantatlas_images)
+                 })
     
     observeEvent(input$ukplantatlas_hints, ignoreNULL = FALSE, 
                  ignoreInit = TRUE, {
-        temp_variables <- 
-            hints_ukplantatlas_lookup$variable[which(
-                hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
-        hints_reactive$hints_ukplantatlas <- 
-            hints_ukplantatlas_lookup$variable[which(
-                hints_ukplantatlas_lookup$variable %in% temp_variables)]
-    })
+                     temp_variables <- 
+                         hints_ukplantatlas_lookup$variable[which(
+                             hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
+                     hints_reactive$hints_ukplantatlas <- 
+                         hints_ukplantatlas_lookup$variable[which(
+                             hints_ukplantatlas_lookup$variable %in% temp_variables)]
+                 })
     
     ## Own resources ----
-
+    
     hints_available <- function(x, grp) {
         grep(grp, colnames(x)[apply(x, 2, function(y) any(!is.na(y) & y!=""))], 
              value = TRUE)
     }
     
-
+    
     ### Own hints ----
     output$own_hints <- renderUI({
         checkboxGroupInput(inputId = "own_hints", label = "Own hints",
@@ -262,11 +262,11 @@ shinyServer(function(input, output, session) {
                                         value = TRUE))])
     })
     
-
+    
     observeEvent(input$own_hints, ignoreNULL = FALSE, ignoreInit = TRUE, { 
         hints_reactive$hints_custom <- input$own_hints
     })
-
+    
     
     ## Own image links ----
     output$own_links <- renderUI({
@@ -279,7 +279,7 @@ shinyServer(function(input, output, session) {
                                         value = TRUE))])
     })
     
-
+    
     observeEvent(input$own_links, ignoreNULL = FALSE, ignoreInit = TRUE, { 
         hints_reactive$imagelinks_custom <- input$own_links
     })
@@ -290,14 +290,14 @@ shinyServer(function(input, output, session) {
                    filetypes = c('', 'png', 'PNG', 'jpeg',
                                  "JPEG", 'jpg', 'JPG'), 
                    allowDirCreate = FALSE)
-
+    
     # Update reactive image folder
     observeEvent(input$image_folder, {
         if(!is.na(input$image_folder["path"][1])){
             hints_reactive$image_folders[length(
                 hints_reactive$image_folders)+1] <- paste(
-                unlist(input$image_folder["path"])[which(
-                    unlist(input$image_folder["path"]) != "")], collapse="/")
+                    unlist(input$image_folder["path"])[which(
+                        unlist(input$image_folder["path"]) != "")], collapse="/")
         }
     })
     
@@ -317,7 +317,7 @@ shinyServer(function(input, output, session) {
                     hints_reactive$image_folders)]
         }
     })
-
+    
     
     ## Species list ----
     
@@ -334,16 +334,16 @@ shinyServer(function(input, output, session) {
         selectInput("select_specieslist", label = NULL,
                     choices = {
                         if (length(species_list_uploaded_reactive$df_data) > 0)
-                                   c(species_list_filter,"uploaded") else
-                                       species_list_filter
-                        },
+                            c(species_list_filter,"uploaded") else
+                                species_list_filter
+                    },
                     selected = 
                         ifelse(length(
                             species_list_uploaded_reactive$df_data) > 0, 
                             "uploaded", species_list_selected))
     })
-
-
+    
+    
     # Make condition that input is needed to initialize drop_down
     y <- reactive({
         req(input$select_specieslist)
@@ -401,7 +401,7 @@ shinyServer(function(input, output, session) {
                     sum(species_list_reactive$df_data$COUNT>0),
                     " practiced.</i><p>"))
     })
-
+    
     ### Upload a species list ----
     
     sanitize_input <- function(x) {
@@ -448,7 +448,7 @@ shinyServer(function(input, output, session) {
                                 species_list_clean[,c('COUNT','SCORE',
                                                       'ATTEMPTS', 'INCLUDE')], 
                                 2, function(x) is.numeric(x) & all(!is.na(x))
-                                ))){
+                            ))){
                                 return(species_list_clean)
                             } else {
                                 return("Not all entries of the columns 'COUNT', 
@@ -526,10 +526,10 @@ shinyServer(function(input, output, session) {
             
             # update species list drop down
             updateSelectInput(session,
-                           inputId = "select_specieslist", 
-                           label = NULL,
-                           choices = c(species_list_filter,"uploaded"),
-                           selected = "uploaded")
+                              inputId = "select_specieslist", 
+                              label = NULL,
+                              choices = c(species_list_filter,"uploaded"),
+                              selected = "uploaded")
             
             # Update ownhint checkboxes  
             updateCheckboxGroupInput(session,
@@ -607,7 +607,7 @@ shinyServer(function(input, output, session) {
                               label = NULL,
                               choices = c(species_list_filter,"uploaded"),
                               selected = "uploaded")
-
+            
             # Update ownhint checkboxes  
             updateCheckboxGroupInput(session,
                                      inputId = "own_hints", 
@@ -615,7 +615,7 @@ shinyServer(function(input, output, session) {
                                      choices = hints_available(
                                          species_list_uploaded, "ownhint"),
                                      selected = hints_reactive$hints_custom)
-             
+            
             # Update ownlink checkboxes
             updateCheckboxGroupInput(session,
                                      inputId = "own_links", 
@@ -707,7 +707,7 @@ shinyServer(function(input, output, session) {
             write.csv(species_list_save, file, row.names = FALSE)
         }
     )
-
+    
     # Handler for second download button in quiz pop-up
     output$download_2 <- downloadHandler(
         filename = function(){"BotanizeR_practised.csv"}, 
@@ -763,9 +763,9 @@ shinyServer(function(input, output, session) {
                                          c(hints_reactive$hints_floraweb,
                                            hints_reactive$hints_ukplantatlas,
                                            hints_reactive$chorology))
-                               ])
+                           ])
     })
-
+    
     # Dynamic map checkboxes
     output$options_maps <- renderUI({
         temp_options <- c("Map","Map UK","Chorology")[
@@ -773,7 +773,7 @@ shinyServer(function(input, output, session) {
                       c(hints_reactive$hints_floraweb,
                         hints_reactive$hints_ukplantatlas,
                         hints_reactive$chorology))
-            ]
+        ]
         
         if(length(temp_options)>0) {
             temp_options <- c("No map", temp_options)
@@ -783,9 +783,9 @@ shinyServer(function(input, output, session) {
                      choices = temp_options,
                      selected = "No map")
     })
-
+    
     ### Plant list ----
-
+    
     # Previous plant
     observeEvent(input$previous_plant, {
         current_species <- which(species_list_reactive$df_data$SPECIES == 
@@ -801,7 +801,7 @@ shinyServer(function(input, output, session) {
                                  options = 
                                      list(maxOptions = length(
                                          species_list_reactive$df_data$SPECIES)
-                                         ))
+                                     ))
         }
     })
     
@@ -820,14 +820,14 @@ shinyServer(function(input, output, session) {
                                  options = 
                                      list(maxOptions = length(
                                          species_list_reactive$df_data$SPECIES)
-                                         ))
+                                     ))
         }
         
     })
     
     observe({
         req(input$plant_list)
-
+        
         selected_species <- input$plant_list
         print(paste("List:",selected_species))
         
@@ -854,7 +854,7 @@ shinyServer(function(input, output, session) {
         ### Photos ----
         output$selected_sp_photo <- renderSlickR({
             if(length(sp_infos$images) == 0){
-                sp_infos$images = "no_picture.png"
+                sp_infos$images <- "no_picture.png"
             }
             imgs <- slick_list(
                 slick_div(sp_infos$images, 
@@ -911,7 +911,7 @@ shinyServer(function(input, output, session) {
                 "https://www.floraweb.de/pflanzenarten/artenhome.xsql?suchnr=",
                 species_list_reactive$df_data[j, "NAMNR"],
                 "&")
-
+            
             ukplantatlas_link <- paste0(
                 "https://www.brc.ac.uk/plantatlas/plant/",
                 gsub("[\\.\\(\\)]","",gsub(" ","-",tolower(selected_species))))
@@ -922,8 +922,8 @@ shinyServer(function(input, output, session) {
             temp_hints_ukplantatlas <- 
                 hints_reactive$hints_ukplantatlas[which(
                     hints_reactive$hints_ukplantatlas != "mapuk")]
-
-
+            
+            
             HTML(paste0(paste0(unlist(sapply(
                 sp_infos[names(sp_infos) %in% temp_hints_floraweb],
                 function(x) c(x,"</br></br>"))), collapse=""),
@@ -948,9 +948,9 @@ shinyServer(function(input, output, session) {
                        collapse="")
             ))
         })
-
+        
         output$selected_map_text <- renderUI({""})
-
+        
         ### Map ----
         observe({
             output$selected_sp_map <- renderUI({
@@ -973,7 +973,7 @@ shinyServer(function(input, output, session) {
                                     species_list_reactive$df_data)[j,"NAMNR"],
                                 "&")
                             HTML(paste0("Map source: <a href='",
-                                        floraweb_link, #https://www.floraweb.de/
+                                        floraweb_link,
                                         "' target=_blank>FloraWeb
                                         </a></br></br>"))
                         })
@@ -1006,7 +1006,8 @@ shinyServer(function(input, output, session) {
                                 paste0(
                                     "https://www.brc.ac.uk/plantatlas/plant/",
                                     gsub("[\\.\\(\\)]","",
-                                         gsub(" ","-",tolower(selected_species))
+                                         gsub(" ", "-",
+                                              tolower(selected_species))
                                     )
                                 )
                             
@@ -1034,7 +1035,7 @@ shinyServer(function(input, output, session) {
                 }
             })
         })
-
+        
         ### Chorology ----
         isolate({
             observe({
@@ -1060,16 +1061,16 @@ shinyServer(function(input, output, session) {
         })
         
     }) # closes observe()
-
+    
     
     # 3. Quiz ----
-
+    
     ### Render quiz checkboxes ----
     
     name_hints <- function(x) {
         setNames(x, gsub("_"," ",gsub("ownhint_","",x)))
     }
-
+    
     output$quiz_options <- renderUI({
         checkboxGroupInput(
             inputId = "quiz_options", label = "Show:",
@@ -1114,7 +1115,7 @@ shinyServer(function(input, output, session) {
     # Avoid printing map before radiobuttons are set back to "no map"
     m <- reactiveValues(map=TRUE)
     
-
+    
     ### New plant observe ----
     observeEvent(input$newplant, ignoreNULL = FALSE, {
         
@@ -1175,7 +1176,7 @@ shinyServer(function(input, output, session) {
         
         while (sp_picture == 0 & k <= 10) { # New plant if no picture available
             
-            # control for bad choice of species list and image hints (no images)
+            # control for bad choice of species list & image hints (no images)
             k <- k + 1
             
             # random species
@@ -1185,7 +1186,8 @@ shinyServer(function(input, output, session) {
                 i$i <- sample(1:nrow(temp_data), 1, 
                               prob = 
                                   ((temp_data$COUNT - temp_data$SCORE + 1) / 
-                                       (temp_data$SCORE+1)) * temp_data$INCLUDE)
+                                       (temp_data$SCORE+1)) *
+                                  temp_data$INCLUDE)
             } else {
                 i$i <- sample(1:nrow(temp_data), 1, prob = temp_data$INCLUDE)
             }
@@ -1255,7 +1257,7 @@ shinyServer(function(input, output, session) {
                                         paste0(
                                             substring(
                                                 temp_row$SPECIES, 1, 1),"."), 
-                                        temp_row$SPECIES)), " this species",x) 
+                                        temp_row$SPECIES)), " this species", x) 
                                # " F. sylvatica" <- " this species"
                                
                                x <- gsub(gsub(
@@ -1308,7 +1310,7 @@ shinyServer(function(input, output, session) {
             }
         }
         
-
+        
         output$answer_status <- renderUI({
             HTML(paste0(
                 "Mark your answer and click 'Submit' or hit 'Enter'!",
@@ -1322,7 +1324,7 @@ shinyServer(function(input, output, session) {
         
         # setting back answer text
         output$real_answer_print <- renderText("")
-
+        
         # counting
         species_list_reactive$df_data$COUNT[isolate(i$i)] <- 
             species_list_reactive$df_data$COUNT[isolate(i$i)] + 1
@@ -1335,14 +1337,14 @@ shinyServer(function(input, output, session) {
         
         answered_reactive$answered <- FALSE
         # print(paste("answered =", answered_reactive$answered))
-
-
-
+        
+        
+        
         ### Photos ----
         
         output$random_slickr <- renderSlickR({
             if(length(sp_quiz$images) == 0){
-                sp_quiz$images = "no_pictures.png"
+                sp_quiz$images <- "no_pictures.png"
             }
             imgs <- slick_list(
                 slick_div(sp_quiz$images, 
@@ -1352,7 +1354,7 @@ shinyServer(function(input, output, session) {
             slickR(imgs, slideId = "slide_quiz")
             # + settings(adaptiveHeight = TRUE)
         })
-
+        
         ### Image credits
         
         # temp objects to avoid immediate updating:
@@ -1383,11 +1385,12 @@ shinyServer(function(input, output, session) {
                 sources[length(sources)-1] <- " and "
             }
             
-            sources <- ifelse(length(sources)>0,
-                              paste0("Available images sourced from ",
-                                     paste(sources, collapse = ""),
-                                     ".</br>See 'About' tab for more details."),
-                              "") 
+            sources <- ifelse(
+                length(sources)>0,
+                paste0("Available images sourced from ",
+                       paste(sources, collapse = ""),
+                       ".</br>See 'About' tab for more details."),
+                "") 
             
             HTML(sources)
         })
@@ -1415,8 +1418,8 @@ shinyServer(function(input, output, session) {
             temp_hints_custom <- 
                 hints_reactive$hints_custom[which(
                     hints_reactive$hints_custom %in% input$quiz_options)]
-
-
+            
+            
             output$quiz_sp_description <- renderUI({
                 floraweb_link <- paste0(
                     "https://www.floraweb.de/pflanzenarten/",
@@ -1424,7 +1427,7 @@ shinyServer(function(input, output, session) {
                     isolate(
                         species_list_reactive$df_data)[isolate(i$i), "NAMNR"],
                     "&")
-
+                
                 ukplantatlas_link <- 
                     paste0("https://www.brc.ac.uk/plantatlas/plant/",
                            gsub("[\\.\\(\\)]", "", 
@@ -1489,12 +1492,13 @@ shinyServer(function(input, output, session) {
                                                                    "NAMNR"],
                                 "&")
                             HTML(paste0("Map source: <a href='",
-                                        floraweb_link, #https://www.floraweb.de/
+                                        floraweb_link,
                                         "' target=_blank>FloraWeb</a></br>"))
                         })
                         output$plot_map <- renderPlot({
                             par(oma = c(0, 0, 0, 11))
-                            plot(random_map$map[[1]], pal = random_map$map[[2]],
+                            plot(random_map$map[[1]],
+                                 pal = random_map$map[[2]],
                                  key.pos = 4, main = "")
                         })
                         plotOutput("plot_map")
@@ -1553,7 +1557,7 @@ shinyServer(function(input, output, session) {
             })
         })
     })
-
+    
     ### Answer ----
     # display text when no answer is provided
     
@@ -1575,21 +1579,21 @@ shinyServer(function(input, output, session) {
             })
             if (tolower(answer) == tolower(isolate(reactive_species$species))){
                 output$answer_status <- renderUI(
-                        HTML(paste0(
-                            "<p style='border:3px; border-style:solid;
+                    HTML(paste0(
+                        "<p style='border:3px; border-style:solid;
                             border-color:#38772d; padding: 1em;
                             background-color:#73f75b;
                             box-shadow: 3px 5px #666666;
                             text-align: center;
                             max-width: 300px'>
                             <font size=5 color=\"#38772d\"><b>",
-                            "Correct",
-                            "</font></b></p>"))
-                        )
+                        "Correct",
+                        "</font></b></p>"))
+                )
                 
                 # Setting answered
                 if(!answered_reactive$answered & !answered_reactive$cheated){
-                    answered_reactive$answered = TRUE
+                    answered_reactive$answered <- TRUE
                     print(paste("answered =", answered_reactive$answered))
                 }
                 
@@ -1631,7 +1635,8 @@ shinyServer(function(input, output, session) {
                 if(nchar(answer)>0){
                     genus_correct <- paste0(
                         ifelse(strsplit(tolower(answer), " ")[[1]][1] == 
-                                   tolower(genus), "Genus correct<br>", "<br>"))
+                                   tolower(genus), "Genus correct<br>",
+                               "<br>"))
                 } else {
                     genus_correct <- "" 
                 }
@@ -1709,7 +1714,7 @@ shinyServer(function(input, output, session) {
            answered_reactive$answered){
             total_score <- total_score + 1
         }
-
+        
         
         # Session counts, unique species and score
         session_count <- total_count - counts_reactive$init_count
@@ -1762,7 +1767,7 @@ shinyServer(function(input, output, session) {
                                  label = "Share",
                                  icon = icon("twitter"),
                                  onclick = sprintf("window.open('%s')", url)),
-                modalButton('Close'))
+                    modalButton('Close'))
             )
         )
     })

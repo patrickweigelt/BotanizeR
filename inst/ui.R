@@ -11,7 +11,7 @@ library(shinyBS)
 source("config.R")
 
 # Source text for the "About" panel
-tabPanelAbout = source("About.R")$value
+tabPanelAbout <- source("About.R")$value
 
 # ArrowLeft and Right
 js_pr_next <- '$(document).keyup(function(event) {
