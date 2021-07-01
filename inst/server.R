@@ -241,10 +241,12 @@ shinyServer(function(input, output, session) {
                  ignoreInit = TRUE, {
                      temp_variables <- 
                          hints_ukplantatlas_lookup$variable[which(
-                             hints_ukplantatlas_lookup$show %in% input$ukplantatlas_hints)]
+                             hints_ukplantatlas_lookup$show %in% 
+                                 input$ukplantatlas_hints)]
                      hints_reactive$hints_ukplantatlas <- 
                          hints_ukplantatlas_lookup$variable[which(
-                             hints_ukplantatlas_lookup$variable %in% temp_variables)]
+                             hints_ukplantatlas_lookup$variable %in% 
+                                 temp_variables)]
                  })
     
     ## Own resources ----
@@ -301,7 +303,8 @@ shinyServer(function(input, output, session) {
             hints_reactive$image_folders[length(
                 hints_reactive$image_folders)+1] <- paste(
                     unlist(input$image_folder["path"])[which(
-                        unlist(input$image_folder["path"]) != "")], collapse="/")
+                        unlist(input$image_folder["path"]) != "")], 
+                    collapse="/")
         }
     })
     
