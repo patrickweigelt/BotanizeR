@@ -14,7 +14,8 @@ BotanizeR_getlocallist(long = NA, lat = NA, radius = 1, backbone_list = NA)
 \item{radius}{a numeric, defining the radius of the buffer around the
 wanted location.}
 
-\item{backbone_list}{.}
+\item{backbone_list}{a data.frame with the same columns as the data
+returned by data("BotanizeR_species").}
 }
 \value{
 A species list.

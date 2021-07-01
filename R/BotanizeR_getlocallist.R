@@ -10,7 +10,8 @@
 #' @param radius a numeric, defining the radius of the buffer around the
 #' wanted location.
 #' 
-#' @param backbone_list .
+#' @param backbone_list a data.frame with the same columns as the data
+#' returned by data("BotanizeR_species").
 #' 
 #' @return
 #' A species list.
@@ -45,11 +46,12 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
          around the wanted location.")
   }
   
-  # if(!is.na(backbone_list)){
-  #   if(!is.data.frame(backbone_list)){
-  #     stop("'backbone_list' must be a .")
-  #   }
-  # }
+  if(!is.na(backbone_list)){
+    if(!is.data.frame(backbone_list)){
+      stop("'backbone_list' must be a data.frame with the same columns than
+           the data.frame returned by data('BotanizeR_species').")
+    }
+  }
   
   # 2. Code ----
   sp_point <- sp::SpatialPoints(coords = matrix(c(long, lat), 1, 2))
