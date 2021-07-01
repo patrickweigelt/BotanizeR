@@ -1,4 +1,4 @@
-# Compute Functional Distance Matrix
+# Collect information
 test_that("Expected data structure", {
   
   library(BotanizeR)
