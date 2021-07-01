@@ -197,9 +197,11 @@ BotanizeR_quiz <- function(
            "species_row"')
   }
   
-  if(!is.character(image_folders)){
-    stop("'image_folders' must be a character vector that defines a specific
+  if(!is.null(image_folders)){
+    if(!is.character(image_folders)){
+      stop("'image_folders' must be a character vector that defines a specific
       folder from which the user wants to retrieve images.")
+    }
   }
   
   if(!is.null(hints_custom)){

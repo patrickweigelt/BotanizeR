@@ -7,8 +7,11 @@ pkgdown::build_site()
 roxygen2::roxygenise()
 
 # Mispellings
-devtools::spell_check() 
+devtools::spell_check()
 
 # Practice improvements
-goodpractice::gp() 
+goodpractice::gp()
 
+# Tests # https://r-pkgs.org/tests.html
+usethis::use_testthat() # setting up the tests structure
+# testthat::test_that() # test for one function
