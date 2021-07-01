@@ -275,7 +275,7 @@ if(setup){tabPanel(
                                           "uniform")),
            br()
     ),
-    if(online_ressources) {
+    if(online_resources) {
       column(4, style="padding-right: 7%;",
              h4("Online resources"),
              br(),
