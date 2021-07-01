@@ -7,7 +7,10 @@ library(slickR)
 library(shinyFiles)
 library(shinyBS)
 
-# Load starting configuration
+# Load default config
+source("config_default.R")
+
+# Load custom starting config
 source("config.R")
 
 # Source text for the "About" panel

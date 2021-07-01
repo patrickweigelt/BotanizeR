@@ -13,7 +13,11 @@ library(httr)
 shinyServer(function(input, output, session) {
     
     
-    # Load starting config
+    # Load default config
+    source("config_default.R")
+    chorology <- NULL
+    
+    # Load custom starting config
     source("config.R")
     
     # Load list of species that have a chorology map

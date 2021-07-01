@@ -116,7 +116,7 @@ image_floraweb <- TRUE
 image_ukplantatlas <- TRUE
 
 
-### Images from online resources
+### Images from folder
 
 # Provide the path to folders including images of the target species to show
 # in the BotanizeR app at the start as a character string ( e.g. 
@@ -128,28 +128,51 @@ image_ukplantatlas <- TRUE
 image_folders <- NULL
 
 
+### Images from image link columns
+
+# Indicate a column in the species list with URLs of images online to be shown
+# in BotanizeR at the start. Column names need to be named like imagelink_1, 
+# imagelink_2 etc. and can be enabled and disabled in the setup tab if setup is 
+# set to TRUE above.
+
 imagelinks_custom <- NULL
-# imagelinks_custom <- c("imagelink_1")
+# imagelinks_custom <- c("imagelink_1", "imagelink_2")
+
+
+### Hints from online resources
+
+# Indicate which of the hints available from www.floraweb.de and/or 
+# https://www.brc.ac.uk/plantatlas/ shall be shown from the start. If set to 
+# NULL but setup and online_resources are set to TRUE above, the online hints
+# can be activated by the user within the setup tab.
+
 
 hints_floraweb <- NULL
 #hints_floraweb <- c("map","description", "status", "habitat", "family",
 #                   "German name")
-#hints_floraweb <- c("map","description", "status", "habitat")
 
-hints_ukplantatlas <- NULL
+# hints_ukplantatlas <- NULL
 hints_ukplantatlas <- c("mapuk","familyuk","ecology","statusuk","trends",
                        "perennation","lifeform","woodiness","clonality")
 
 
-hints_custom <- NULL
-hints_custom <- c("ownhint_English_name") # column names of own hints to check at start
-# hints_custom <- c("ownhint_Family","ownhint_Habit","ownhint_Elevation","ownhint_Distribution") # column names of own hints to check at start
-#hints_custom <- c("ownhint_Gruppe", "ownhint_Familie", "ownhint_Deutscher_Name", "ownhint_Zeigerwert", "ownhint_Bluetezeit")
+### Hints from own hint columns
+
+# Indicate columns with descriptive hints that shall be shown from the start. 
+# Column names need to be named like ownhint_HintName. If set to NULL but setup
+# is to TRUE above, the hints can be activated by the user within the setup tab.
+
+# hints_custom <- NULL
+hints_custom <- c("ownhint_English_name")
 
 
-chorology <- NULL
-# chorology <- "chorology"
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# 3. About ----
 
+# Add text (html) describing your instance of BotanizeR and your sources of
+# images, hints and species lists to be shown in addition to our general 
+# description of the app in the about tab. For more fundcamental changes,
+# modify about.R directly.
 
 instance_description <- 
   'This particular instance of the BotanizeR Shiny app exemplifies a few 
