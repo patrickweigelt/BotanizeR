@@ -10,8 +10,8 @@
 setup <- TRUE
 
 # Shall online ressources in setup tab be shown
-online_ressources <- TRUE
-# online_ressources <- FALSE
+online_resources <- TRUE
+# online_resources <- FALSE
 
 # Shall subsetting by local GBIF occurrences be shown?
 gbif <- TRUE
