@@ -14,4 +14,6 @@ goodpractice::gp()
 
 # Tests # https://r-pkgs.org/tests.html
 usethis::use_testthat() # setting up the tests structure
-# testthat::test_that() # test for one function
+
+# Test coverage of the package
+covr::package_coverage()

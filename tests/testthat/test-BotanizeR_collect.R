@@ -4,11 +4,11 @@ test_that("Expected data structure", {
   library(BotanizeR)
   
   # Species list for Germany with IDs from floraweb.de
-  data(floraweb_species)
+  data("BotanizeR_species")
   
   # Select Acer campestre
-  species_row = floraweb_species[which(floraweb_species$SPECIES ==
-                                         "Acer campestre"),]
+  species_row <- BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                           "Acer campestre"),]
   
   # Running the function
   test_collect <- BotanizeR_collect(
