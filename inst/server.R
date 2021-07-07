@@ -414,7 +414,14 @@ shinyServer(function(input, output, session) {
     sanitize_input <- function(x) {
         ext <- tools::file_ext(x)
         if(ext == "csv"){
+            semicolon <- FALSE
             header <- read.csv(x, header=FALSE, nrows=1)
+            
+            if(ncol(header)==1){
+                header <- read.csv2(x, header=FALSE, nrows=1)
+                semicolon <- TRUE
+            }
+            
             if(all(c("TAXONNAME", "SPECIES", "GENUS") %in% header)){
                 header <- header[1,] %in% 
                     c("NAMNR", "TAXONNAME", "SPECIES", "GENUS", "COUNT", 
@@ -423,8 +430,15 @@ shinyServer(function(input, output, session) {
                 
                 header <- ifelse(header, NA, "NULL")
                 
-                species_list_clean <- unique(read.csv(x, colClasses = header, 
-                                                      nrows = 6000))
+                if(semicolon){
+                    species_list_clean <- unique(read.csv2(x, 
+                                                           colClasses = header, 
+                                                           nrows = 6000))
+                } else {
+                    species_list_clean <- unique(read.csv(x, 
+                                                          colClasses = header, 
+                                                          nrows = 6000))
+                }
                 
                 if(nrow(species_list_clean)>0){
                     
