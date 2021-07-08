@@ -1,5 +1,5 @@
 ---
-title: "BotanizeR Shiny application"
+title: "BotanizeR Shiny"
 author: "Patrick Weigelt, Pierre Denelle"
 date: "`r Sys.Date()`"
 output: 
@@ -8,7 +8,7 @@ output:
     toc_depth: 2
     number_sections: true
 vignette: >
- %\VignetteIndexEntry{BotanizeR Shiny application}
+ %\VignetteIndexEntry{BotanizeR Shiny}
  %\VignetteEncoding{UTF-8} 
  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

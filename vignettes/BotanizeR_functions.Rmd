@@ -1,6 +1,6 @@
 ---
-title: "BotanizeR tutorial"
-author: "Patrick Weigelt"
+title: "BotanizeR functions"
+author: "Patrick Weigelt, Pierre Denelle"
 date: "`r Sys.Date()`"
 output: 
   html_vignette:
@@ -8,7 +8,7 @@ output:
     toc_depth: 2
     number_sections: true
 vignette: >
- %\VignetteIndexEntry{BotanizeR tutorial}
+ %\VignetteIndexEntry{BotanizeR functions}
  %\VignetteEncoding{UTF-8} 
  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

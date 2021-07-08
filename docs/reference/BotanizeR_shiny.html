@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run BotanizeR Shiny app in R console — BotanizeR_shiny • BotanizeR</title>
+<title>Shiny application — BotanizeR_shiny • BotanizeR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Run BotanizeR Shiny app in R console — BotanizeR_shiny" />
-<meta property="og:description" content="Runs locally the Shiny application associated to BotanizeR package." />
+<meta property="og:title" content="Shiny application — BotanizeR_shiny" />
+<meta property="og:description" content="Running the Shiny application of BotanizeR." />
 
 
 
@@ -95,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tutorial.html">BotanizeR tutorial</a>
+      <a href="../articles/BotanizeR_functions.html">BotanizeR functions</a>
+    </li>
+    <li>
+      <a href="../articles/BotanizeR_Shiny.html">BotanizeR Shiny</a>
     </li>
   </ul>
 </li>
@@ -115,42 +118,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run BotanizeR Shiny app in R console</h1>
+    <h1>Shiny application</h1>
     
     <div class="hidden name"><code>BotanizeR_shiny.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Runs locally the Shiny application associated to BotanizeR package.</p>
+    <p>Running the Shiny application of BotanizeR.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>BotanizeR_shiny</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>BotanizeR_shiny</span><span class='op'>(</span>run <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>run</th>
-      <td><p>a binary, runs the Shiny application when set to TRUE.</p></td>
+      <td><p>a logical, when TRUE, the Shiny application is lauched</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    
-
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>Shiny application.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
+    <p>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
+    R-package with Shiny-App for practicing plant identification in times of
+    online teaching and beyond. Plants, People, Planet.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>BotanizeR_shiny</span><span class='op'>(</span>run <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: shiny</span></div><div class='output co'>#&gt; <span class='message'>If you want to run the application, set 'run = TRUE'</span></div></pre>
+    <pre class="examples"><div class='input'><span class='co'># Example</span>
+<span class='fu'>BotanizeR_shiny</span><span class='op'>(</span>run <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>If you want to run the application, set 'run = TRUE'</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

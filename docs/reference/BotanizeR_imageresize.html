@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Batch resize images for plotting in BotanizeR quiz — BotanizeR_imageresize • BotanizeR</title>
+<title>Resizing images — BotanizeR_imageresize • BotanizeR</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Batch resize images for plotting in BotanizeR quiz — BotanizeR_imageresize" />
-<meta property="og:description" content="
-" />
+<meta property="og:title" content="Resizing images — BotanizeR_imageresize" />
+<meta property="og:description" content="Batch resize images for plotting in BotanizeR quiz." />
 
 
 
@@ -96,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tutorial.html">BotanizeR tutorial</a>
+      <a href="../articles/BotanizeR_functions.html">BotanizeR functions</a>
+    </li>
+    <li>
+      <a href="../articles/BotanizeR_Shiny.html">BotanizeR Shiny</a>
     </li>
   </ul>
 </li>
@@ -116,34 +118,68 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Batch resize images for plotting in BotanizeR quiz</h1>
+    <h1>Resizing images</h1>
     
     <div class="hidden name"><code>BotanizeR_imageresize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
-
+    <p>Batch resize images for plotting in BotanizeR quiz.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>BotanizeR_imageresize</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>BotanizeR_imageresize</span><span class='op'>(</span>
+  image_folders <span class='op'>=</span> <span class='cn'>NULL</span>,
+  image_width <span class='op'>=</span> <span class='cn'>NA</span>,
+  max_height <span class='op'>=</span> <span class='cn'>NA</span>,
+  int_type <span class='op'>=</span> <span class='fl'>1</span>,
+  quality <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>image_folders</th>
+      <td><p>character vector that defines a specific folder from
+which the user wants to retrieve images</p></td>
+    </tr>
+    <tr>
+      <th>image_width</th>
+      <td><p>number to define the width of the images.</p></td>
+    </tr>
+    <tr>
+      <th>max_height</th>
+      <td><p>number to define the height of the images.</p></td>
+    </tr>
+    <tr>
+      <th>int_type</th>
+      <td><p>number to define the type of the images.</p></td>
+    </tr>
+    <tr>
+      <th>quality</th>
+      <td><p>number to define the quality of the images.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
+    <p>Resized images.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+    <p>Resizing images so they fit in the Shiny application.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
+    R-package with Shiny-App for practicing plant identification in times of
+    online teaching and beyond. Plants, People, Planet.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>[imager::resize()]</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'></div></pre>
+    <pre class="examples"><div class='input'><span class='co'># Example</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

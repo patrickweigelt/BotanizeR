@@ -17,3 +17,6 @@ usethis::use_testthat() # setting up the tests structure
 
 # Test coverage of the package
 covr::package_coverage()
+
+
+# library(checkmate)

@@ -94,7 +94,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/tutorial.html">BotanizeR tutorial</a>
+      <a href="articles/BotanizeR_functions.html">BotanizeR functions</a>
+    </li>
+    <li>
+      <a href="articles/BotanizeR_Shiny.html">BotanizeR Shiny</a>
     </li>
   </ul>
 </li>
@@ -203,12 +206,6 @@
 <li><del>number of species in currently loaded species list (setup page)</del></li>
 </ul>
 </li>
-<li>Make some of the elements in the about page dependent on the resources used
-<ul>
-<li>If floraweb used: Floraweb credits</li>
-<li>If own images used load file with image credits</li>
-</ul>
-</li>
 <li><del>Plot UK map and think about where to plot maps in general. Make space available if maps not plotted?</del></li>
 <li><del>App becomes unresponsive if you choose no picture source or the wrong one and the quiz keeps trying to find a species with picture</del></li>
 <li><del>Why does species list page update immediately after setup changes and quiz doesn’t?</del></li>
@@ -216,31 +213,14 @@
 <li>
 <del>Some UK pictures don’t exist as large pictures and hence don’t show up</del>
 <ul>
-<li>
-<del>now that the images scale properly we could load the larger ones for these cases. Need control for this</del><br>
-</li>
+<li><del>now that the images scale properly we could load the larger ones for these cases. Need control for this</del></li>
 </ul>
 </li>
 <li><del>Make images scale automatically in slickR slider</del></li>
-<li>
-<del>Add image credits below slider</del>
-<ul>
-<li>
-<strong>modify BotanizeR_collect to keep track of image source</strong> &lt;- started<br>
-</li>
-</ul>
-</li>
 <li><del>Map legend and credits</del></li>
 <li><del>separate UK and DE credits in quiz hints</del></li>
 <li>Allow defining images not used in quiz</li>
 <li><del>no map text</del></li>
-<li><strong>redo message images (harmonize)</strong></li>
-<li>instructions
-<ul>
-<li>how does table for upload have to look like</li>
-<li>About tab: more details; dynamic depending on what is shown</li>
-</ul>
-</li>
 <li><del>if map is checked, going to next species is slow because new map loads (uncheck first)</del></li>
 <li>
 <del>make whether setup tab is shown a variable in config</del>
@@ -261,20 +241,38 @@
 <li>Think about the draggable popup (already implemented but commented out)</li>
 <li>Multiple Choice</li>
 <li><del>Stats, counting last one if identified?</del></li>
-<li>Flora Incognita images?<br>
-</li>
-<li>
-<del>unique species counting too few due to overall table?</del><br>
-</li>
-<li>
-<del>include == 0 if floraweb down? &lt;- not the case</del><br>
-</li>
-<li>
-<del>ownhints uncheck when uploading species list in quiz popup</del><br>
-</li>
+<li>Flora Incognita images?</li>
+<li><del>unique species counting too few due to overall table?</del></li>
+<li><del>include == 0 if floraweb down? &lt;- not the case</del></li>
+<li><del>ownhints uncheck when uploading species list in quiz popup</del></li>
 <li><del>Quiz sometimes shows hints of previous species; Links to floraweb and ukplantatlas are fine though</del></li>
 <li><del>replace species names in descriptions be “The species”</del></li>
-<li>Size of right quiz column jumping include something to have a minimum width</li>
+<li>Size of right quiz column jumping include something to have a minimum width (scrollbar)</li>
+<li>
+<del>Add image credits below slider</del>
+<ul>
+<li>
+<strong>modify BotanizeR_collect to keep track of image source</strong> &lt;- started</li>
+</ul>
+</li>
+<li>Make some of the elements in the about page dependent on the resources used
+<ul>
+<li>If floraweb used: Floraweb credits</li>
+<li>If own images used load file with image credits</li>
+</ul>
+</li>
+<li>instructions
+<ul>
+<li>how does table for upload have to look like</li>
+<li>About tab: more details; dynamic depending on what is shown</li>
+</ul>
+</li>
+<li><strong>redo message images (harmonize)</strong></li>
+<li><del>button to disable dynamic probabilities</del></li>
+<li>Hints are visible for a short moment when going on to next species</li>
+<li><del>check/uncheck all button for hints</del></li>
+<li><del>Make the GBIF stuff optional in config</del></li>
+<li><del>semicolon in csv</del></li>
 </ul>
 </div>
 <div id="2-package" class="section level2">
@@ -293,7 +291,9 @@
 <li>plot first image before map is loaded to safe time.</li>
 <li>loading bar for map</li>
 <li>add synonyms</li>
-<li>species list Göttingen</li>
+<li>
+<del>species list Göttingen</del><br>
+</li>
 <li><del>check image folder path in local shiny app</del></li>
 <li>make error messages in case floraweb is not available</li>
 <li><del>define columns needed for species list</del></li>
@@ -302,6 +302,10 @@
 <li>Map floraweb distribution based on api</li>
 <li>switch entirely to httr to get rid of temp folders</li>
 <li>jpg, JPG, JPEG, jpeg etc. for own folder</li>
+<li>
+<del>Control for coordinates outside -180:180; -89:89</del><br>
+</li>
+<li>Consider getting rid of magick::read_image to simplify installation for Ubuntu users</li>
 </ul>
 </div>
 <div id="3-layout" class="section level2">
@@ -324,8 +328,8 @@
 </ul>
 </li>
 <li><del>Make correct more prominent and easier to go to next species; info messages</del></li>
-<li><strong>Make correct easier to go to next species</strong></li>
-<li><strong>Clean info messages</strong></li>
+<li><del>Make correct easier to go to next species</del></li>
+<li><del>Clean info messages</del></li>
 <li>Make online resources in Setup collapsable</li>
 </ul>
 </div>
