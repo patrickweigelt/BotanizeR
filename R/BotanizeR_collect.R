@@ -17,15 +17,16 @@
 #' wants to retrieve from [FloraWeb](https://www.floraweb.de)
 #'
 #' @param image_ukplantatlas logical that defines if images from the
-#' [Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
-#' should be retrieved
+#' [Online Atlas of the British 
+#' and Irish flora](https://www.brc.ac.uk/plantatlas/) should be retrieved
 #'
 #' @param hints_ukplantatlas character vector that defines what hints the user
 #' wants to retrieve from the
-#' [Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
+#' [Online Atlas of the British 
+#' and Irish flora](https://www.brc.ac.uk/plantatlas/)
 #'
-#' @param imagelinks_custom character vector that defines a custom link to
-#' retrieve images
+#' @param imagelinks_custom character vector that defines a custom link (URL) 
+#' to retrieve images
 #'
 #' @param image_folders character vector that defines a specific folder from
 #' which the user wants to retrieve images
@@ -52,7 +53,7 @@
 #' @references
 #'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
 #'     R-package with Shiny-App for practicing plant identification in times of
-#'     online teaching and beyond. Plants, People, Planet.
+#'     online teaching and beyond. submitted.
 #'
 #' @seealso [BotanizeR::BotanizeR_quiz()]
 #'
@@ -143,17 +144,15 @@ BotanizeR_collect <-
     }
     
     if(!is.null(hints_floraweb)){
-      if(!is.character(hints_floraweb)){
-        stop("'hints_floraweb' must be either NULL or a character string with
-        the wanted hints.")
+      if(!is.character(hints_floraweb) | 
+         !all(hints_floraweb %in% c("map", "description", "status", "habitat",
+                                    "family", "German name"))){
+        stop("'hints_floraweb' must be either NULL or a character string with 
+             the wanted hints from c('map', 'description', 'status', 'habitat', 
+             'family', 'German name').")
       }
     }
     
-    if(!all(hints_floraweb %in% c("map", "description", "status", "habitat",
-                                  "family", "German name"))){
-      stop('"hints_floraweb" must be a subset of c("map", "description",
-           "status", "habitat", "family", "German name")')
-    }
     
     
     if(!is.logical(image_ukplantatlas)){
@@ -162,18 +161,15 @@ BotanizeR_collect <-
     }
     
     if(!is.null(hints_ukplantatlas)){
-      if(!is.character(hints_ukplantatlas)){
-        stop("'hints_ukplantatlas' must be either NULL or a character string
-        with the wanted hints.")
+      if(!is.character(hints_ukplantatlas) |
+         !all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
+                                        "statusuk", "trends", "perennation",
+                                        "lifeform", "woodiness", "clonality"))){
+        stop("'hints_ukplantatlas' must be either NULL or a character string 
+             with the wanted hints from c('mapuk', 'familyuk', 'ecology', 
+             'statusuk', 'trends', 'perennation', 'lifeform', 'woodiness', 
+             'clonality').")
       }
-    }
-    
-    if(!all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
-                                      "statusuk", "trends", "perennation",
-                                      "lifeform", "woodiness", "clonality"))){
-      stop('"hints_ukplantatlas" must be a subset of c("mapuk", "familyuk",
-           "ecology", "statusuk", "trends", "perennation", "lifeform",
-           "woodiness", "clonality")')
     }
     
     if(!is.null(imagelinks_custom)){

@@ -256,9 +256,9 @@ mean(sample(numbers, 1000, replace=TRUE, prob=probs))
 
 
 sp_infos <- BotanizeR_collect(
-  species_row = floraweb_species[1, ], 
+  species_row = species_list[1, ], 
   image_floraweb = FALSE,
-  hints_floraweb = NULL, 
+  hints_floraweb = c(1,2), 
   hints_custom = NULL, imagelinks_custom = NULL,
   image_folders = "inst/www/pictures_Clemens",
   # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 

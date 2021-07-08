@@ -15,7 +15,7 @@ data("floraweb_species")
 }
 \description{
 Table containing the relevant information for 4639 species. The data
-originate from [FloraWeb](https://www.floraweb.de).
+originate from \href{https://www.floraweb.de}{FloraWeb}.
 }
 \examples{
 data(floraweb_species)

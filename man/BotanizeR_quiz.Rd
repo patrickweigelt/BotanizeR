@@ -25,23 +25,23 @@ BotanizeR_quiz(
 }
 \arguments{
 \item{species_list}{a data.frame with the species for which we want to
-retrieve information. **It should contain the following columns**: 
-*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
-*SCORE* and *ATTEMPTS*}
+retrieve information. \strong{It should contain the following columns}:
+\emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES}, \emph{GENUS}, \emph{EPITHET}, \emph{AUTHOR}, \emph{COUNT},
+\emph{SCORE} and \emph{ATTEMPTS}}
 
 \item{image_floraweb}{logical that defines if images from
-[FloraWeb](https://www.floraweb.de) should be retrieved}
+\href{https://www.floraweb.de}{FloraWeb} should be retrieved}
 
 \item{hints_floraweb}{character vector that defines what hints the user
-wants to retrieve from [FloraWeb](https://www.floraweb.de)}
+wants to retrieve from \href{https://www.floraweb.de}{FloraWeb}}
 
 \item{image_ukplantatlas}{logical that defines if images from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}
 should be retrieved}
 
 \item{hints_ukplantatlas}{character vector that defines what hints the user
 wants to retrieve from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)}
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}}
 
 \item{imagelinks_custom}{character vector that defines a custom link to
 retrieve images}
@@ -50,8 +50,8 @@ retrieve images}
 which the user wants to retrieve images}
 
 \item{hints_custom}{character vector that defines personal hints the user
-wants to use. **Note:** in that case, these hints should be present as
-columns in the `species_row` table.}
+wants to use. \strong{Note:} in that case, these hints should be present as
+columns in the \code{species_row} table.}
 
 \item{case_sensitive}{logical.}
 
@@ -59,13 +59,13 @@ columns in the `species_row` table.}
 
 \item{startat}{number}
 
-\item{init_count}{sum of the column `$COUNT` in `species_list`,
+\item{init_count}{sum of the column \verb{$COUNT} in \code{species_list},
 defining the total number of tries of the user}
 
-\item{init_score}{sum of the column `$SCORE` in `species_list`,
+\item{init_score}{sum of the column \verb{$SCORE} in \code{species_list},
 defining the total score of the user}
 
-\item{init_attempts}{sum of the column `$ATTEMPTS` in `species_list`,
+\item{init_attempts}{sum of the column \verb{$ATTEMPTS} in \code{species_list},
 defining how many attempts he user had in total}
 
 \item{max_attempts}{number defining the number of attempts per species}
@@ -102,20 +102,21 @@ data(floraweb_species)
 floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
 floraweb_species$BioDiv2005==1), ]
 
-# Type in species name, or press enter for next hint or type "skip" and press 
-# enter for next species or type "exit" to end quiz and save results
+# Type in species name, or press enter for next hint or type "skip" and
+press enter for next species or type "exit" to end quiz and save results
 floraweb_species_trained <- BotanizeR_quiz(
 species_list = floraweb_species, hints_floraweb = c("description", "status",
 "habitat","family","German name"), case_sensitive = FALSE)
 
-# If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit
+# If you want to include distribution maps as hints add "map" to hints;
+This increases the download times a bit
 floraweb_species_trained <- BotanizeR_quiz(
 species_list = floraweb_species,
 hints_floraweb = c("map","description","status", "habitat", "family",
 "German name"), case_sensitive = FALSE)
 
-# If you want to keep track of your progress, you can save the species list with 
-# updated scores locally and load it in the next session
+# If you want to keep track of your progress, you can save the species list
+with updated scores locally and load it in the next session
 
 # Initial saving
 write.csv(floraweb_species_trained, "floraweb_species_trained.csv",
@@ -147,10 +148,11 @@ custom_species_trained <- BotanizeR_quiz(
 
 }
 \references{
-Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.
+\preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. Plants, People, Planet.
+}
 }
 \seealso{
-[BotanizeR::BotanizeR_collect()]
+\code{\link[=BotanizeR_collect]{BotanizeR_collect()}}
 }

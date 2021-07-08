@@ -21,7 +21,8 @@ BotanizeR_shiny(run = FALSE)
 
 }
 \references{
-Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.
+\preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. Plants, People, Planet.
+}
 }

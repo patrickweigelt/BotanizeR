@@ -15,7 +15,7 @@ data("BotanizeR_species")
 }
 \description{
 Table containing the relevant information for 5852 species. The data
-originate from [FloraWeb](https://www.floraweb.de).
+originate from \href{https://www.floraweb.de}{FloraWeb}.
 }
 \examples{
 data(BotanizeR_species)

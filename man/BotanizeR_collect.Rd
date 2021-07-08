@@ -21,37 +21,36 @@ BotanizeR_collect(
 }
 \arguments{
 \item{species_row}{a data.frame with the species for which we want to
-retrieve information. **It should contain the following columns**: 
-*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
-*SCORE* and *ATTEMPTS*}
+retrieve information. \strong{It should contain the following columns}:
+\emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES}, \emph{GENUS}, \emph{EPITHET}, \emph{AUTHOR}, \emph{COUNT},
+\emph{SCORE} and \emph{ATTEMPTS}}
 
 \item{image_floraweb}{logical that defines if images from
-[FloraWeb](https://www.floraweb.de) should be retrieved}
+\href{https://www.floraweb.de}{FloraWeb} should be retrieved}
 
 \item{hints_floraweb}{character vector that defines what hints the user
-wants to retrieve from [FloraWeb](https://www.floraweb.de)}
+wants to retrieve from \href{https://www.floraweb.de}{FloraWeb}}
 
 \item{image_ukplantatlas}{logical that defines if images from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
-should be retrieved}
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora } should be retrieved}
 
 \item{hints_ukplantatlas}{character vector that defines what hints the user
 wants to retrieve from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)}
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora }}
 
-\item{imagelinks_custom}{character vector that defines a custom link to
+\item{imagelinks_custom}{character vector that defines a custom link (URL) to
 retrieve images}
 
 \item{image_folders}{character vector that defines a specific folder from
 which the user wants to retrieve images}
 
 \item{hints_custom}{character vector that defines personal hints the user
-wants to use. **Note:** in that case, these hints should be present as
-columns in the `species_row` table.}
+wants to use. \strong{Note:} in that case, these hints should be present as
+columns in the \code{species_row} table.}
 
 \item{file_location}{character vector that defines}
 
-\item{only_links}{logical, if `TRUE`, then the images behind the links are
+\item{only_links}{logical, if \code{TRUE}, then the images behind the links are
 not loaded.}
 
 \item{image_required}{logical.}
@@ -62,13 +61,13 @@ not loaded.}
 Hints for the selected species.
 }
 \description{
-Collects information from [FloraWeb](https://www.floraweb.de) 
+Collects information from \href{https://www.floraweb.de}{FloraWeb}
 (images, map and species descriptions) and from user defined image folders
 and columns in the species_list data.frame to show them as hints in
-[BotanizeR::BotanizeR_quiz()]
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
 }
 \details{
-This function combines with [BotanizeR::BotanizeR_quiz()]
+This function combines with \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
 }
 \examples{
 # Species list for Germany with IDs from floraweb.de
@@ -135,10 +134,11 @@ pictures included. File names need to include the species names.
 
 }
 \references{
-Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.
+\preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. submitted.
+}
 }
 \seealso{
-[BotanizeR::BotanizeR_quiz()]
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
 }

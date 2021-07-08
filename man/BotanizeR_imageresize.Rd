@@ -38,10 +38,11 @@ Resizing images so they fit in the Shiny application.
 
 }
 \references{
-Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.
+\preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. Plants, People, Planet.
+}
 }
 \seealso{
-[imager::resize()]
+\code{\link[imager:resize]{imager::resize()}}
 }

@@ -1,3 +1,4 @@
+devtools::load_all()
 
 # Build the website
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
@@ -23,3 +24,4 @@ covr::package_coverage()
 
 
 ?build_site
+

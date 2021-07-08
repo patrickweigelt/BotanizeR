@@ -22,14 +22,15 @@ A species list.
 }
 \description{
 Using coordinates and a buffer radius, this function retrieves a certain
-species list from [GBIF](https://www.gbif.org/) database.
+species list from \href{https://www.gbif.org/}{GBIF} database.
 }
 \examples{
 # Example
 
 }
 \references{
-Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.
+\preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. Plants, People, Planet.
+}
 }

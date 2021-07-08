@@ -15,7 +15,7 @@ data("ukplantatlas_species")
 }
 \description{
 Table containing the relevant information for 2945 species. The data
-originate from [Online Atlas of the British and Irish flora](https://www.brc.ac.uk/plantatlas/).
+originate from \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}.
 }
 \examples{
 data(ukplantatlas_species)
