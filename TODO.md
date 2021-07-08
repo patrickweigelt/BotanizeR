@@ -97,8 +97,8 @@
 * ~~button to disable dynamic probabilities~~
 * Hints are visible for a short moment when going on to next species
 * ~~check/uncheck all button for hints~~
-* Make the GBIF studd optional in config
-* semicolon in csv
+* ~~Make the GBIF stuff optional in config~~
+* ~~semicolon in csv~~
 
 
 
