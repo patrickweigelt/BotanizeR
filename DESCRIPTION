@@ -30,6 +30,7 @@ Imports:
   slickR,
   sp,
   XML
+URL: https://patrickweigelt.github.io/BotanizeR/
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Suggests: 
