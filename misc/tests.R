@@ -255,20 +255,54 @@ mean(sample(numbers, 1000, replace=TRUE, prob=probs))
 
 
 
+
+
+devtools::load_all()
+
+# Species list for Germany with IDs from floraweb.de
+data(BotanizeR_species)
+
+
+species_list <- BotanizeR_species
+
+species_row = species_list[which(species_list$SPECIES == "Fagus sylvatica"),c("NAMNR","SPECIES")]
+
+species_row$SPECIES <- 1
+summary(species_row)
+
+is.factor(species_row$SPECIES)
+is.character(species_row$SPECIES)
+
 sp_infos <- BotanizeR_collect(
-  species_row = species_list[1, ], 
+  species_row = species_row, 
   image_floraweb = FALSE,
-  hints_floraweb = c(1,2), 
+  hints_floraweb = c("description"), 
   hints_custom = NULL, imagelinks_custom = NULL,
   image_folders = "inst/www/pictures_Clemens",
   # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
   file_location = "temporary", only_links = TRUE)
 
 
+sp_infos <- BotanizeR_collect(
+  species_row = list(1,2,3), 
+  image_floraweb = FALSE,
+  hints_floraweb = species_list, 
+  hints_custom = NULL, imagelinks_custom = NULL,
+  image_folders = "inst/www/pictures_Clemens",
+  # image_folders = "~/ShinyApps/BotanizeR/WWW/pictures_Clemens", # This is needed on server; 
+  file_location = "temporary", only_links = TRUE)
+
+
+
+nrow(list(1,2,3))
+
 image1 <- load.image("inst/www/pictures_Clemens/SamenZapfenFruechte/Acer campestre (2).jpg")
 
 image1 <- resize(image1, size_x = 320, size_y = 320/nrow(image1)*ncol(image1))
 plot(image1)
+
+
+
 
 
 
