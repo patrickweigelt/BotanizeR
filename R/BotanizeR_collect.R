@@ -1,61 +1,85 @@
-#' Collect information for quiz
+#' Collect images and information for BotanizeR quiz
 #'
 #' Collects information from [FloraWeb](https://www.floraweb.de) 
-#' (images, map and species descriptions) and from user defined image folders
-#' and columns in the species_list data.frame to show them as hints in
-#' [BotanizeR::BotanizeR_quiz()]
+#' (images, map and species descriptions) and/or the [Online Atlas of the 
+#' British Irish flora](https://www.brc.ac.uk/plantatlas/) as well as from user 
+#' defined image folders and columns in the `species_list` data.frame to show 
+#' them as hints in [BotanizeR::BotanizeR_quiz()] and the BotanizeR Shiny app.
 #'
-#' @param species_row a data.frame with the species for which we want to
-#' retrieve information. **It should contain the following columns**: 
-#' *NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
-#' *SCORE* and *ATTEMPTS*
+#' @param species_row a data.frame of one row including the species for which 
+#' information shall be retrieved (Usually an entry of the `species_list` 
+#' data.frame used in [BotanizeR::BotanizeR_quiz()] and the BotanizeR Shiny 
+#' app. **It should contain at least the following columns**: 
+#' *NAMNR* and *SPECIES*. The *SPECIES* column includes the species name 
+#' (character or factor) to be looked up in the online resources or image 
+#' folders. *NAMNR* contains the ID (numeric) of the species used by 
+#' [FloraWeb](https://www.floraweb.de). In case FloraWeb content is not 
+#' retrieved or not available for a given species, this may be NA or "".
 #'
 #' @param image_floraweb logical that defines if images from
-#' [FloraWeb](https://www.floraweb.de) should be retrieved
+#' [FloraWeb](https://www.floraweb.de) shall be retrieved.
 #'
-#' @param hints_floraweb character vector that defines what hints the user
-#' wants to retrieve from [FloraWeb](https://www.floraweb.de)
+#' @param hints_floraweb character vector defining the hints to 
+#' retrieve from [FloraWeb](https://www.floraweb.de). 'hints_floraweb' 
+#' must be either NULL or a character string with the wanted hints from 
+#' c('map', 'description', 'status', 'habitat', 'family', 'German name').
 #'
 #' @param image_ukplantatlas logical that defines if images from the
 #' [Online Atlas of the British 
-#' and Irish flora](https://www.brc.ac.uk/plantatlas/) should be retrieved
+#' and Irish flora](https://www.brc.ac.uk/plantatlas/) shall be retrieved.
 #'
-#' @param hints_ukplantatlas character vector that defines what hints the user
-#' wants to retrieve from the
-#' [Online Atlas of the British 
-#' and Irish flora](https://www.brc.ac.uk/plantatlas/)
+#' @param hints_ukplantatlas character vector defining the hints to 
+#' retrieve from the [Online Atlas of the British and Irish 
+#' flora](https://www.brc.ac.uk/plantatlas/). 'hints_ukplantatlas' 
+#' must be either NULL or a character string with the wanted hints from 
+#' c('mapuk', 'familyuk', 'ecology', 'statusuk', 'trends', 'perennation', 
+#' 'lifeform', 'woodiness', 'clonality').
 #'
-#' @param imagelinks_custom character vector that defines a custom link (URL) 
-#' to retrieve images
+#' @param imagelinks_custom character vector defining columns of `species_row` 
+#' containing links (URLs) to retrieve images from the internet. For using it
+#' inside the BotanizeR Shiny App these columns need to be named like
+#' c("imagelink_1", "imagelink_2") etc.
 #'
-#' @param image_folders character vector that defines a specific folder from
-#' which the user wants to retrieve images
+#' @param image_folders character vector defining a folder from
+#' which to retrieve images. Image file names need to contain the species names 
+#' to be found.
 #' 
-#' @param hints_custom character vector that defines personal hints the user
-#' wants to use. **Note:** in that case, these hints should be present as
-#' columns in the `species_row` table.
+#' @param hints_custom character vector defining custom hints to use. 
+#' **Note:** In that case, these hints should be stored in `species_row` in 
+#' additional columns named like ownhint_*HintName* where *HintName* should be 
+#' different than the hints allowed for `hints_ukplantatlas` and 
+#' `hints_floraweb`.
 #' 
-#' @param file_location character vector that defines 
+#' @param file_location character vector defining a location to temporarily 
+#' store the images retrieved from online resources. If put to "temporary", R 
+#' will create a temporary folder automatically.
 #' 
-#' @param only_links logical, if `TRUE`, then the images behind the links are
-#' not loaded.
+#' @param only_links logical, if `TRUE`, then all images found will not be 
+#' loaded but links will be returned. Set to `TRUE` for shiny app.
 #' 
-#' @param image_required logical.
+#' @param image_required logical indicating whether additional hints shall only 
+#' be retrieved if at least one image for the given species is available. Set 
+#' to `TRUE` for [BotanizeR::BotanizeR_quiz()].
 #' 
-#' @param image_width number to define the width of the images.
+#' @param image_width numeric defining to what width of the images shall be 
+#' rescaled in case `only_links` is `FALSE`and `image_width` is not `NA`.
 #' 
 #' @return
 #' Hints for the selected species.
 #'
 #'
-#' @details This function combines with [BotanizeR::BotanizeR_quiz()]
+#' @details This function provides the information shown in 
+#' [BotanizeR::BotanizeR_quiz()] and the BotanizeR Shiny app. Have a look into 
+#' the [BotanizeR 
+#' tutorials](https://patrickweigelt.github.io/BotanizeR/index.html) 
+#' on how to use the quiz and the shiny app to learn more about its usage.
 #'
 #' @references
 #'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
 #'     R-package with Shiny-App for practicing plant identification in times of
 #'     online teaching and beyond. submitted.
 #'
-#' @seealso [BotanizeR::BotanizeR_quiz()]
+#' @seealso [BotanizeR::BotanizeR_quiz()] and [BotanizeR::BotanizeR_shiny()]
 #'
 #' @examples
 #' # Species list for Germany with IDs from floraweb.de
@@ -134,10 +158,31 @@ BotanizeR_collect <-
     # 1. Controls ----
     # Arguments
     if(!is.data.frame(species_row)){
-      stop(".")
+      stop("species_row must be a data.frame of one row including the species 
+      for which you want to retrieve information. It should contain at least 
+      the following columns: 'NAMNR' and 'SPECIES'.")
     }
-    # nrow(species_row) == 1
     
+    if(nrow(species_row) !=1) {
+      stop("species_row must be a data.frame of one row including the species 
+        for which you want to retrieve information. It should contain at least 
+        the following columns: 'NAMNR' and 'SPECIES'.")
+    } 
+    
+    if(!all(c('NAMNR','SPECIES') %in% colnames(species_row))) {
+      stop("species_row must be a data.frame of one row including the species 
+        for which you want to retrieve information. It should contain at least 
+        the following columns: 'NAMNR' and 'SPECIES'.")
+    } 
+    
+    if(!is.character(species_row$SPECIES) & !is.factor(species_row$SPECIES)) {
+      stop("species_row must be a data.frame of one row including the species 
+        for which you want to retrieve information. It should contain at least 
+        the following columns: 'NAMNR' and 'SPECIES'. The *SPECIES* column has 
+        to include a character string or factor of species names to be looked 
+        up in the online resources or image folders.")
+    } 
+
     if(!is.logical(image_floraweb)){
       stop("'image_floraweb' must be a logical that defines if images from
       https://www.floraweb.de should be retrieved")
@@ -152,9 +197,7 @@ BotanizeR_collect <-
              'family', 'German name').")
       }
     }
-    
-    
-    
+
     if(!is.logical(image_ukplantatlas)){
       stop("'image_ukplantatlas' must be a logical that defines if images from
       https://www.brc.ac.uk/plantatlas/ should be retrieved.")
@@ -194,23 +237,24 @@ BotanizeR_collect <-
     if(!is.null(hints_custom)){
       if(!is.character(hints_custom)){
         stop("'hints_custom' must be either NULL or a character string
-        with the wanted hints.")
+        indicating the columns of 'species_row' containing custom hints.")
       }
     }
     
     if(!all(hints_custom %in% colnames(species_row))){
-      stop('"hints_custom" must be present in the column names of
-           "species_row"')
+      stop('"hints_custom" must all be present in the column names of
+           "species_row".')
     }
     
     if(!is.character(file_location)){
-      stop("'file_location' must be a character vector that defines a specific
-      folder from which the user wants to retrieve images.")
+      stop("'file_location' must be 'temporary' or a character vector that 
+      defines a temporary folder location to store images.")
     }
     
     if(!is.logical(only_links)){
-      stop("'only_links' must be a logical that defines whether images should
-           be loaded into the R session.")
+      stop("'only_links' must be a logical defining whether images should
+           be loaded into the R session or links to the images should be 
+           returned.")
     }
     
     if(!is.logical(image_required)){
