@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect information for quiz — BotanizeR_collect • BotanizeR</title>
+<title>Collect images and information for BotanizeR quiz — BotanizeR_collect • BotanizeR</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Collect information for quiz — BotanizeR_collect" />
-<meta property="og:description" content="Collects information from [FloraWeb](https://www.floraweb.de) 
-(images, map and species descriptions) and from user defined image folders
-and columns in the species_list data.frame to show them as hints in
-[BotanizeR::BotanizeR_quiz()]" />
+<meta property="og:title" content="Collect images and information for BotanizeR quiz — BotanizeR_collect" />
+<meta property="og:description" content="Collects information from FloraWeb
+(images, map and species descriptions) and/or the Online Atlas of the British Irish flora as well as from user
+defined image folders and columns in the species_list data.frame to show
+them as hints in BotanizeR_quiz() or the BotanizeR Shiny app." />
 
 
 
@@ -121,21 +121,21 @@ and columns in the species_list data.frame to show them as hints in
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect information for quiz</h1>
+    <h1>Collect images and information for BotanizeR quiz</h1>
     
     <div class="hidden name"><code>BotanizeR_collect.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Collects information from [FloraWeb](https://www.floraweb.de) 
-(images, map and species descriptions) and from user defined image folders
-and columns in the species_list data.frame to show them as hints in
-[BotanizeR::BotanizeR_quiz()]</p>
+    <p>Collects information from <a href='https://www.floraweb.de'>FloraWeb</a>
+(images, map and species descriptions) and/or the <a href='https://www.brc.ac.uk/plantatlas/'>Online Atlas of the British Irish flora</a> as well as from user
+defined image folders and columns in the <code>species_list</code> data.frame to show
+them as hints in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> or the BotanizeR Shiny app.</p>
     </div>
 
     <pre class="usage"><span class='fu'>BotanizeR_collect</span><span class='op'>(</span>
   <span class='va'>species_row</span>,
-  image_floraweb <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  image_floraweb <span class='op'>=</span> <span class='cn'>FALSE</span>,
   hints_floraweb <span class='op'>=</span> <span class='cn'>NULL</span>,
   image_ukplantatlas <span class='op'>=</span> <span class='cn'>FALSE</span>,
   hints_ukplantatlas <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -153,85 +153,215 @@ and columns in the species_list data.frame to show them as hints in
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>species_row</th>
-      <td><p>a data.frame with the species for which we want to
-retrieve information. **It should contain the following columns**: 
-*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
-*SCORE* and *ATTEMPTS*</p></td>
+      <td><p>a data.frame of one row including the species for which
+information shall be retrieved (Usually an entry of the <code>species_list</code>
+data.frame used in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> and the BotanizeR Shiny
+app. <strong>It should contain at least the following columns</strong>:
+<em>NAMNR</em> and <em>SPECIES</em>. The <em>SPECIES</em> column includes the species name
+(character or factor) to be looked up in the online resources or image
+folders. <em>NAMNR</em> contains the ID (numeric) of the species used by
+<a href='https://www.floraweb.de'>FloraWeb</a>. In case FloraWeb content is not
+retrieved or not available for a given species, this may be NA or "".</p></td>
     </tr>
     <tr>
       <th>image_floraweb</th>
       <td><p>logical that defines if images from
-[FloraWeb](https://www.floraweb.de) should be retrieved</p></td>
+<a href='https://www.floraweb.de'>FloraWeb</a> shall be retrieved.</p></td>
     </tr>
     <tr>
       <th>hints_floraweb</th>
-      <td><p>character vector that defines what hints the user
-wants to retrieve from [FloraWeb](https://www.floraweb.de)</p></td>
+      <td><p>character vector defining the hints to
+retrieve from <a href='https://www.floraweb.de'>FloraWeb</a>. 'hints_floraweb'
+must be either NULL or a character string with the wanted hints from
+c('map', 'description', 'status', 'habitat', 'family', 'German name').</p></td>
     </tr>
     <tr>
       <th>image_ukplantatlas</th>
       <td><p>logical that defines if images from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
-should be retrieved</p></td>
+<a href='https://www.brc.ac.uk/plantatlas/'>Online Atlas of the British and Irish flora</a> shall be retrieved.</p></td>
     </tr>
     <tr>
       <th>hints_ukplantatlas</th>
-      <td><p>character vector that defines what hints the user
-wants to retrieve from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)</p></td>
+      <td><p>character vector defining the hints to
+retrieve from the <a href='https://www.brc.ac.uk/plantatlas/'>Online Atlas of the British and Irish flora</a>. 'hints_ukplantatlas'
+must be either NULL or a character string with the wanted hints from
+c('mapuk', 'familyuk', 'ecology', 'statusuk', 'trends', 'perennation',
+'lifeform', 'woodiness', 'clonality').</p></td>
     </tr>
     <tr>
       <th>imagelinks_custom</th>
-      <td><p>character vector that defines a custom link to
-retrieve images</p></td>
+      <td><p>character vector defining columns of <code>species_row</code>
+containing links (URLs) to retrieve images from the internet. For using it
+inside the BotanizeR Shiny App these columns need to be named like
+c("imagelink_1", "imagelink_2") etc.</p></td>
     </tr>
     <tr>
       <th>image_folders</th>
-      <td><p>character vector that defines a specific folder from
-which the user wants to retrieve images</p></td>
+      <td><p>character vector defining a folder from
+which to retrieve images. Image file names need to contain the species names
+to be found.</p></td>
     </tr>
     <tr>
       <th>hints_custom</th>
-      <td><p>character vector that defines personal hints the user
-wants to use. **Note:** in that case, these hints should be present as
-columns in the `species_row` table.</p></td>
+      <td><p>character vector defining custom hints to use.
+<strong>Note:</strong> In that case, these hints should be stored in <code>species_row</code> in
+additional columns named like ownhint_<em>HintName</em> where <em>HintName</em> should be
+different than the hints allowed for <code>hints_ukplantatlas</code> and
+<code>hints_floraweb</code>.</p></td>
     </tr>
     <tr>
       <th>file_location</th>
-      <td><p>character vector that defines</p></td>
+      <td><p>character vector defining a location to temporarily
+store the images retrieved from online resources. If put to "temporary", R
+will create a temporary folder automatically.</p></td>
     </tr>
     <tr>
       <th>only_links</th>
-      <td><p>logical, if `TRUE`, then the images behind the links are
-not loaded.</p></td>
+      <td><p>logical, if <code>TRUE</code>, then all images found will not be
+loaded but links will be returned. Set to <code>TRUE</code> for shiny app.</p></td>
     </tr>
     <tr>
       <th>image_required</th>
-      <td><p>logical.</p></td>
+      <td><p>logical indicating whether additional hints shall only
+be retrieved if at least one image for the given species is available. Set
+to <code>TRUE</code> for <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code>.</p></td>
     </tr>
     <tr>
       <th>image_width</th>
-      <td><p>number to define the width of the images.</p></td>
+      <td><p>numeric defining to what width of the images shall be
+rescaled in case <code>only_links</code> is <code>FALSE</code>and <code>image_width</code> is not <code>NA</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Hints for the selected species.</p>
+    <p>list of named elements including (for the selected species) the hints as
+characters and images and maps either as link or image or spatial object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function combines with [BotanizeR::BotanizeR_quiz()]</p>
+    <p>This function provides the information shown in
+<code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> and the BotanizeR Shiny app. Have a look into
+the <a href='https://patrickweigelt.github.io/BotanizeR/index.html'>BotanizeR tutorials</a>
+on how to use the quiz and the shiny app to learn more about its usage.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.</p>
+    
+<pre>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. submitted.
+</pre>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>[BotanizeR::BotanizeR_quiz()]</p></div>
+    <div class='dont-index'><p><code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> and <code><a href='BotanizeR_shiny.html'>BotanizeR_shiny()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='co'># Load species list for Britain and Germany with species and IDs from </span>
+<span class='co'># https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>)</span>
+
+<span class='co'># Select Acer campestre</span>
+<span class='va'>species_row</span> <span class='op'>=</span> <span class='va'>BotanizeR_species</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>$</span><span class='va'>SPECIES</span> <span class='op'>==</span>
+                                        <span class='st'>"Acer campestre"</span><span class='op'>)</span>,<span class='op'>]</span>
+
+
+<span class='co'># only ukplantatlas image(s) + hints + map</span>
+<span class='va'>hints</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span>, image_ukplantatlas <span class='op'>=</span> <span class='cn'>TRUE</span>, 
+                           hints_ukplantatlas <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mapuk"</span>, <span class='st'>"familyuk"</span>, 
+                                                 <span class='st'>"ecology"</span>, <span class='st'>"statusuk"</span>, 
+                                                 <span class='st'>"trends"</span>, <span class='st'>"perennation"</span>,
+                                                 <span class='st'>"lifeform"</span>, <span class='st'>"woodiness"</span>, 
+                                                 <span class='st'>"clonality"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>4</span><span class='op'>)</span>, oma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>image</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, axes <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>image</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>, axes <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>mapuk</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>hints</span><span class='op'>$</span><span class='va'>statusuk</span>
+</div><div class='output co'>#&gt; [1] "Status: Native"</div><div class='input'><span class='va'>hints</span><span class='op'>$</span><span class='va'>clonality</span>
+</div><div class='output co'>#&gt; [1] "Clonality: Little or no vegetative spread"</div><div class='input'>
+
+<span class='co'># only floraweb image(s) + hints + map</span>
+<span class='va'>hints</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span>, image_floraweb <span class='op'>=</span> <span class='cn'>TRUE</span>, 
+                           hints_floraweb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"map"</span>, <span class='st'>"description"</span>, <span class='st'>"status"</span>, 
+                                              <span class='st'>"habitat"</span>, <span class='st'>"family"</span>, 
+                                              <span class='st'>"German name"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>oma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>10.5</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>map</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, pal <span class='op'>=</span> <span class='va'>hints</span><span class='op'>$</span><span class='va'>map</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>, key.pos <span class='op'>=</span> <span class='fl'>4</span>, main <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>image</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, axes <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>hints</span><span class='op'>$</span><span class='va'>family</span>
+</div><div class='output co'>#&gt; [1] "Familienzugehörigkeit: Aceraceae, Ahorngewächse"</div><div class='input'>
+
+<span class='co'># only images from custom image links + custom hints</span>
+<span class='va'>hints</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span>, image_floraweb <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                           hints_custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ownhint_English_name"</span>, 
+                                            <span class='st'>"ownhint_Description"</span>, 
+                                            <span class='st'>"ownhint_Distribution"</span><span class='op'>)</span>,
+                           imagelinks_custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"imagelink_1"</span>, 
+                                                 <span class='st'>"imagelink_2"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>image</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, axes <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>hints</span><span class='op'>$</span><span class='va'>image</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>, axes <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='BotanizeR_collect-6.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>hints</span><span class='op'>$</span><span class='va'>ownhint_English_name</span>
+</div><div class='output co'>#&gt; [1] "English name: Field Maple"</div><div class='input'>
+
+<span class='co'># only returning image links instead of actual images</span>
+<span class='va'>hints</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span>, image_floraweb <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                           image_ukplantatlas <span class='op'>=</span> <span class='cn'>TRUE</span>, 
+                           imagelinks_custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"imagelink_1"</span>, 
+                                                 <span class='st'>"imagelink_2"</span><span class='op'>)</span>,
+                           hints_ukplantatlas <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mapuk"</span>, <span class='st'>"familyuk"</span><span class='op'>)</span>,
+                           only_links <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>hints</span>
+</div><div class='output co'>#&gt; $images
+#&gt; $images[[1]]
+#&gt; [1] "https://www.floraweb.de/bilder/arten/1925.jpg"
+#&gt; 
+#&gt; $images[[2]]
+#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_2.JPG"
+#&gt; 
+#&gt; $images[[3]]
+#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_1.JPG"
+#&gt; 
+#&gt; $images[[4]]
+#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Salop_SHammonds.JPG"
+#&gt; 
+#&gt; $images[[5]]
+#&gt; [1] "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Acer_campestre_005.jpg/1280px-Acer_campestre_005.jpg"
+#&gt; 
+#&gt; $images[[6]]
+#&gt; [1] "https://upload.wikimedia.org/wikipedia/commons/f/f5/237_Acer_campestre.jpg"
+#&gt; 
+#&gt; 
+#&gt; $mapuk
+#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/atlas_maps/3.gif"
+#&gt; 
+#&gt; $familyuk
+#&gt; [1] "Family: Aceraceae"
+#&gt; </div><div class='input'>
+<span class='co'># retrieving nothing</span>
+<span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $images
+#&gt; list()
+#&gt; </div><div class='input'>
+<span class='co'># To load images from your local computer, specify an image folder with</span>
+<span class='co'># pictures included. File names need to include the species names.</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>hints</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_collect</span><span class='op'>(</span><span class='va'>species_row</span>, 
+                           image_folders <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"images/Asteraceae_Britain"</span>,
+                                             <span class='st'>"images/Trees"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

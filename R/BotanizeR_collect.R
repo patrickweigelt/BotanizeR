@@ -65,7 +65,8 @@
 #' rescaled in case `only_links` is `FALSE`and `image_width` is not `NA`.
 #' 
 #' @return
-#' Hints for the selected species.
+#' list of named elements including (for the selected species) the hints as 
+#' characters and images and maps either as link or image or spatial object.
 #'
 #'
 #' @details This function provides the information shown in 
@@ -99,6 +100,7 @@
 #'                                                  "lifeform", "woodiness", 
 #'                                                  "clonality"))
 #' 
+#' par(mar = rep(0.5, 4), oma = rep(0, 4))
 #' plot(hints$image[[1]], axes = FALSE)
 #' plot(hints$image[[2]], axes = FALSE)
 #' 
@@ -119,7 +121,6 @@
 #' plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
 #' }
 #' 
-#' par(mar = rep(0.5, 4), oma = rep(0, 4))
 #' plot(hints$image[[1]], axes = FALSE)
 #' 
 #' hints$family
@@ -144,6 +145,7 @@
 #'                            image_ukplantatlas = TRUE, 
 #'                            imagelinks_custom = c("imagelink_1", 
 #'                                                  "imagelink_2"),
+#'                            hints_ukplantatlas = c("mapuk", "familyuk"),
 #'                            only_links = TRUE)
 #' hints
 #' 
@@ -152,6 +154,12 @@
 #' 
 #' # To load images from your local computer, specify an image folder with
 #' # pictures included. File names need to include the species names.
+#' 
+#' \dontrun{
+#' hints <- BotanizeR_collect(species_row, 
+#'                            image_folders = c("images/Asteraceae_Britain",
+#'                                              "images/Trees"))
+#' }
 #' 
 #' @export
 

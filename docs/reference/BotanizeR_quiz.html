@@ -160,31 +160,31 @@ species.</p>
     <tr>
       <th>species_list</th>
       <td><p>a data.frame with the species for which we want to
-retrieve information. **It should contain the following columns**: 
-*NAMNR*, *TAXONNAME*, *SPECIES*, *GENUS*, *EPITHET*, *AUTHOR*, *COUNT*,
-*SCORE* and *ATTEMPTS*</p></td>
+retrieve information. <strong>It should contain the following columns</strong>:
+<em>NAMNR</em>, <em>TAXONNAME</em>, <em>SPECIES</em>, <em>GENUS</em>, <em>EPITHET</em>, <em>AUTHOR</em>, <em>COUNT</em>,
+<em>SCORE</em> and <em>ATTEMPTS</em></p></td>
     </tr>
     <tr>
       <th>image_floraweb</th>
       <td><p>logical that defines if images from
-[FloraWeb](https://www.floraweb.de) should be retrieved</p></td>
+<a href='https://www.floraweb.de'>FloraWeb</a> should be retrieved</p></td>
     </tr>
     <tr>
       <th>hints_floraweb</th>
       <td><p>character vector that defines what hints the user
-wants to retrieve from [FloraWeb](https://www.floraweb.de)</p></td>
+wants to retrieve from <a href='https://www.floraweb.de'>FloraWeb</a></p></td>
     </tr>
     <tr>
       <th>image_ukplantatlas</th>
       <td><p>logical that defines if images from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)
+<a href='https://www.brc.ac.uk/plantatlas/'>Online Atlas of the British and Irish flora</a>
 should be retrieved</p></td>
     </tr>
     <tr>
       <th>hints_ukplantatlas</th>
       <td><p>character vector that defines what hints the user
 wants to retrieve from the
-[Online Atlas of the British and Irish flora ](https://www.brc.ac.uk/plantatlas/)</p></td>
+<a href='https://www.brc.ac.uk/plantatlas/'>Online Atlas of the British and Irish flora</a></p></td>
     </tr>
     <tr>
       <th>imagelinks_custom</th>
@@ -199,8 +199,8 @@ which the user wants to retrieve images</p></td>
     <tr>
       <th>hints_custom</th>
       <td><p>character vector that defines personal hints the user
-wants to use. **Note:** in that case, these hints should be present as
-columns in the `species_row` table.</p></td>
+wants to use. <strong>Note:</strong> in that case, these hints should be present as
+columns in the <code>species_row</code> table.</p></td>
     </tr>
     <tr>
       <th>case_sensitive</th>
@@ -216,17 +216,17 @@ columns in the `species_row` table.</p></td>
     </tr>
     <tr>
       <th>init_count</th>
-      <td><p>sum of the column `$COUNT` in `species_list`,
+      <td><p>sum of the column <code>$COUNT</code> in <code>species_list</code>,
 defining the total number of tries of the user</p></td>
     </tr>
     <tr>
       <th>init_score</th>
-      <td><p>sum of the column `$SCORE` in `species_list`,
+      <td><p>sum of the column <code>$SCORE</code> in <code>species_list</code>,
 defining the total score of the user</p></td>
     </tr>
     <tr>
       <th>init_attempts</th>
-      <td><p>sum of the column `$ATTEMPTS` in `species_list`,
+      <td><p>sum of the column <code>$ATTEMPTS</code> in <code>species_list</code>,
 defining how many attempts he user had in total</p></td>
     </tr>
     <tr>
@@ -256,65 +256,18 @@ the species randomly. The better you know a species the less likely it will
 be shown again.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
-    R-package with Shiny-App for practicing plant identification in times of
-    online teaching and beyond. Plants, People, Planet.</p>
+    
+<pre>Weigelt, P., Denelle, P., Brambach, F. &amp; Kreft, H. (2021) A flexible
+R-package with Shiny-App for practicing plant identification in times of
+online teaching and beyond. Plants, People, Planet.
+</pre>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>[BotanizeR::BotanizeR_collect()]</p></div>
+    <div class='dont-index'><p><code><a href='BotanizeR_collect.html'>BotanizeR_collect()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Species list for Germany with IDs from floraweb.de</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>floraweb_species</span><span class='op'>)</span>
-
-<span class='co'># Subset for about 300 species students in Goettingen learn</span>
-<span class='va'>floraweb_species</span> <span class='op'>&lt;-</span> <span class='va'>floraweb_species</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>floraweb_species</span><span class='op'>$</span><span class='va'>SUMMER</span><span class='op'>==</span><span class='fl'>1</span> <span class='op'>|</span>
-<span class='va'>floraweb_species</span><span class='op'>$</span><span class='va'>BioDiv2005</span><span class='op'>==</span><span class='fl'>1</span><span class='op'>)</span>, <span class='op'>]</span>
-
-<span class='co'># Type in species name, or press enter for next hint or type "skip" and press </span>
-<span class='co'># enter for next species or type "exit" to end quiz and save results</span>
-<span class='va'>floraweb_species_trained</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>
-species_list <span class='op'>=</span> <span class='va'>floraweb_species</span>, hints_floraweb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"description"</span>, <span class='st'>"status"</span>,
-<span class='st'>"habitat"</span>,<span class='st'>"family"</span>,<span class='st'>"German name"</span><span class='op'>)</span>, case_sensitive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in colnames(species_row): object 'species_row' not found</span></div><div class='input'>
-<span class='co'># If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit</span>
-<span class='va'>floraweb_species_trained</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>
-species_list <span class='op'>=</span> <span class='va'>floraweb_species</span>,
-hints_floraweb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"map"</span>,<span class='st'>"description"</span>,<span class='st'>"status"</span>, <span class='st'>"habitat"</span>, <span class='st'>"family"</span>,
-<span class='st'>"German name"</span><span class='op'>)</span>, case_sensitive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in colnames(species_row): object 'species_row' not found</span></div><div class='input'>
-<span class='co'># If you want to keep track of your progress, you can save the species list with </span>
-<span class='co'># updated scores locally and load it in the next session</span>
-
-<span class='co'># Initial saving</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>floraweb_species_trained</span>, <span class='st'>"floraweb_species_trained.csv"</span>,
-row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is.data.frame(x): object 'floraweb_species_trained' not found</span></div><div class='input'>
-<span class='co'># Load species list</span>
-<span class='va'>floraweb_species_trained</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"floraweb_species_trained.csv"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: cannot open file 'floraweb_species_trained.csv': No such file or directory</span></div><div class='output co'>#&gt; <span class='error'>Error in file(file, "rt"): cannot open the connection</span></div><div class='input'>
-<span class='co'># Practice</span>
-<span class='va'>floraweb_species_trained</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>
-  species_list <span class='op'>=</span> <span class='va'>floraweb_species_trained</span>,
-  hints_floraweb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"map"</span>, <span class='st'>"description"</span>, <span class='st'>"status"</span>, <span class='st'>"habitat"</span>, <span class='st'>"family"</span>,
-                     <span class='st'>"German name"</span><span class='op'>)</span>, case_sensitive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is.data.frame(species_list): object 'floraweb_species_trained' not found</span></div><div class='input'>
-<span class='co'># Save species list</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></span><span class='op'>(</span><span class='va'>floraweb_species_trained</span>, <span class='st'>"floraweb_species_trained.csv"</span>,
-          row.names <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is.data.frame(x): object 'floraweb_species_trained' not found</span></div><div class='input'>
-<span class='co'>### example for three species with custom hints and images</span>
-<span class='va'>custom_species</span> <span class='op'>&lt;-</span> <span class='va'>floraweb_species</span><span class='op'>[</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>floraweb_species</span><span class='op'>$</span><span class='va'>SPECIES</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Acer campestre"</span>, <span class='st'>"Erica carnea"</span>,
-                                        <span class='st'>"Melampyrum nemorosum"</span><span class='op'>)</span><span class='op'>)</span>, <span class='op'>]</span>
-
-<span class='va'>custom_species_trained</span> <span class='op'>&lt;-</span> <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>
-  species_list <span class='op'>=</span> <span class='va'>custom_species</span>, image_floraweb <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  hints_floraweb <span class='op'>=</span> <span class='cn'>NULL</span>, hints_custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ownhint_1"</span>, <span class='st'>"ownhint_2"</span><span class='op'>)</span>, 
-  imagelinks_custom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"imagelink_1"</span>, <span class='st'>"imagelink_2"</span><span class='op'>)</span>, 
-  image_folders <span class='op'>=</span> <span class='cn'>NULL</span>, case_sensitive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in colnames(species_row): object 'species_row' not found</span></div><div class='input'>
-</div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

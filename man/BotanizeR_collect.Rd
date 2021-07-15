@@ -2,11 +2,11 @@
 % Please edit documentation in R/BotanizeR_collect.R
 \name{BotanizeR_collect}
 \alias{BotanizeR_collect}
-\title{Collect information for quiz}
+\title{Collect images and information for BotanizeR quiz}
 \usage{
 BotanizeR_collect(
   species_row,
-  image_floraweb = TRUE,
+  image_floraweb = FALSE,
   hints_floraweb = NULL,
   image_ukplantatlas = FALSE,
   hints_ukplantatlas = NULL,
@@ -20,117 +20,156 @@ BotanizeR_collect(
 )
 }
 \arguments{
-\item{species_row}{a data.frame with the species for which we want to
-retrieve information. \strong{It should contain the following columns}:
-\emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES}, \emph{GENUS}, \emph{EPITHET}, \emph{AUTHOR}, \emph{COUNT},
-\emph{SCORE} and \emph{ATTEMPTS}}
+\item{species_row}{a data.frame of one row including the species for which
+information shall be retrieved (Usually an entry of the \code{species_list}
+data.frame used in \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and the BotanizeR Shiny
+app. \strong{It should contain at least the following columns}:
+\emph{NAMNR} and \emph{SPECIES}. The \emph{SPECIES} column includes the species name
+(character or factor) to be looked up in the online resources or image
+folders. \emph{NAMNR} contains the ID (numeric) of the species used by
+\href{https://www.floraweb.de}{FloraWeb}. In case FloraWeb content is not
+retrieved or not available for a given species, this may be NA or "".}
 
 \item{image_floraweb}{logical that defines if images from
-\href{https://www.floraweb.de}{FloraWeb} should be retrieved}
+\href{https://www.floraweb.de}{FloraWeb} shall be retrieved.}
 
-\item{hints_floraweb}{character vector that defines what hints the user
-wants to retrieve from \href{https://www.floraweb.de}{FloraWeb}}
+\item{hints_floraweb}{character vector defining the hints to
+retrieve from \href{https://www.floraweb.de}{FloraWeb}. 'hints_floraweb'
+must be either NULL or a character string with the wanted hints from
+c('map', 'description', 'status', 'habitat', 'family', 'German name').}
 
 \item{image_ukplantatlas}{logical that defines if images from the
-\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora } should be retrieved}
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora} shall be retrieved.}
 
-\item{hints_ukplantatlas}{character vector that defines what hints the user
-wants to retrieve from the
-\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora }}
+\item{hints_ukplantatlas}{character vector defining the hints to
+retrieve from the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}. 'hints_ukplantatlas'
+must be either NULL or a character string with the wanted hints from
+c('mapuk', 'familyuk', 'ecology', 'statusuk', 'trends', 'perennation',
+'lifeform', 'woodiness', 'clonality').}
 
-\item{imagelinks_custom}{character vector that defines a custom link (URL) to
-retrieve images}
+\item{imagelinks_custom}{character vector defining columns of \code{species_row}
+containing links (URLs) to retrieve images from the internet. For using it
+inside the BotanizeR Shiny App these columns need to be named like
+c("imagelink_1", "imagelink_2") etc.}
 
-\item{image_folders}{character vector that defines a specific folder from
-which the user wants to retrieve images}
+\item{image_folders}{character vector defining a folder from
+which to retrieve images. Image file names need to contain the species names
+to be found.}
 
-\item{hints_custom}{character vector that defines personal hints the user
-wants to use. \strong{Note:} in that case, these hints should be present as
-columns in the \code{species_row} table.}
+\item{hints_custom}{character vector defining custom hints to use.
+\strong{Note:} In that case, these hints should be stored in \code{species_row} in
+additional columns named like ownhint_\emph{HintName} where \emph{HintName} should be
+different than the hints allowed for \code{hints_ukplantatlas} and
+\code{hints_floraweb}.}
 
-\item{file_location}{character vector that defines}
+\item{file_location}{character vector defining a location to temporarily
+store the images retrieved from online resources. If put to "temporary", R
+will create a temporary folder automatically.}
 
-\item{only_links}{logical, if \code{TRUE}, then the images behind the links are
-not loaded.}
+\item{only_links}{logical, if \code{TRUE}, then all images found will not be
+loaded but links will be returned. Set to \code{TRUE} for shiny app.}
 
-\item{image_required}{logical.}
+\item{image_required}{logical indicating whether additional hints shall only
+be retrieved if at least one image for the given species is available. Set
+to \code{TRUE} for \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}.}
 
-\item{image_width}{number to define the width of the images.}
+\item{image_width}{numeric defining to what width of the images shall be
+rescaled in case \code{only_links} is \code{FALSE}and \code{image_width} is not \code{NA}.}
 }
 \value{
-Hints for the selected species.
+list of named elements including (for the selected species) the hints as
+characters and images and maps either as link or image or spatial object.
 }
 \description{
 Collects information from \href{https://www.floraweb.de}{FloraWeb}
-(images, map and species descriptions) and from user defined image folders
-and columns in the species_list data.frame to show them as hints in
-\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
+(images, map and species descriptions) and/or the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British Irish flora} as well as from user
+defined image folders and columns in the \code{species_list} data.frame to show
+them as hints in \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} or the BotanizeR Shiny app.
 }
 \details{
-This function combines with \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
+This function provides the information shown in
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and the BotanizeR Shiny app. Have a look into
+the \href{https://patrickweigelt.github.io/BotanizeR/index.html}{BotanizeR tutorials}
+on how to use the quiz and the shiny app to learn more about its usage.
 }
 \examples{
-# Species list for Germany with IDs from floraweb.de
-data(floraweb_species)
+# Load species list for Britain and Germany with species and IDs from 
+# https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/
+data(BotanizeR_species)
 
 # Select Acer campestre
-species_row = floraweb_species[which(floraweb_species$SPECIES ==
-"Acer campestre"),]
+species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                        "Acer campestre"),]
 
-# Some self-made hints
-species_row$ownhint_1 <- "very nice species"
-species_row$ownhint_2 <- "tree"
-species_row$ownhint_3 <- NA
 
-# Image links from Wikipedia
-species_row$imagelink_1 <- "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Acer_campestre_005.jpg/1280px-Acer_campestre_005.jpg"
-species_row$imagelink_2 <- "https://upload.wikimedia.org/wikipedia/commons/f/f5/237_Acer_campestre.jpg"
-species_row$imagelink_3 <- ""
-
-# only floraweb image + description + map
-hints <- BotanizeR_collect(
-species_row, image_floraweb = TRUE, hints_floraweb = c("map",
-"description", "status", "habitat", "family", "German name"),
-hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
-file_location="temporary")
-
-par(oma = c(0, 0, 0, 10.5))
-plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
+# only ukplantatlas image(s) + hints + map
+hints <- BotanizeR_collect(species_row, image_ukplantatlas = TRUE, 
+                           hints_ukplantatlas = c("mapuk", "familyuk", 
+                                                 "ecology", "statusuk", 
+                                                 "trends", "perennation",
+                                                 "lifeform", "woodiness", 
+                                                 "clonality"))
 
 par(mar = rep(0.5, 4), oma = rep(0, 4))
 plot(hints$image[[1]], axes = FALSE)
+plot(hints$image[[2]], axes = FALSE)
 
-message(hints$habitat)
+plot(hints$mapuk)
 
-# only custom image links + floraweb descriptions
+hints$statusuk
+hints$clonality
+
+
+# only floraweb image(s) + hints + map
+hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
+                           hints_floraweb = c("map", "description", "status", 
+                                              "habitat", "family", 
+                                              "German name"))
+
+\dontrun{
+par(oma = c(0, 0, 0, 10.5))
+plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
+}
+
+plot(hints$image[[1]], axes = FALSE)
+
+hints$family
+
+
+# only images from custom image links + custom hints
 hints <- BotanizeR_collect(species_row, image_floraweb = FALSE,
-hints_floraweb = c("description", "status", "habitat", "family",
-"German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
-"imagelink_2", "imagelink_3"), image_folders = NULL,
-file_location = "temporary")
+                           hints_custom = c("ownhint_English_name", 
+                                            "ownhint_Description", 
+                                            "ownhint_Distribution"),
+                           imagelinks_custom = c("imagelink_1", 
+                                                 "imagelink_2"))
 
-# floraweb + custom images + floraweb descriptions
-hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-hints_floraweb = c("description", "status", "habitat", "family",
-"German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
-"imagelink_2", "imagelink_3"), image_folders = NULL,
-file_location = "temporary")
+plot(hints$image[[1]], axes = FALSE)
+plot(hints$image[[2]], axes = FALSE)
 
-# floraweb + custom images + floraweb descriptions + custom description
-hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-hints_floraweb = c("description", "status", "habitat", "family",
-"German name"), hints_custom = c("ownhint_1", "ownhint_2", "ownhint_3"),
-imagelinks_custom = c("imagelink_1", "imagelink_2", "imagelink_3"), 
-image_folders = NULL, file_location="temporary")
+hints$ownhint_English_name
 
-# floraweb + custom images + only custom description
+
+# only returning image links instead of actual images
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-hints_floraweb = NULL, hints_custom = c("ownhint_1", "ownhint_2",
-"ownhint_3"), imagelinks_custom = c("imagelink_1", "imagelink_2",
-"imagelink_3"), image_folders = NULL, file_location = "temporary")
+                           image_ukplantatlas = TRUE, 
+                           imagelinks_custom = c("imagelink_1", 
+                                                 "imagelink_2"),
+                           hints_ukplantatlas = c("mapuk", "familyuk"),
+                           only_links = TRUE)
+hints
+
+# retrieving nothing
+BotanizeR_collect(species_row)
 
 # To load images from your local computer, specify an image folder with
-pictures included. File names need to include the species names.
+# pictures included. File names need to include the species names.
+
+\dontrun{
+hints <- BotanizeR_collect(species_row, 
+                           image_folders = c("images/Asteraceae_Britain",
+                                             "images/Trees"))
+}
 
 }
 \references{
@@ -140,5 +179,5 @@ online teaching and beyond. submitted.
 }
 }
 \seealso{
-\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and \code{\link[=BotanizeR_shiny]{BotanizeR_shiny()}}
 }

@@ -1,13 +1,14 @@
 devtools::load_all()
 
+# To generate the documentation of functions and NAMESPACE
+roxygen2::roxygenise()
+
 # Build the website
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_site()
 
-# To generate the documentation of functions and NAMESPACE
-roxygen2::roxygenise()
 
-# Mispellings
+# Misspellings
 devtools::spell_check()
 
 # Practice improvements
