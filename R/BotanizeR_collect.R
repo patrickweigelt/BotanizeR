@@ -4,7 +4,7 @@
 #' (images, map and species descriptions) and/or the [Online Atlas of the 
 #' British Irish flora](https://www.brc.ac.uk/plantatlas/) as well as from user 
 #' defined image folders and columns in the `species_list` data.frame to show 
-#' them as hints in [BotanizeR::BotanizeR_quiz()] and the BotanizeR Shiny app.
+#' them as hints in [BotanizeR::BotanizeR_quiz()] or the BotanizeR Shiny app.
 #'
 #' @param species_row a data.frame of one row including the species for which 
 #' information shall be retrieved (Usually an entry of the `species_list` 
@@ -82,72 +82,81 @@
 #' @seealso [BotanizeR::BotanizeR_quiz()] and [BotanizeR::BotanizeR_shiny()]
 #'
 #' @examples
-#' # Species list for Germany with IDs from floraweb.de
-#' data(floraweb_species)
-#'
+#' # Load species list for Britain and Germany with species and IDs from 
+#' # https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/
+#' data(BotanizeR_species)
+#' 
 #' # Select Acer campestre
-#' species_row = floraweb_species[which(floraweb_species$SPECIES ==
-#' "Acer campestre"),]
-#'
-#' # Some self-made hints
-#' species_row$ownhint_1 <- "very nice species"
-#' species_row$ownhint_2 <- "tree"
-#' species_row$ownhint_3 <- NA
+#' species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+#'                                         "Acer campestre"),]
 #' 
-#' # Image links from Wikipedia
-#' species_row$imagelink_1 <- "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Acer_campestre_005.jpg/1280px-Acer_campestre_005.jpg"
-#' species_row$imagelink_2 <- "https://upload.wikimedia.org/wikipedia/commons/f/f5/237_Acer_campestre.jpg"
-#' species_row$imagelink_3 <- ""
 #' 
-#' # only floraweb image + description + map
-#' hints <- BotanizeR_collect(
-#' species_row, image_floraweb = TRUE, hints_floraweb = c("map",
-#' "description", "status", "habitat", "family", "German name"),
-#' hints_custom = NULL, imagelinks_custom = NULL, image_folders = NULL,
-#' file_location="temporary")
+#' # only ukplantatlas image(s) + hints + map
+#' hints <- BotanizeR_collect(species_row, image_ukplantatlas = TRUE, 
+#'                            hints_ukplantatlas = c("mapuk", "familyuk", 
+#'                                                  "ecology", "statusuk", 
+#'                                                  "trends", "perennation",
+#'                                                  "lifeform", "woodiness", 
+#'                                                  "clonality"))
 #' 
+#' plot(hints$image[[1]], axes = FALSE)
+#' plot(hints$image[[2]], axes = FALSE)
+#' 
+#' plot(hints$mapuk)
+#' 
+#' hints$statusuk
+#' hints$clonality
+#' 
+#' 
+#' # only floraweb image(s) + hints + map
+#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
+#'                            hints_floraweb = c("map", "description", "status", 
+#'                                               "habitat", "family", 
+#'                                               "German name"))
+#' 
+#' \dontrun{
 #' par(oma = c(0, 0, 0, 10.5))
 #' plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
+#' }
 #' 
 #' par(mar = rep(0.5, 4), oma = rep(0, 4))
 #' plot(hints$image[[1]], axes = FALSE)
 #' 
-#' message(hints$habitat)
+#' hints$family
 #' 
-#' # only custom image links + floraweb descriptions
+#' 
+#' # only images from custom image links + custom hints
 #' hints <- BotanizeR_collect(species_row, image_floraweb = FALSE,
-#' hints_floraweb = c("description", "status", "habitat", "family",
-#' "German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
-#' "imagelink_2", "imagelink_3"), image_folders = NULL,
-#' file_location = "temporary")
+#'                            hints_custom = c("ownhint_English_name", 
+#'                                             "ownhint_Description", 
+#'                                             "ownhint_Distribution"),
+#'                            imagelinks_custom = c("imagelink_1", 
+#'                                                  "imagelink_2"))
 #' 
-#' # floraweb + custom images + floraweb descriptions
-#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-#' hints_floraweb = c("description", "status", "habitat", "family",
-#' "German name"), hints_custom = NULL, imagelinks_custom = c("imagelink_1",
-#' "imagelink_2", "imagelink_3"), image_folders = NULL,
-#' file_location = "temporary")
+#' plot(hints$image[[1]], axes = FALSE)
+#' plot(hints$image[[2]], axes = FALSE)
 #' 
-#' # floraweb + custom images + floraweb descriptions + custom description
-#' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-#' hints_floraweb = c("description", "status", "habitat", "family",
-#' "German name"), hints_custom = c("ownhint_1", "ownhint_2", "ownhint_3"),
-#' imagelinks_custom = c("imagelink_1", "imagelink_2", "imagelink_3"), 
-#' image_folders = NULL, file_location="temporary")
+#' hints$ownhint_English_name
 #' 
-#' # floraweb + custom images + only custom description
+#' 
+#' # only returning image links instead of actual images
 #' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
-#' hints_floraweb = NULL, hints_custom = c("ownhint_1", "ownhint_2",
-#' "ownhint_3"), imagelinks_custom = c("imagelink_1", "imagelink_2",
-#' "imagelink_3"), image_folders = NULL, file_location = "temporary")
+#'                            image_ukplantatlas = TRUE, 
+#'                            imagelinks_custom = c("imagelink_1", 
+#'                                                  "imagelink_2"),
+#'                            only_links = TRUE)
+#' hints
+#' 
+#' # retrieving nothing
+#' BotanizeR_collect(species_row)
 #' 
 #' # To load images from your local computer, specify an image folder with
-#' pictures included. File names need to include the species names.
+#' # pictures included. File names need to include the species names.
 #' 
 #' @export
 
 BotanizeR_collect <-
-  function(species_row, image_floraweb = TRUE, hints_floraweb = NULL,
+  function(species_row, image_floraweb = FALSE, hints_floraweb = NULL,
            image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,
            imagelinks_custom = NULL, image_folders = NULL, hints_custom = NULL,
            file_location = "temporary", only_links = FALSE,
@@ -405,11 +414,11 @@ BotanizeR_collect <-
           
           if(length(imagelinks) > 0){
             # Check if medium sized image is available
-            imagelinks_error <- sapply(imagelinks, http_error)
+            imagelinks_error <- sapply(imagelinks, httr::http_error)
             imagelinks[imagelinks_error] <- gsub("/large/",
                                                  "/largest_1152_870/",
                                                  imagelinks[imagelinks_error])
-            imagelinks_error <- sapply(imagelinks, http_error)
+            imagelinks_error <- sapply(imagelinks, httr::http_error)
             imagelinks <- imagelinks[!imagelinks_error]
           }
         }
@@ -667,7 +676,7 @@ BotanizeR_collect <-
                                XML::xmlValue)
       
       # Map
-      mapuk <- NA
+      mapuk <- NULL
       if("mapuk" %in% hints_ukplantatlas){
         try({mapuk_temp <- XML::xpathApply(species_main,
                                            "//img[@class='img-responsive']",
@@ -730,7 +739,7 @@ BotanizeR_collect <-
           names(hints)[length(hints)] <- hints_ukplantatlas[i]
         }
         
-        if(hints_ukplantatlas[i] == "mapuk" & !is.na(mapuk)){
+        if(hints_ukplantatlas[i] == "mapuk" & !is.null(mapuk)){
           hints[[length(hints)+1]] <- mapuk
           names(hints)[length(hints)] <- hints_ukplantatlas[i]
         }
