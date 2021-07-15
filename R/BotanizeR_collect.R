@@ -159,48 +159,48 @@ BotanizeR_collect <-
     # Arguments
     if(!is.data.frame(species_row)){
       stop("species_row must be a data.frame of one row including the species 
-      for which you want to retrieve information. It should contain at least 
+      for which information shall be retrieved. It should contain at least 
       the following columns: 'NAMNR' and 'SPECIES'.")
     }
     
     if(nrow(species_row) !=1) {
       stop("species_row must be a data.frame of one row including the species 
-        for which you want to retrieve information. It should contain at least 
+        for which information shall be retrieved. It should contain at least 
         the following columns: 'NAMNR' and 'SPECIES'.")
     } 
     
     if(!all(c('NAMNR','SPECIES') %in% colnames(species_row))) {
       stop("species_row must be a data.frame of one row including the species 
-        for which you want to retrieve information. It should contain at least 
+        for which information shall be retrieved. It should contain at least 
         the following columns: 'NAMNR' and 'SPECIES'.")
     } 
     
     if(!is.character(species_row$SPECIES) & !is.factor(species_row$SPECIES)) {
       stop("species_row must be a data.frame of one row including the species 
-        for which you want to retrieve information. It should contain at least 
+        for which information shall be retrieved. It should contain at least 
         the following columns: 'NAMNR' and 'SPECIES'. The *SPECIES* column has 
-        to include a character string or factor of species names to be looked 
-        up in the online resources or image folders.")
+        to include the species name (character or factor) to be looked up in 
+        the online resources or image folders.")
     } 
 
     if(!is.logical(image_floraweb)){
-      stop("'image_floraweb' must be a logical that defines if images from
-      https://www.floraweb.de should be retrieved")
+      stop("'image_floraweb' must be a logical defining if images from
+      https://www.floraweb.de shall be retrieved")
     }
     
     if(!is.null(hints_floraweb)){
       if(!is.character(hints_floraweb) | 
          !all(hints_floraweb %in% c("map", "description", "status", "habitat",
                                     "family", "German name"))){
-        stop("'hints_floraweb' must be either NULL or a character string with 
-             the wanted hints from c('map', 'description', 'status', 'habitat', 
-             'family', 'German name').")
+        stop("'hints_floraweb' must be either NULL or a character string 
+        defining the hints to retrieve from https://www.floraweb.de: 
+        c('map', 'description', 'status', 'habitat', 'family', 'German name').")
       }
     }
 
     if(!is.logical(image_ukplantatlas)){
-      stop("'image_ukplantatlas' must be a logical that defines if images from
-      https://www.brc.ac.uk/plantatlas/ should be retrieved.")
+      stop("'image_ukplantatlas' must be a logical defining if images from
+      https://www.brc.ac.uk/plantatlas/ shall be retrieved.")
     }
     
     if(!is.null(hints_ukplantatlas)){
@@ -209,35 +209,37 @@ BotanizeR_collect <-
                                         "statusuk", "trends", "perennation",
                                         "lifeform", "woodiness", "clonality"))){
         stop("'hints_ukplantatlas' must be either NULL or a character string 
-             with the wanted hints from c('mapuk', 'familyuk', 'ecology', 
-             'statusuk', 'trends', 'perennation', 'lifeform', 'woodiness', 
-             'clonality').")
+             defining the hints to retrieve from 
+             https://www.brc.ac.uk/plantatlas/: c('mapuk', 'familyuk', 
+             'ecology', 'statusuk', 'trends', 'perennation', 'lifeform', 
+             'woodiness', 'clonality').")
       }
     }
     
     if(!is.null(imagelinks_custom)){
       if(!is.character(imagelinks_custom)){
         stop("'imagelinks_custom' must be either NULL or a character string
-        with the links for images.")
+        defining columns of 'species_row' containing URLs to retrieve images 
+        from the internet.")
       }
     }
     
     if(!all(imagelinks_custom %in% colnames(species_row))){
-      stop('"imagelinks_custom" must be present in the column names of
-           "species_row"')
+      stop('"imagelinks_custom" must all be present in the column names of
+           "species_row".')
     }
     
     if(!is.null(image_folders)){
       if(!is.character(image_folders)){
-        stop("'image_folders' must be a character vector that defines a specific
-      folder from which the user wants to retrieve images.")
+        stop("'image_folders' must be a character vector defining a specific
+        folder from which to retrieve images.")
       }
     }
     
     if(!is.null(hints_custom)){
       if(!is.character(hints_custom)){
         stop("'hints_custom' must be either NULL or a character string
-        indicating the columns of 'species_row' containing custom hints.")
+        defining columns of 'species_row' containing custom hints.")
       }
     }
     
@@ -248,7 +250,7 @@ BotanizeR_collect <-
     
     if(!is.character(file_location)){
       stop("'file_location' must be 'temporary' or a character vector that 
-      defines a temporary folder location to store images.")
+      defines a temporary folder location where to store images.")
     }
     
     if(!is.logical(only_links)){
@@ -263,8 +265,8 @@ BotanizeR_collect <-
     
     if(!is.na(image_width)){
       if(!is.numeric(image_width)){
-        stop("'image_width' must be either NA or a numeric setting the width
-           of the images.")
+        stop("'image_width' must be either NA or a numeric defining to what 
+        width of the images shall be rescaled.")
       }
     }
     
