@@ -272,7 +272,7 @@ BotanizeR_quiz <- function(
   
   # 3. Quiz ----
   # Species i
-  i <- sample(1:nrow(species_list), 1,
+  i <- sample(seq_len(nrow(species_list)), 1,
               prob = ((species_list$COUNT - species_list$SCORE + 1)/
                         (species_list$SCORE+1))*species_list$INCLUDE)
   species <- species_list$SPECIES[i]
@@ -295,10 +295,10 @@ BotanizeR_quiz <- function(
     infos$images <- sample(infos$images)
     
     if(length(infos)>1){
-      hints_i <- c(paste("image", c(1:length(infos$images))),
+      hints_i <- c(paste("image", seq_along(infos$images)),
                    names(infos)[2:length(infos)])
     } else {
-      hints_i <- paste("image", c(1:length(infos$images)))
+      hints_i <- paste("image", seq_along(infos$images))
     }
     
     if(!case_sensitive){
@@ -310,7 +310,7 @@ BotanizeR_quiz <- function(
       
       genus <- FALSE
       
-      for(k in 1:length(hints_i)){
+      for(k in seq_along(hints_i)){
         
         attempt <- "start"
         

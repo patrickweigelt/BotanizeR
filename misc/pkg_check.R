@@ -15,7 +15,7 @@ devtools::spell_check()
 goodpractice::gp()
 
 # Tests # https://r-pkgs.org/tests.html
-usethis::use_testthat() # setting up the tests structure
+# usethis::use_testthat() # setting up the tests structure
 
 # Test coverage of the package
 covr::package_coverage()

@@ -1204,13 +1204,13 @@ shinyServer(function(input, output, session) {
             temp_data <- isolate(species_list_reactive$df_data)
             
             if(isolate(counts_reactive$dynamic)){
-                i$i <- sample(1:nrow(temp_data), 1, 
+                i$i <- sample(seq_len(nrow(temp_data)), 1, 
                               prob = 
                                   ((temp_data$COUNT - temp_data$SCORE + 1) / 
                                        (temp_data$SCORE+1)) *
                                   temp_data$INCLUDE)
             } else {
-                i$i <- sample(1:nrow(temp_data), 1, prob = temp_data$INCLUDE)
+                i$i <- sample(seq_len(nrow(temp_data)), 1, prob = temp_data$INCLUDE)
             }
             
             temp_row <- temp_data[isolate(i$i),]
@@ -1419,7 +1419,8 @@ shinyServer(function(input, output, session) {
         ### Description ----
         
         # observe({
-        observeEvent(input$quiz_options, ignoreNULL = FALSE, ignoreInit = TRUE, {
+        observeEvent(input$quiz_options, ignoreNULL = FALSE, 
+                     ignoreInit = TRUE, {
                 
             temp_hints_floraweb <- 
                 hints_floraweb_lookup$variable[which(
@@ -1510,7 +1511,7 @@ shinyServer(function(input, output, session) {
                                 "https://www.floraweb.de/pflanzenarten/",
                                 "artenhome.xsql?suchnr=",
                                 isolate(
-                                    species_list_reactive$df_data)[isolate(i$i), 
+                                    species_list_reactive$df_data)[isolate(i$i),
                                                                    "NAMNR"],
                                 "&")
                             HTML(paste0("Map source: <a href='",

@@ -441,7 +441,7 @@ BotanizeR_collect <-
           imagecredits <- imagecredits[2:length(imagecredits)]
           imagecredits <- gsub(" +", " ", imagecredits)
           
-          for(i in 1:length(imagelinks)){
+          for(i in seq_along(imagelinks)){
             if(only_links){
               hints[[1]][[length(hints[[1]])+1]] <- imagelinks[i]
             } else {
@@ -456,7 +456,7 @@ BotanizeR_collect <-
     
     # 3.3 Images from own image link ----
     if(length(imagelinks_custom) > 0){
-      for(i in 1:length(imagelinks_custom)){
+      for(i in seq_along(imagelinks_custom)){
         if(!is.na(species_row[, imagelinks_custom[i]]) &
            species_row[, imagelinks_custom[i]] != ""){
           if(only_links){
@@ -472,7 +472,7 @@ BotanizeR_collect <-
     
     # 3.4 Images from image folder ----
     if(length(image_folders) > 0){
-      for(k in 1:length(image_folders)){
+      for(k in seq_along(image_folders)){
         image_files <- list.files(image_folders[k], pattern = "\\.jpg|\\.jpeg",
                                   recursive = TRUE, full.names = FALSE)
         image_files <- image_files[
@@ -485,13 +485,13 @@ BotanizeR_collect <-
             # WWW/image_folder in local shiny needs to be image_folder
             # ~/ShinyApps/BotanizeR/WWW/image_folder in server shiny needs to
             # be image_folder
-            for(i in 1:length(image_files)){
+            for(i in seq_along(image_files)){
               hints[[1]][[length(hints[[1]])+1]] <-
                 file.path(gsub(".*[wwwWWW]/(.+)$", ("\\1"), image_folders[k]),
                           image_files[i])
             }
           } else {
-            for(i in 1:length(image_files)){
+            for(i in seq_along(image_files)){
               try(hints[[1]][[length(hints[[1]])+1]] <-
                     imager::load.image(file.path(image_folders[k],
                                                  image_files[i])))
@@ -629,7 +629,7 @@ BotanizeR_collect <-
         }
       }
       
-      for (i in 1:length(hints_floraweb)){
+      for (i in seq_along(hints_floraweb)){
         
         if(hints_floraweb[i] == "description" & (exists("infos_photo") |
                                                  exists("infos_biology"))){
@@ -703,7 +703,7 @@ BotanizeR_collect <-
         })
       }
       
-      for (i in 1:length(hints_ukplantatlas)){
+      for (i in seq_along(hints_ukplantatlas)){
         
         if(hints_ukplantatlas[i] == "statusuk" & length(infos) >= 3){
           hints[[length(hints)+1]] <- paste("Status:", infos[[3]])
@@ -756,7 +756,7 @@ BotanizeR_collect <-
     
     # 4.3 Hints from own entries ----
     if(length(hints_custom) > 0){
-      for(i in 1:length(hints_custom)){
+      for(i in seq_along(hints_custom)){
         if(!is.na(species_row[,hints_custom[i]]) &
            species_row[,hints_custom[i]] != ""){
           hints[[length(hints)+1]] <- paste0(

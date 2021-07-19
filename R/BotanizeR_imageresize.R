@@ -68,7 +68,7 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
   
   # 3. Scan image folders and resize images ----
   if(!is.null(image_folders)){
-    for(k in 1:length(image_folders)){
+    for(k in seq_along(image_folders)){
       image_files <- list.files(
         image_folders[k],
         pattern = "\\.jpg|\\.jpeg|\\.png|\\.JPG|\\.JPEG|\\.PNG",
@@ -84,7 +84,7 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
       
       # load, resize, save
       if(length(image_files) > 0){
-        for(i in 1:length(image_files)){
+        for(i in seq_along(image_files)){
           image_i <- load.image(file.path(image_folders[k], image_files[i]))
           
           if(!is.na(max_height) &
