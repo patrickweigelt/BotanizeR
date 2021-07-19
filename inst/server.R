@@ -906,7 +906,7 @@ shinyServer(function(input, output, session) {
             
             if (length(sources)>1){
                 sources <- vapply(sources, function(x) c(x,", "), 
-                                  FUN.VALUE = sources)
+                                  FUN.VALUE = rep("",2))
                 sources <- sources[-(length(sources))]
                 sources[length(sources)-1] <- " and "
             }
@@ -1403,7 +1403,7 @@ shinyServer(function(input, output, session) {
             
             if (length(sources)>1){
                 sources <- vapply(sources, function(x) c(x,", "), 
-                                  FUN.VALUE = sources)
+                                  FUN.VALUE = rep("",2))
                 sources <- sources[-(length(sources))]
                 sources[length(sources)-1] <- " and "
             }
