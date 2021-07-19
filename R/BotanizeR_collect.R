@@ -356,10 +356,11 @@ BotanizeR_collect <-
           # photolink <- XML::xpathApply(html_photo,
           #                              "//div[@id='content']//img",
           #                              XML::xmlAttrs)[[1]][3]
-          photolinks <- sapply(XML::xpathApply(html_photo,
-                                               "//section//img",
-                                               XML::xmlAttrs),
-                               function(x) grep("bilder", x, value = TRUE))
+          photolinks <- grep("bilder",
+                             unlist(
+                               XML::xpathApply(html_photo, "//section//img",
+                                               XML::xmlAttrs)),
+                             value = TRUE)
           
           if(photolinks[1] != "/bilder/arten/"){
             if(only_links){
@@ -413,20 +414,20 @@ BotanizeR_collect <-
                                       XML::xmlAttrs)
         
         if(length(imagelinks) > 0){
-          imagelinks <- imagelinks[sapply(imagelinks,
-                                          function(x) any(grepl("images", x)))]
-          imagelinks <- sapply(imagelinks, function(x) x[[2]])
+          imagelinks <- grep("images", unlist(imagelinks), value = TRUE)
           imagelinks <- imagelinks[grepl("/medium/", imagelinks)]
           imagelinks <- gsub("(.*)(\\?itok.*)", "\\1", imagelinks)
           imagelinks <- gsub("/medium/", "/large/", imagelinks)
           
           if(length(imagelinks) > 0){
             # Check if medium sized image is available
-            imagelinks_error <- sapply(imagelinks, httr::http_error)
+            imagelinks_error <- vapply(imagelinks, httr::http_error, 
+                                       FUN.VALUE = TRUE)
             imagelinks[imagelinks_error] <- gsub("/large/",
                                                  "/largest_1152_870/",
                                                  imagelinks[imagelinks_error])
-            imagelinks_error <- sapply(imagelinks, httr::http_error)
+            imagelinks_error <- vapply(imagelinks, httr::http_error, 
+                                       FUN.VALUE = TRUE)
             imagelinks <- imagelinks[!imagelinks_error]
           }
         }
@@ -689,12 +690,7 @@ BotanizeR_collect <-
         try({mapuk_temp <- XML::xpathApply(species_main,
                                            "//img[@class='img-responsive']",
                                            XML::xmlAttrs)
-        # mapuk <- unlist(
-        #   mapuk[sapply(mapuk, function(x) any(grepl("\\.png", x)))])[1]
-        mapuk_temp <- unlist(mapuk_temp[sapply(mapuk_temp,
-                                               function(x){
-                                                 any(grepl("atlas_maps", x))
-                                               })])[1]
+        mapuk_temp <- grep("atlas_maps", unlist(mapuk_temp), value = TRUE)[1]
         mapuk <- paste0("https://www.brc.ac.uk/plantatlas",
                         gsub("\\.\\.", "", mapuk_temp))
         if (!only_links){
@@ -767,6 +763,6 @@ BotanizeR_collect <-
       }
     }
     
-    hints <- hints[which(!sapply(hints, is.null))]
+    hints <- hints[which(!vapply(hints, is.null, FUN.VALUE = TRUE))]
     return(hints)
   } 

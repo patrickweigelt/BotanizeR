@@ -905,7 +905,8 @@ shinyServer(function(input, output, session) {
             sources <- sources[!is.na(sources)]
             
             if (length(sources)>1){
-                sources <- sapply(sources, function(x) c(x,", "))
+                sources <- vapply(sources, function(x) c(x,", "), 
+                                  FUN.VALUE = sources)
                 sources <- sources[-(length(sources))]
                 sources[length(sources)-1] <- " and "
             }
@@ -945,7 +946,7 @@ shinyServer(function(input, output, session) {
                     hints_reactive$hints_ukplantatlas != "mapuk")]
             
             
-            HTML(paste0(paste0(unlist(sapply(
+            HTML(paste0(paste0(unlist(lapply(
                 sp_infos[names(sp_infos) %in% temp_hints_floraweb],
                 function(x) c(x,"</br></br>"))), collapse=""),
                 ifelse(length(temp_hints_floraweb)>0,
@@ -953,7 +954,7 @@ shinyServer(function(input, output, session) {
                               floraweb_link, # https://www.floraweb.de/,
                               "' target=_blank>FloraWeb</a></br></br>")
                        ,""),
-                paste0(unlist(sapply(sp_infos[names(sp_infos) %in% 
+                paste0(unlist(lapply(sp_infos[names(sp_infos) %in% 
                                                   temp_hints_ukplantatlas],
                                      function(x) c(x,"</br></br>"))), 
                        collapse=""),
@@ -963,7 +964,7 @@ shinyServer(function(input, output, session) {
                               "' target=_blank>UK & Ireland Plant Atlas
                               </a></br></br>")
                        ,""),
-                paste0(unlist(sapply(sp_infos[names(sp_infos) %in% 
+                paste0(unlist(lapply(sp_infos[names(sp_infos) %in% 
                                                   hints_reactive$hints_custom],
                                      function(x) c(x,"</br></br>"))), 
                        collapse="")
@@ -1401,7 +1402,8 @@ shinyServer(function(input, output, session) {
             sources <- sources[!is.na(sources)]
             
             if (length(sources)>1){
-                sources <- sapply(sources, function(x) c(x,", "))
+                sources <- vapply(sources, function(x) c(x,", "), 
+                                  FUN.VALUE = sources)
                 sources <- sources[-(length(sources))]
                 sources[length(sources)-1] <- " and "
             }
@@ -1458,7 +1460,7 @@ shinyServer(function(input, output, session) {
                                      tolower(
                                          isolate(reactive_species$species)))))
                 
-                HTML(paste0(paste0(unlist(sapply(isolate(
+                HTML(paste0(paste0(unlist(lapply(isolate(
                     sp_quiz_reactive$sp_quiz)[names(isolate(
                         sp_quiz_reactive$sp_quiz)) %in% temp_hints_floraweb],
                     function(x) c(x,"</br></br>"))), collapse=""),
@@ -1467,7 +1469,7 @@ shinyServer(function(input, output, session) {
                                   floraweb_link, # https://www.floraweb.de/,
                                   "' target=_blank>FloraWeb</a></br></br>")
                            ,""),
-                    paste0(unlist(sapply(isolate(
+                    paste0(unlist(lapply(isolate(
                         sp_quiz_reactive$sp_quiz)[names(isolate(
                             sp_quiz_reactive$sp_quiz)) %in% 
                                 temp_hints_ukplantatlas],
@@ -1478,7 +1480,7 @@ shinyServer(function(input, output, session) {
                                   "' target=_blank>UK & Ireland Plant Atlas
                                   </a></br></br>")
                            ,""),
-                    paste0(unlist(sapply(isolate(
+                    paste0(unlist(lapply(isolate(
                         sp_quiz_reactive$sp_quiz)[names(isolate(
                             sp_quiz_reactive$sp_quiz)) %in% temp_hints_custom],
                         function(x) c(x,"</br></br>"))), collapse="")
