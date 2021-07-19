@@ -1418,8 +1418,9 @@ shinyServer(function(input, output, session) {
         
         ### Description ----
         
-        observe({
-            
+        # observe({
+        observeEvent(input$quiz_options, ignoreNULL = FALSE, ignoreInit = TRUE, {
+                
             temp_hints_floraweb <- 
                 hints_floraweb_lookup$variable[which(
                     hints_floraweb_lookup$show %in% input$quiz_options)]
