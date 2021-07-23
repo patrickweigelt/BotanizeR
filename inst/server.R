@@ -333,7 +333,7 @@ shinyServer(function(input, output, session) {
     # Text note
     output$selectlist_note <- renderUI({
         HTML("Choose one of the available predefined species lists for 
-              practicing.")
+              practicing. For more infos about the options see About tab. ")
     })
     
     # Render drop down

@@ -95,10 +95,11 @@
   - About tab: more details; dynamic depending on what is shown
 * **redo message images (harmonize)**
 * ~~button to disable dynamic probabilities~~
-* Hints are visible for a short moment when going on to next species
+* ~~Hints are visible for a short moment when going on to next species~~
 * ~~check/uncheck all button for hints~~
 * ~~Make the GBIF stuff optional in config~~
 * ~~semicolon in csv~~
+* ~~Control for sum(species$included)==0 for species list upload
 
 
 
