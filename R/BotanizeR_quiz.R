@@ -83,10 +83,10 @@
 #' rescaled before plotting in case `image_width` is not `NA`.
 #' 
 #' @return
-#' A data.frame with updated scores and counts per species.
+#' A data.frame like `species_list` with updated scores and counts per species.
 #'
 #' @details After running the main function BotanizeR_quiz() you need to click
-#' into the console to type the species names in there. If you have no clue,
+#' into the console to enter the species name in there. If you have no clue,
 #' press enter and the next hint will appear (you have ten tries). If you type
 #' the name slightly wrong the function will tell you. If the genus is correct
 #' it will also tell you. It shows several photos if available. If you want to
@@ -104,56 +104,78 @@
 #' @seealso [BotanizeR::BotanizeR_collect()]
 #'
 #' @examples
-#' # Species list for Germany with IDs from floraweb.de
-#' data(floraweb_species)
-#'
-#' # Subset for about 300 species students in Goettingen learn
-#' floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
-#' floraweb_species$BioDiv2005==1), ]
+#' # Load species list for UK, Ireland and Germany based on floraweb.de and the 
+#' # Online Atlas of the British and Irish flora 
+#' # (https://www.brc.ac.uk/plantatlas/)
+#' data(BotanizeR_species)
+#' 
+#' 
+#' # Subset for about 700 species known from Sussex, UK
+#' BotanizeR_Sussex <- 
+#'   BotanizeR_species[which(BotanizeR_species$UK_Ireland_Sussex==1), ]
+#' 
+#' 
+#' # Subset including only one species (Acer campestre) for predictable outcome
+#' BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+#'                                               "Acer campestre"),]
 #' 
 #' # Type in species name, or press enter for next hint or type "skip" and
-#' press enter for next species or type "exit" to end quiz and save results
-#' floraweb_species_trained <- BotanizeR_quiz(
-#' species_list = floraweb_species, hints_floraweb = c("description", "status",
-#' "habitat","family","German name"), case_sensitive = FALSE)
+#' # press enter for next species or type "exit" to end quiz and save results
+#' BotanizeR_example_practiced <- 
+#'   BotanizeR_quiz(species_list = BotanizeR_example,
+#'                  image_floraweb = FALSE, image_ukplantatlas = TRUE, 
+#'                  hints_ukplantatlas =  c('mapuk', 'familyuk', 'ecology', 
+#'                                          'statusuk', 'trends', 'perennation',
+#'                                          'lifeform', 'woodiness', 
+#'                                          'clonality'), 
+#'                  hints_floraweb = NULL, 
+#'                  case_sensitive = FALSE)
+#'exit 
+#' \dontrun{
+#' # Subset for about 300 species students in Goettingen learn
+#' BotanizeR_Germany <- 
+#'   BotanizeR_species[which(BotanizeR_species$Germany_summer==1 | 
+#'                             BotanizeR_species$Germany_BioDiv==1), ]
+#' 
+#' 
+#' # Subset including only one species (Acer campestre) for predictable outcome
+#' BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+#'                                               "Acer campestre"),]
+#' 
+#' # Type in species name, or press enter for next hint or type "skip" and
+#' # press enter for next species or type "exit" to end quiz and save results
+#' BotanizeR_example_practiced <- 
+#'   BotanizeR_quiz(species_list = BotanizeR_example, 
+#'                  hints_floraweb = c("description", "status",
+#'                                     "habitat","family","German name"), 
+#'                  case_sensitive = FALSE)
+#' 
 #' 
 #' # If you want to include distribution maps as hints add "map" to hints;
-#' This increases the download times a bit
-#' floraweb_species_trained <- BotanizeR_quiz(
-#' species_list = floraweb_species,
-#' hints_floraweb = c("map","description","status", "habitat", "family",
-#' "German name"), case_sensitive = FALSE)
-#' 
-#' # If you want to keep track of your progress, you can save the species list
-#' with updated scores locally and load it in the next session
-#' 
-#' # Initial saving
-#' write.csv(floraweb_species_trained, "floraweb_species_trained.csv",
-#' row.names = FALSE)
-#' 
-#' # Load species list
-#' floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
-#' 
-#' # Practice
-#' floraweb_species_trained <- BotanizeR_quiz(
-#'   species_list = floraweb_species_trained,
-#'   hints_floraweb = c("map", "description", "status", "habitat", "family",
+#' # This increases the download times a bit
+#' BotanizeR_Germany_practiced <- BotanizeR_quiz(
+#'   species_list = BotanizeR_Germany,
+#'   hints_floraweb = c("map","description","status", "habitat", "family",
 #'                      "German name"), case_sensitive = FALSE)
 #' 
-#' # Save species list
-#' write.csv(floraweb_species_trained, "floraweb_species_trained.csv",
-#'           row.names = FALSE)
+#' 
+#' # If you want to keep track of your progress, you can save the species list
+#' # with updated scores locally and load it in the next session
+#' 
 #' 
 #' ### example for three species with custom hints and images
-#' custom_species <- floraweb_species[
-#'   which(floraweb_species$SPECIES %in% c("Acer campestre", "Erica carnea",
-#'                                         "Melampyrum nemorosum")), ]
+#' BotanizeR_Germany_custom <-  BotanizeR_Germany_practiced[
+#'   which(BotanizeR_Germany_practiced$SPECIES %in% c("Acer campestre", 
+#'                                                    "Erica carnea",
+#'                                                    "Melampyrum nemorosum")),]
 #' 
 #' custom_species_trained <- BotanizeR_quiz(
-#'   species_list = custom_species, image_floraweb = TRUE,
-#'   hints_floraweb = NULL, hints_custom = c("ownhint_1", "ownhint_2"), 
+#'   species_list = BotanizeR_Germany_custom, image_floraweb = TRUE,
+#'   hints_floraweb = NULL, hints_custom = c("ownhint_Description", 
+#'                                           "ownhint_Distribution"), 
 #'   imagelinks_custom = c("imagelink_1", "imagelink_2"), 
 #'   image_folders = NULL, case_sensitive = FALSE)
+#' }
 #' 
 #' @export
 
@@ -183,9 +205,12 @@ BotanizeR_quiz <- function(
         and 'GENUS'.")
   } 
   
-  if((!is.character(species_list$TAXONNAME) & !is.factor(species_list$TAXONNAME))
-     | (!is.character(species_list$SPECIES) & !is.factor(species_list$SPECIES))
-     | (!is.character(species_list$GENUS) & !is.factor(species_list$GENUS))) {
+  if((!is.character(species_list$TAXONNAME) & 
+      !is.factor(species_list$TAXONNAME))
+     | (!is.character(species_list$SPECIES) & 
+        !is.factor(species_list$SPECIES))
+     | (!is.character(species_list$GENUS) & 
+        !is.factor(species_list$GENUS))) {
     stop("One of the columns 'TAXONNAME', 'SPECIES' and 'GENUS' is not 
          a character of factor vector.")
   } 
@@ -355,11 +380,12 @@ BotanizeR_quiz <- function(
   startat <- startat + 1
   
   if(startat == 1){
-    message("Welcome to BotanizeR quiz!\n\nPlease click into the console to
-            enter the species name.\nIf you have no clou, press enter and the
-            next image or hint will appear. If you want to skip a species enter
-            'skip'. If you want to cancel the quiz write 'exit'.\nDon't hit Esc
-            if you want to save your progress.\n\n")
+    message("Welcome to BotanizeR quiz!\n\n
+    Please click into the console to enter the species name.\n
+    If you have no clou, press enter and the next image or hint will appear. 
+    If you want to skip a species enter 'skip'. 
+    If you want to cancel the quiz write 'exit'.\n
+    Don't hit Esc if you want to save your progress.\n\n")
   }
   
   message("Species ", startat, ". ---------------------------------\n")
