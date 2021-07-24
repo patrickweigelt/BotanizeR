@@ -470,7 +470,11 @@ shinyServer(function(input, output, session) {
                                                       'ATTEMPTS', 'INCLUDE')], 
                                 2, function(x) is.numeric(x) & all(!is.na(x))
                             ))){
-                                return(species_list_clean)
+                                if(sum(species_list_clean$INCLUDE)>0){
+                                    return(species_list_clean)
+                                } else {
+                                    return("No species indicated as included.")
+                                }
                             } else {
                                 return("Not all entries of the columns 'COUNT', 
                                        'SCORE', 'ATTEMPTS' and 'INCLUDE' are 

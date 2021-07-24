@@ -99,7 +99,7 @@
 * ~~check/uncheck all button for hints~~
 * ~~Make the GBIF stuff optional in config~~
 * ~~semicolon in csv~~
-* ~~Control for sum(species$included)==0 for species list upload
+* ~~Control for sum(species$included)==0 for species list upload~~
 
 
 
