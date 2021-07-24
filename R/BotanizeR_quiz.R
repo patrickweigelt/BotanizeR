@@ -8,7 +8,7 @@
 #'
 #'
 #' @param species_list a data.frame including the species that shall be 
-#' practiced and which wil be retrieved information for using 
+#' practiced and which will be retrieved information for using 
 #' [BotanizeR::BotanizeR_collect()] 
 #' **It needs to contain at least the following columns**: 
 #' *NAMNR*, *TAXONNAME*, *SPECIES* and *GENUS*. The *SPECIES* column includes 
@@ -170,89 +170,144 @@ BotanizeR_quiz <- function(
   # 1. Controls ----
   # Arguments
   if(!is.data.frame(species_list)){
-    stop(".")
+    stop("species_list must be a data.frame including the species that shall be 
+        practiced and which will be retrieved information for. It should 
+        contain at least the following columns: 'NAMNR', 'TAXONNAME', 'SPECIES' 
+        and 'GENUS'.")
   }
   
+  if(!all(c('TAXONNAME', 'SPECIES', 'GENUS') %in% colnames(species_list))) {
+    stop("species_list must be a data.frame including the species that shall be 
+        practiced and which will be retrieved information for. It should 
+        contain at least the following columns: 'NAMNR', 'TAXONNAME', 'SPECIES' 
+        and 'GENUS'.")
+  } 
+  
+  if((!is.character(species_list$TAXONNAME) & !is.factor(species_list$TAXONNAME))
+     | (!is.character(species_list$SPECIES) & !is.factor(species_list$SPECIES))
+     | (!is.character(species_list$GENUS) & !is.factor(species_list$GENUS))) {
+    stop("One of the columns 'TAXONNAME', 'SPECIES' and 'GENUS' is not 
+         a character of factor vector.")
+  } 
+  
+  if(nrow(species_list)==0){
+    stop("No entries in species_list found!")
+  }
+  
+  if(!all(apply(species_list[,c('TAXONNAME','SPECIES','GENUS')], 2,
+               function(x) all(!is.na(x) & x != "")))){
+    stop("Missing entries in at least one of the columns
+                                 'TAXONNAME', 'SPECIES' and 'GENUS'.")
+  }
+  
+  if(length(which(duplicated(species_list$SPECIES))) > 0){
+    stop("Duplicates in 'SPECIES' column found.")
+    
+  }
+
+  if(!"NAMNR" %in% names(species_list))
+    species_list$NAMNR <- NA
+  if(!"COUNT" %in% names(species_list))
+    species_list$COUNT <- 0
+  if(!"SCORE" %in% names(species_list))
+    species_list$SCORE <- 0
+  if(!"ATTEMPTS" %in% names(species_list))
+    species_list$ATTEMPTS <- 0
+  if(!"INCLUDE" %in% names(species_list))
+    species_list$INCLUDE <- 1
+  
+  if(!all(apply(species_list[,c('COUNT','SCORE','ATTEMPTS','INCLUDE')], 2, 
+               function(x) is.numeric(x) & all(!is.na(x))))){
+    stop("Not all entries of the columns 'COUNT', 'SCORE', 'ATTEMPTS' and 
+    'INCLUDE' are numeric.")
+  }
+  
+  if(sum(species_list$INCLUDE) == 0){
+    stop("No species indicated as included (species_list$INCLUDE).")
+  }
+
   if(!is.logical(image_floraweb)){
-    stop("'image_floraweb' must be a logical that defines if images from
-      https://www.floraweb.de should be retrieved")
+    stop("'image_floraweb' must be a logical defining if images from
+      https://www.floraweb.de shall be retrieved")
   }
   
   if(!is.null(hints_floraweb)){
-    if(!is.character(hints_floraweb)){
-      stop("'hints_floraweb' must be either NULL or a character string with
-        the wanted hints.")
+    if(!is.character(hints_floraweb) | 
+       !all(hints_floraweb %in% c("map", "description", "status", "habitat",
+                                  "family", "German name"))){
+      stop("'hints_floraweb' must be either NULL or a character string 
+        defining the hints to retrieve from https://www.floraweb.de: 
+        c('map', 'description', 'status', 'habitat', 'family', 'German name').")
     }
   }
   
-  if(!all(hints_floraweb %in% c("map", "description", "status", "habitat",
-                                "family", "German name"))){
-    stop('"hints_floraweb" must be a subset of c("map", "description",
-           "status", "habitat", "family", "German name")')
+  if(image_floraweb | !is.null(hints_floraweb)){
+    if(all(is.na(species_list$NAMNR) | species_list$NAMNR == "")){
+      stop("No FloraWeb IDs in species_list$NAMNR given.")
+    }
   }
   
   if(!is.logical(image_ukplantatlas)){
-    stop("'image_ukplantatlas' must be a logical that defines if images from
-      https://www.brc.ac.uk/plantatlas/ should be retrieved.")
+    stop("'image_ukplantatlas' must be a logical defining if images from
+      https://www.brc.ac.uk/plantatlas/ shall be retrieved.")
   }
   
   if(!is.null(hints_ukplantatlas)){
-    if(!is.character(hints_ukplantatlas)){
-      stop("'hints_ukplantatlas' must be either NULL or a character string
-        with the wanted hints.")
+    if(!is.character(hints_ukplantatlas) |
+       !all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
+                                      "statusuk", "trends", "perennation",
+                                      "lifeform", "woodiness", "clonality"))){
+      stop("'hints_ukplantatlas' must be either NULL or a character string 
+             defining the hints to retrieve from 
+             https://www.brc.ac.uk/plantatlas/: c('mapuk', 'familyuk', 
+             'ecology', 'statusuk', 'trends', 'perennation', 'lifeform', 
+             'woodiness', 'clonality').")
     }
-  }
-  
-  if(!all(hints_ukplantatlas %in% c("mapuk", "familyuk", "ecology",
-                                    "statusuk", "trends", "perennation",
-                                    "lifeform", "woodiness", "clonality"))){
-    stop('"hints_ukplantatlas" must be a subset of c("mapuk", "familyuk",
-           "ecology", "statusuk", "trends", "perennation", "lifeform",
-           "woodiness", "clonality")')
   }
   
   if(!is.null(imagelinks_custom)){
     if(!is.character(imagelinks_custom)){
       stop("'imagelinks_custom' must be either NULL or a character string
-        with the links for images.")
+        defining columns of 'species_list' containing URLs to retrieve images 
+        from the internet.")
     }
   }
   
   if(!all(imagelinks_custom %in% colnames(species_list))){
-    stop('"imagelinks_custom" must be present in the column names of
-           "species_list"')
+    stop('"imagelinks_custom" must all be present in the column names of
+           "species_list".')
   }
   
   if(!is.null(image_folders)){
     if(!is.character(image_folders)){
-      stop("'image_folders' must be a character vector that defines a specific
-      folder from which the user wants to retrieve images.")
+      stop("'image_folders' must be a character vector defining a specific
+        folder from which to retrieve images.")
     }
   }
   
   if(!is.null(hints_custom)){
     if(!is.character(hints_custom)){
       stop("'hints_custom' must be either NULL or a character string
-        with the wanted hints.")
+        defining columns of 'species_list' containing custom hints.")
     }
   }
   
   if(!all(hints_custom %in% colnames(species_list))){
-    stop('"hints_custom" must be present in the column names of
-           "species_list"')
+    stop('"hints_custom" must all be present in the column names of
+           "species_list".')
   }
   
   if(!is.logical(case_sensitive)){
-    stop("'case_sensitive' must be a logical.")
+    stop("'case_sensitive' must be logical.")
   }
   
   if(!is.character(file_location)){
-    stop("'file_location' must be a character vector that defines a specific
-      folder from which the user wants to retrieve images.")
+    stop("'file_location' must be 'temporary' or a character vector that 
+      defines a temporary folder location where to store images.")
   }
   
   if(!is.numeric(startat)){
-    stop("'startat' must be numeric")
+    stop("'startat' must numeric")
   }
   
   if(!is.na(init_count)){
@@ -291,60 +346,7 @@ BotanizeR_quiz <- function(
   }
   
   
-  
-#   if(nrow(species_list_clean)>0){
-#     
-#     if(all(apply(
-#       species_list_clean[,c('TAXONNAME','SPECIES','GENUS')], 
-#       2,function(x) all(!is.na(x) & x != "")))){
-#       
-#       if(length(which(
-#         duplicated(species_list_clean$SPECIES))) == 0){
-#         
-#         
-#         if(!"NAMNR" %in% names(species_list_clean)) 
-#           species_list_clean$NAMNR <- NA
-#         if(!"COUNT" %in% names(species_list_clean)) 
-#           species_list_clean$COUNT <- 0
-#         if(!"SCORE" %in% names(species_list_clean)) 
-#           species_list_clean$SCORE <- 0
-#         if(!"ATTEMPTS" %in% names(species_list_clean)) 
-#           species_list_clean$ATTEMPTS <- 0
-#         if(!"INCLUDE" %in% names(species_list_clean)) 
-#           species_list_clean$INCLUDE <- 1
-#         
-#         species_list_clean <- 
-#           species_list_clean[order(
-#             species_list_clean$SPECIES),]
-#         
-#         if(all(apply(
-#           species_list_clean[,c('COUNT','SCORE',
-#                                 'ATTEMPTS', 'INCLUDE')], 
-#           2, function(x) is.numeric(x) & all(!is.na(x))
-#         ))){
-#           return(species_list_clean)
-#         } else {
-#           return("Not all entries of the columns 'COUNT', 
-#                                        'SCORE', 'ATTEMPTS' and 'INCLUDE' are 
-#                                        numeric.")
-#         }
-#       } else {
-#         return("Duplicates in 'SPECIES' column found.")
-#       }
-#     } else {
-#       return("Missing entries in at least one of the columns 
-#                                'TAXONNAME', 'SPECIES' and 'GENUS'.")
-#     }
-#   } else {
-#     return("No entries found!")
-#   }
-# } else {
-#   return("At least one of the columns 'TAXONNAME', 'SPECIES' and 
-#                        'GENUS' is missing.")
-# }
 
-  
-  
   # 2. Prep ----
 
   hints <- 0
