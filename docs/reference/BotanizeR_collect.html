@@ -156,12 +156,12 @@ them as hints in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code>
       <td><p>a data.frame of one row including the species for which
 information shall be retrieved (Usually an entry of the <code>species_list</code>
 data.frame used in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> and the BotanizeR Shiny
-app. <strong>It should contain at least the following columns</strong>:
+app. <strong>It needs to contain at least the following columns</strong>:
 <em>NAMNR</em> and <em>SPECIES</em>. The <em>SPECIES</em> column includes the species name
 (character or factor) to be looked up in the online resources or image
 folders. <em>NAMNR</em> contains the ID (numeric) of the species used by
 <a href='https://www.floraweb.de'>FloraWeb</a>. In case FloraWeb content is not
-retrieved or not available for a given species, this may be NA or "".</p></td>
+retrieved or not available for a given species, this may be NA.</p></td>
     </tr>
     <tr>
       <th>image_floraweb</th>
@@ -197,7 +197,7 @@ c("imagelink_1", "imagelink_2") etc.</p></td>
     </tr>
     <tr>
       <th>image_folders</th>
-      <td><p>character vector defining a folder from
+      <td><p>character vector defining folders from
 which to retrieve images. Image file names need to contain the species names
 to be found.</p></td>
     </tr>
@@ -326,13 +326,16 @@ online teaching and beyond. submitted.
 #&gt; [1] "https://www.floraweb.de/bilder/arten/1925.jpg"
 #&gt; 
 #&gt; $images[[2]]
-#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_2.JPG"
+#&gt;                                                                                                                                     src 
+#&gt; "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_2.JPG" 
 #&gt; 
 #&gt; $images[[3]]
-#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_1.JPG"
+#&gt;                                                                                                                                     src 
+#&gt; "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Notts_SHammonds_1.JPG" 
 #&gt; 
 #&gt; $images[[4]]
-#&gt; [1] "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Salop_SHammonds.JPG"
+#&gt;                                                                                                                                   src 
+#&gt; "https://www.brc.ac.uk/plantatlas/sites/www.brc.ac.uk.plantatlas/files/styles/large/public/images/Acer_campestre_Salop_SHammonds.JPG" 
 #&gt; 
 #&gt; $images[[5]]
 #&gt; [1] "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Acer_campestre_005.jpg/1280px-Acer_campestre_005.jpg"

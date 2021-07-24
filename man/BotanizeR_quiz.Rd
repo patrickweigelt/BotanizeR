@@ -16,75 +16,100 @@ BotanizeR_quiz(
   case_sensitive = TRUE,
   file_location = "temporary",
   startat = 0,
-  init_count = sum(species_list$COUNT),
-  init_score = sum(species_list$SCORE),
-  init_attempts = sum(species_list$ATTEMPTS),
+  init_count = NA,
+  init_score = NA,
+  init_attempts = NA,
   max_attempts = 10,
   image_width = 500
 )
 }
 \arguments{
-\item{species_list}{a data.frame with the species for which we want to
-retrieve information. \strong{It should contain the following columns}:
-\emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES}, \emph{GENUS}, \emph{EPITHET}, \emph{AUTHOR}, \emph{COUNT},
-\emph{SCORE} and \emph{ATTEMPTS}}
+\item{species_list}{a data.frame including the species that shall be
+practiced and which will be retrieved information for using
+\code{\link[=BotanizeR_collect]{BotanizeR_collect()}}
+\strong{It needs to contain at least the following columns}:
+\emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES} and \emph{GENUS}. The \emph{SPECIES} column includes
+the species name (genus and epithet; character or factor) to be guessed and
+looked up in the online resources or image folders. The \emph{TAXONNAME} column
+includes the full species name including additional information like, for
+example the authority (character or factor). The \emph{GENUS} column includes the
+corresponding genus name (character or factor). \emph{NAMNR} contains the ID
+(numeric) of the species used by \href{https://www.floraweb.de}{FloraWeb}. In
+case FloraWeb content is not retrieved, this may be NA.}
 
 \item{image_floraweb}{logical that defines if images from
-\href{https://www.floraweb.de}{FloraWeb} should be retrieved}
+\href{https://www.floraweb.de}{FloraWeb} shall be retrieved.}
 
-\item{hints_floraweb}{character vector that defines what hints the user
-wants to retrieve from \href{https://www.floraweb.de}{FloraWeb}}
+\item{hints_floraweb}{character vector defining the hints to
+retrieve from \href{https://www.floraweb.de}{FloraWeb}. 'hints_floraweb'
+must be either NULL or a character string with the wanted hints from
+c('map', 'description', 'status', 'habitat', 'family', 'German name').}
 
 \item{image_ukplantatlas}{logical that defines if images from the
-\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}
-should be retrieved}
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora} shall be retrieved.}
 
-\item{hints_ukplantatlas}{character vector that defines what hints the user
-wants to retrieve from the
-\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}}
+\item{hints_ukplantatlas}{character vector defining the hints to
+retrieve from the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British and Irish flora}. 'hints_ukplantatlas'
+must be either NULL or a character string with the wanted hints from
+c('mapuk', 'familyuk', 'ecology', 'statusuk', 'trends', 'perennation',
+'lifeform', 'woodiness', 'clonality').}
 
-\item{imagelinks_custom}{character vector that defines a custom link to
-retrieve images}
+\item{imagelinks_custom}{character vector defining columns of \code{species_list}
+containing links (URLs) to retrieve images from the internet. These columns
+need to be available in \code{species_list}.}
 
-\item{image_folders}{character vector that defines a specific folder from
-which the user wants to retrieve images}
+\item{image_folders}{character vector defining folders from
+which to retrieve images. Image file names need to contain the species names
+to be found.}
 
-\item{hints_custom}{character vector that defines personal hints the user
-wants to use. \strong{Note:} in that case, these hints should be present as
-columns in the \code{species_row} table.}
+\item{hints_custom}{character vector defining custom hints to use.
+\strong{Note:} In that case, these hints should be stored in \code{species_list} in
+additional columns named like ownhint_\emph{HintName} where \emph{HintName} should be
+different than the hints allowed for \code{hints_ukplantatlas} and
+\code{hints_floraweb}.}
 
-\item{case_sensitive}{logical.}
+\item{case_sensitive}{logical indicating whether cases need to match when
+guessing a species name.}
 
-\item{file_location}{character vector that defines}
+\item{file_location}{character vector defining a location to temporarily
+store the images retrieved from online resources. If put to "temporary", R
+will create a temporary folder automatically.}
 
-\item{startat}{number}
+\item{startat}{numeric indicating how many species have already been
+practiced in this session. Should be 0 when running the function and will be
+consecutively increased when the function calls itself.}
 
-\item{init_count}{sum of the column \verb{$COUNT} in \code{species_list},
-defining the total number of tries of the user}
+\item{init_count}{numeric indicating how many times overall species have
+already been practiced. If set to \code{NA}, the function takes the sum of the
+column \verb{$COUNT} in \code{species_list}.}
 
-\item{init_score}{sum of the column \verb{$SCORE} in \code{species_list},
-defining the total score of the user}
+\item{init_score}{numeric indicating how many times overall species have
+been named correctly. If set to \code{NA}, the function takes the sum of the
+column \verb{$SCORE} in \code{species_list}.}
 
-\item{init_attempts}{sum of the column \verb{$ATTEMPTS} in \code{species_list},
-defining how many attempts he user had in total}
+\item{init_attempts}{numeric indicating how many attempts have been used
+overall across all species so far. If set to \code{NA}, the function takes the
+sum of the column \verb{$ATTEMPTS} in \code{species_list}.}
 
-\item{max_attempts}{number defining the number of attempts per species}
+\item{max_attempts}{numeric defining the number of attempts allowed per
+species before moving on to next species}
 
-\item{image_width}{number to define the width of the images.}
+\item{image_width}{numeric defining to what width of the images shall be
+rescaled before plotting in case \code{image_width} is not \code{NA}.}
 }
 \value{
-A data.frame with updated scores and counts per species.
+A data.frame like \code{species_list} with updated scores and counts per species.
 }
 \description{
-Navigates through species from floraweb.de (or a defined subset thereof),
-shows pictures and descriptions and other hints and let's the user guess the
+Navigates randomly through a species list, shows defined
+pictures and descriptions and other hints and let's the user guess the
 species name. Number of tries and attempts are used to calculate scores that
 will be used to update probabilities for the random sampling of subsequent
 species.
 }
 \details{
 After running the main function BotanizeR_quiz() you need to click
-into the console to type the species names in there. If you have no clue,
+into the console to enter the species name in there. If you have no clue,
 press enter and the next hint will appear (you have ten tries). If you type
 the name slightly wrong the function will tell you. If the genus is correct
 it will also tell you. It shows several photos if available. If you want to
@@ -95,62 +120,85 @@ the species randomly. The better you know a species the less likely it will
 be shown again.
 }
 \examples{
-# Species list for Germany with IDs from floraweb.de
-data(floraweb_species)
+# Load species list for UK, Ireland and Germany based on floraweb.de and the 
+# Online Atlas of the British and Irish flora 
+# (https://www.brc.ac.uk/plantatlas/)
+data(BotanizeR_species)
 
-# Subset for about 300 species students in Goettingen learn
-floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 |
-floraweb_species$BioDiv2005==1), ]
+
+# Subset for about 700 species known from Sussex, UK
+BotanizeR_Sussex <- 
+  BotanizeR_species[which(BotanizeR_species$UK_Ireland_Sussex==1), ]
+
+
+# Subset including only one species (Acer campestre) for predictable outcome
+BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                              "Acer campestre"),]
+
+\dontrun{
+# Type in species name, or press enter for next hint or type "skip" and
+# press enter for next species or type "exit" to end quiz and save results
+BotanizeR_example_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_example,
+                 image_floraweb = FALSE, image_ukplantatlas = TRUE, 
+                 hints_ukplantatlas =  c('mapuk', 'familyuk', 'ecology', 
+                                         'statusuk', 'trends', 'perennation',
+                                         'lifeform', 'woodiness', 
+                                         'clonality'), 
+                 hints_floraweb = NULL, 
+                 case_sensitive = FALSE)#'
+
+
+# Subset for about 300 species students in Goettingen, Germany, learn
+BotanizeR_Germany <- 
+  BotanizeR_species[which(BotanizeR_species$Germany_summer==1 | 
+                            BotanizeR_species$Germany_BioDiv==1), ]
+
+
+# Subset including only one species (Acer campestre) for predictable outcome
+BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                              "Acer campestre"),]
 
 # Type in species name, or press enter for next hint or type "skip" and
-press enter for next species or type "exit" to end quiz and save results
-floraweb_species_trained <- BotanizeR_quiz(
-species_list = floraweb_species, hints_floraweb = c("description", "status",
-"habitat","family","German name"), case_sensitive = FALSE)
+# press enter for next species or type "exit" to end quiz and save results
+BotanizeR_example_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_example, 
+                 hints_floraweb = c("description", "status",
+                                    "habitat","family","German name"), 
+                 case_sensitive = FALSE)
+
 
 # If you want to include distribution maps as hints add "map" to hints;
-This increases the download times a bit
-floraweb_species_trained <- BotanizeR_quiz(
-species_list = floraweb_species,
-hints_floraweb = c("map","description","status", "habitat", "family",
-"German name"), case_sensitive = FALSE)
-
-# If you want to keep track of your progress, you can save the species list
-with updated scores locally and load it in the next session
-
-# Initial saving
-write.csv(floraweb_species_trained, "floraweb_species_trained.csv",
-row.names = FALSE)
-
-# Load species list
-floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
-
-# Practice
-floraweb_species_trained <- BotanizeR_quiz(
-  species_list = floraweb_species_trained,
-  hints_floraweb = c("map", "description", "status", "habitat", "family",
+# This increases the download times a bit
+BotanizeR_Germany_practiced <- BotanizeR_quiz(
+  species_list = BotanizeR_Germany,
+  hints_floraweb = c("map","description","status", "habitat", "family",
                      "German name"), case_sensitive = FALSE)
 
-# Save species list
-write.csv(floraweb_species_trained, "floraweb_species_trained.csv",
-          row.names = FALSE)
+
+# If you want to keep track of your progress, you can save the species list
+# with updated scores locally and load it in the next session
+
 
 ### example for three species with custom hints and images
-custom_species <- floraweb_species[
-  which(floraweb_species$SPECIES \%in\% c("Acer campestre", "Erica carnea",
-                                        "Melampyrum nemorosum")), ]
+BotanizeR_Germany_custom <-  BotanizeR_Germany_practiced[
+  which(BotanizeR_Germany_practiced$SPECIES \%in\% c("Acer campestre", 
+                                                   "Erica carnea",
+                                                   "Melampyrum nemorosum")),]
 
 custom_species_trained <- BotanizeR_quiz(
-  species_list = custom_species, image_floraweb = TRUE,
-  hints_floraweb = NULL, hints_custom = c("ownhint_1", "ownhint_2"), 
+  species_list = BotanizeR_Germany_custom, image_floraweb = TRUE,
+  hints_floraweb = NULL, hints_custom = c("ownhint_Description", 
+                                          "ownhint_Distribution"), 
   imagelinks_custom = c("imagelink_1", "imagelink_2"), 
   image_folders = NULL, case_sensitive = FALSE)
+}
 
 }
 \references{
 \preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
 R-package with Shiny-App for practicing plant identification in times of
-online teaching and beyond. Plants, People, Planet.
+online teaching and beyond. submitted.
 }
 }
 \seealso{

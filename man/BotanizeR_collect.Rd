@@ -23,12 +23,12 @@ BotanizeR_collect(
 \item{species_row}{a data.frame of one row including the species for which
 information shall be retrieved (Usually an entry of the \code{species_list}
 data.frame used in \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and the BotanizeR Shiny
-app. \strong{It should contain at least the following columns}:
+app. \strong{It needs to contain at least the following columns}:
 \emph{NAMNR} and \emph{SPECIES}. The \emph{SPECIES} column includes the species name
 (character or factor) to be looked up in the online resources or image
 folders. \emph{NAMNR} contains the ID (numeric) of the species used by
 \href{https://www.floraweb.de}{FloraWeb}. In case FloraWeb content is not
-retrieved or not available for a given species, this may be NA or "".}
+retrieved or not available for a given species, this may be NA.}
 
 \item{image_floraweb}{logical that defines if images from
 \href{https://www.floraweb.de}{FloraWeb} shall be retrieved.}
@@ -52,7 +52,7 @@ containing links (URLs) to retrieve images from the internet. For using it
 inside the BotanizeR Shiny App these columns need to be named like
 c("imagelink_1", "imagelink_2") etc.}
 
-\item{image_folders}{character vector defining a folder from
+\item{image_folders}{character vector defining folders from
 which to retrieve images. Image file names need to contain the species names
 to be found.}
 

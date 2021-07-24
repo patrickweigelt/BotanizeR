@@ -119,6 +119,7 @@
 #' BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
 #'                                               "Acer campestre"),]
 #' 
+#' \dontrun{
 #' # Type in species name, or press enter for next hint or type "skip" and
 #' # press enter for next species or type "exit" to end quiz and save results
 #' BotanizeR_example_practiced <- 
@@ -129,10 +130,10 @@
 #'                                          'lifeform', 'woodiness', 
 #'                                          'clonality'), 
 #'                  hints_floraweb = NULL, 
-#'                  case_sensitive = FALSE)
-#'exit 
-#' \dontrun{
-#' # Subset for about 300 species students in Goettingen learn
+#'                  case_sensitive = FALSE)#'
+#' 
+#' 
+#' # Subset for about 300 species students in Goettingen, Germany, learn
 #' BotanizeR_Germany <- 
 #'   BotanizeR_species[which(BotanizeR_species$Germany_summer==1 | 
 #'                             BotanizeR_species$Germany_BioDiv==1), ]
