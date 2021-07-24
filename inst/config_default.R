@@ -75,7 +75,7 @@ system_path <- ""
 # Provide a csv file (system_path defined above will be added in front) of the 
 # backbone species list used in BotanizeR (e.g. "species_list.csv"). If not 
 # supplied (species_list_path <- ""), BotanizeR_species.rda from the BotanizeR 
-# R package including a comprehensive species list of Germany and GReat Britain 
+# R package including a comprehensive species list of Germany and Great Britain 
 # will be loaded.
 
 species_list_path <- ""
