@@ -162,8 +162,8 @@ hints_ukplantatlas <- c("mapuk","familyuk","ecology","statusuk","trends",
 # Column names need to be named like ownhint_HintName. If set to NULL but setup
 # is to TRUE above, the hints can be activated by the user within the setup tab.
 
-# hints_custom <- NULL
-hints_custom <- c("ownhint_English_name")
+hints_custom <- NULL
+# hints_custom <- c("ownhint_English_name")
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -185,20 +185,21 @@ instance_description <-
   UK & Ireland Plant Atlas</a>. 
   You can choose which of the Floras to practice species from, which 
   species subset to use and which information from each of the websites 
-  to show. In addition to the complete floras (UK_Ireland & Germany), you can 
+  to show.<br>
+  In addition to the complete floras (UK_Ireland & Germany), you can 
   choose to practice species from a list of about 700 plants known from Sussex, 
   UK (UK_Ireland_Sussex), a list of 174 species common in forests and 
-  grasslands around Göttingen, Germany (Germany_BioDiv), a list of 128 woody 
-  species from Germany with additional images available in winter state 
+  grasslands around G&ouml;ttingen, Germany (Germany_BioDiv), a list of 128 
+  woody species from Germany with additional images available in winter state 
   (Germany_winter), and a list of 214 species of forest indicator species from 
-  Germany (Germany_summer). 
+  Germany (Germany_summer).<br>
   In the settings tab, you can enable and disable images and hints from the 
   <a href="https://www.brc.ac.uk/plantatlas/" target=_blank>
   UK & Ireland Plant Atlas</a> or 
   <a href="https://www.floraweb.de/" target=_blank>FloraWeb</a> as well as 
   images from a local folder on the server including images in winter state 
   as an example of images provided by the host of the app. You can also enable 
-  or disable the English and French common names as examples of a hints 
+  or disable the English and French common names as examples of hints 
   provided directly via the species list table by the host of the app or by the 
   user.' 
   
