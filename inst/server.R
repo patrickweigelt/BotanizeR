@@ -676,7 +676,7 @@ shinyServer(function(input, output, session) {
                 " for a defined radius around your desired location. Longitude 
                 and latitude values should not exceed +/- 180° and +/- 90° 
                 after adding the radius. Retreiving the GBIF data can take 
-                up to around 10 seconds."))
+                up to a minute. Consider a small radius."))
     })
     
     observeEvent(input$local_list, {
