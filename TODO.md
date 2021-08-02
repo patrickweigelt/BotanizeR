@@ -124,6 +124,7 @@
 * jpg, JPG, JPEG, jpeg etc. for own folder
 * ~~Control for coordinates outside -180:180; -89:89~~  
 * Consider getting rid of magick::read_image to simplify installation for Ubuntu users
+* Image Folder access in BotanizeR_shiny()  
 
 
 ## 3. Layout
