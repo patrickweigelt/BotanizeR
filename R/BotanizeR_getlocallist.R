@@ -13,9 +13,19 @@
 #' decimal degrees.
 #' 
 #' @param radius a numeric, defining the radius of the buffer around the
-#' wanted location in degrees.
+#' wanted location in degrees. `lat - radius` needs to be > -90 and 
+#' `lat + radius` needs to be < 90.
 #' 
-#' @param backbone_list a data.frame with `SPECIES` column containing the 
+#' @param taxonKey a numeric, defining the taxonKey of the target taxonomic 
+#' group used by [GBIF](https://www.gbif.org/) passed on to [rgbif::occ_data]. 
+#' Default of 7707728 represents Tracheophyta. Use [rgbif::name_lookup] to 
+#' find taxonKey of alternative taxa.
+#'  
+#' @param limit a numeric, defining the maximum number of occurrences retrieved 
+#' from [GBIF](https://www.gbif.org/) passed on to [rgbif::occ_data]. 
+#' Increasing it may significantly reduce speed.
+#' 
+#' @param backbone_list a data.frame with a `SPECIES` column containing the 
 #' species to be subset. If this list shall be used as `species_list` in 
 #' [BotanizeR::BotanizeR_quiz()], It needs to contain at least the following 
 #' columns: *NAMNR*, *TAXONNAME*, *SPECIES* and *GENUS*. See 
@@ -40,30 +50,57 @@
 #' 
 #' @export
 
-BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
+BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1, 
+                                   taxonKey = 7707728, limit = 10000,  
                                    backbone_list = NA){
   
   # 1. Controls ----
   # Arguments
   if(!is.numeric(long)){
-    stop("'long' must be a numeric > -180 and < 180 defining the longitude of 
+    stop("'long' must be a numeric >= -180 and <= 180 defining the longitude of 
          the wanted location in decimal degrees.")
+  } else {
+    if(long < -180 | long > 180){
+      stop("'long' must be a numeric >= -180 and <= 180 defining the longitude 
+           of the wanted location in decimal degrees.")
+    }
   }
   
   if(!is.numeric(lat)){
     stop("'lat' must be a numeric > -90 and < 90 defining the latitude of 
          the wanted location in decimal degrees.")
+  } else {
+    if(lat <= -90 | lat >= 90){
+      stop("'lat' must be a numeric > -90 and < 90 defining the latitude of 
+           the wanted location in decimal degrees.")
+    }
   }
   
   if(!is.numeric(radius)){
     stop("'radius' must be a numeric defining to the radius of the buffer
-         around the wanted location in degrees.")
+         around the wanted location in degrees. 'lat' - 'radius' needs to be 
+         > -90 and 'lat' + 'radius' needs to be < 90.")
+  } else {
+    if(lat - radius <= -90 | lat + radius >= 90){
+      stop("'radius' must be a numeric defining to the radius of the buffer 
+           around the wanted location in degrees. 'lat' - 'radius' needs to be 
+           > -90 and 'lat' + 'radius' needs to be < 90.")
+    }
+  }
+
+  if(!is.numeric(taxonKey)){
+    stop("'taxonKey' must be numeric representing a valid GBIF taxonKey.")
+  }
+
+  if(!is.numeric(limit)){
+    stop("'limit' must be a numeric <= 100000 defining the maximum number of 
+         occureences retreived from GBIF.")
   }
   
-  if(!is.na(backbone_list)){
+  if(!all(is.na(backbone_list))){
     if(!is.data.frame(backbone_list)){
-      stop("'backbone_list' must be a data.frame with the same columns as
-           the data.frame returned by data('BotanizeR_species').")
+      stop("'backbone_list' must NA or a data.frame wit a `SPECIES` column 
+           containing the species to be subset.")
     }
   }
   
@@ -75,14 +112,18 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   sp_polygon <- rgeos::writeWKT(sp_polygon, byid = FALSE)
   
   # as.data.frame(name_lookup("Tracheophyta")$data)
-  species <- rgbif::occ_data(taxonKey = 7707728,
-                             geometry = sp_polygon)$data$species
+  species <- rgbif::occ_data(taxonKey = taxonKey,
+                             geometry = sp_polygon,
+                             limit = limit)$data$species
   
   species <- as.data.frame.table(table(species))
   names(species) <- toupper(names(species))
   
   if(all(is.na(backbone_list))){
+    
     return(species)
+    
+    
   } else {
     if(nrow(species) > 0){
       species <- dplyr::inner_join(backbone_list, species, by = "SPECIES")
