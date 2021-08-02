@@ -690,6 +690,7 @@ shinyServer(function(input, output, session) {
                 BotanizeR_getlocallist(lat = input$latitude, 
                                        long = input$longitude, 
                                        radius = input$radius,
+                                       limit = 10000, 
                                        backbone_list = isolate(
                                            species_list_reactive$df_data_0)))
         

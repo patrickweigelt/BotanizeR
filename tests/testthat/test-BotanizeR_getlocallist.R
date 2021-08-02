@@ -3,7 +3,6 @@ test_that("Expected data structure", {
   
   library(BotanizeR)
   
-  # Species list for Germany with IDs from floraweb.de
   data("BotanizeR_species")
   
   gottingen_coords <- data.frame(lon = 9.93558,
@@ -14,6 +13,7 @@ test_that("Expected data structure", {
     long = gottingen_coords$lon,
     lat = gottingen_coords$lat,
     radius = gottingen_coords$radius,
+    taxonKey = 7707728, limit = 500,
     backbone_list = BotanizeR_species[which(BotanizeR_species$SPECIES %in%
                                               c("Acer platanoides",
                                                 "Acer pseudoplatanus")), ])

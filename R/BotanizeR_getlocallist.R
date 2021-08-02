@@ -48,9 +48,31 @@
 #' @examples
 #' # Example
 #' 
+#' # Species list for Germany with IDs from floraweb.de
+#' data(BotanizeR_species)
+#' 
+#' 
+#' # Load species list for Britain and Germany with species and IDs from 
+#' # https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/
+#' data(BotanizeR_species)
+#' 
+#' # Subset the species list for species occurring in Cairngorms National Park
+#' BotanizeR_Cairngorms <- 
+#'   BotanizeR_getlocallist(long = -3.5966, lat = 57.0877, 
+#'                          radius = 0.5, taxonKey = 7707728, 
+#'                          limit = 10000, backbone_list = BotanizeR_species)
+#' 
+#' 
+#' 
+#' # Create a new species list for the Island of Bornholm, Denmark
+#' BotanizeR_Bornholm <- 
+#'   BotanizeR_getlocallist(long = 14.9184, lat = 55.1273, 
+#'                          radius = 0.5, taxonKey = 7707728, 
+#'                          limit = 10000, backbone_list = NA)
+#' 
 #' @export
 
-BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1, 
+BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 0.1, 
                                    taxonKey = 7707728, limit = 10000,  
                                    backbone_list = NA){
   
@@ -77,12 +99,12 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   }
   
   if(!is.numeric(radius)){
-    stop("'radius' must be a numeric defining to the radius of the buffer
+    stop("'radius' must be a numeric defining the radius of the buffer
          around the wanted location in degrees. 'lat' - 'radius' needs to be 
          > -90 and 'lat' + 'radius' needs to be < 90.")
   } else {
     if(lat - radius <= -90 | lat + radius >= 90){
-      stop("'radius' must be a numeric defining to the radius of the buffer 
+      stop("'radius' must be a numeric defining the radius of the buffer 
            around the wanted location in degrees. 'lat' - 'radius' needs to be 
            > -90 and 'lat' + 'radius' needs to be < 90.")
     }
@@ -114,22 +136,46 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   # as.data.frame(name_lookup("Tracheophyta")$data)
   species <- rgbif::occ_data(taxonKey = taxonKey,
                              geometry = sp_polygon,
-                             limit = limit)$data$species
-  
-  species <- as.data.frame.table(table(species))
-  names(species) <- toupper(names(species))
+                             limit = limit)$data
   
   if(all(is.na(backbone_list))){
     
+    if(!is.null(species)){
+      if(length(which(species$taxonRank == "SPECIES")) > 0){
+        species_count <- as.data.frame.table(table(species$species[which(species$taxonRank == "SPECIES")]))
+        names(species_count)[1] <- "species"
+        species <- unique(species[which(species$taxonRank == "SPECIES"),c("acceptedScientificName","genus","species")])
+        
+        species <- dplyr::left_join(species_count, species, by = "species")
+        
+        species <- species[!duplicated(species$species),]
+        
+        names(species) <- toupper(names(species))
+        names(species)[3] <- "TAXONNAME"
+        species$NAMNR <- NA
+        species$COUNT <- 0
+        species$SCORE <- 0
+        species$ATTEMPTS <- 0
+        species$INCLUDE <- 1
+        species <- species[,c("NAMNR", "TAXONNAME", "SPECIES", "GENUS", "COUNT",
+                              "SCORE", "ATTEMPTS", "INCLUDE", "FREQ")]
+      }
+    }
+    
     return(species)
     
-    
   } else {
-    if(nrow(species) > 0){
-      species <- dplyr::inner_join(backbone_list, species, by = "SPECIES")
-      return(species)
-    } else {
-      return(backbone_list[0, ])
+    
+    if(!is.null(species)){
+      if(length(which(!is.na(species$species))) > 0){
+        species <- as.data.frame.table(table(species$species[!is.na(species$species)]))
+        names(species) <- c("SPECIES","FREQ")
+        species <- dplyr::inner_join(backbone_list, species, by = "SPECIES")
+        return(species)
+      } 
     }
+    
+    return(backbone_list[0, ])
+    
   }
 }

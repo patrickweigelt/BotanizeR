@@ -3,7 +3,6 @@ test_that("Expected data structure", {
   
   library(BotanizeR)
   
-  # Species list for Germany with IDs from floraweb.de
   data("BotanizeR_species")
   
   # Select Acer campestre

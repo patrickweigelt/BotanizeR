@@ -226,11 +226,11 @@ if(setup){tabPanel(
                ),
                column(width = 3, style="min-width: 100px",
                       numericInput("latitude", "Latitude:", 51.53290, 
-                                   step = 0.00001, min = -89, max = 89)
+                                   step = 0.00001, min = -90, max = 90)
                ),
                column(width = 3, style="min-width: 100px",
-                      numericInput("radius", "Radius:", 1, 
-                                   step = 0.01, min = 0.01, max = 100)
+                      numericInput("radius", "Radius:", 0.1, 
+                                   step = 0.01, min = 0.01, max = 10)
                ),
                column(width = 3, style="min-width: 100px; margin-top: 25px;",
                       actionButton("local_list", "Subset list")
