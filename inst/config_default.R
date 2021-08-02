@@ -185,20 +185,23 @@ instance_description <-
   UK & Ireland Plant Atlas</a>. 
   You can choose which of the Floras to practice species from, which 
   species subset to use and which information from each of the websites 
-  to show. In addition, you can choose to include images of woody 
-  plants of Germany in winter state as an example of images provided by 
-  the host of the app or the French common name as an example of a hint 
-  provided by the host of the app. The app starts with a list of 314 
-  common or characteristic species from Central Germany, including 
-  images from all three resources mentioned above. In the settings tab 
-  you can switch to the entire Flora of Britain and Ireland including 
-  only images and hints from the 
+  to show. In addition to the complete floras (UK_Ireland & Germany), you can 
+  choose to practice species from a list of about 700 plants known from Sussex, 
+  UK (UK_Ireland_Sussex), a list of 174 species common in forests and 
+  grasslands around Göttingen, Germany (Germany_BioDiv), a list of 128 woody 
+  species from Germany with additional images available in winter state 
+  (Germany_winter), and a list of 214 species of forest indicator species from 
+  Germany (Germany_summer). 
+  In the settings tab, you can enable and disable images and hints from the 
   <a href="https://www.brc.ac.uk/plantatlas/" target=_blank>
-  UK & Ireland Plant Atlas</a> 
-  or to a list of 128 woody species from Germany with images available 
-  in winter state. If you disable other image sources you can practice 
-  these species only based on their characteristics as found during the 
-  winter months.'
+  UK & Ireland Plant Atlas</a> or 
+  <a href="https://www.floraweb.de/" target=_blank>FloraWeb</a> as well as 
+  images from a local folder on the server including images in winter state 
+  as an example of images provided by the host of the app. You can also enable 
+  or disable the English and French common names as examples of a hints 
+  provided directly via the species list table by the host of the app or by the 
+  user.' 
+  
 
 instance_credits <- 
   'This instance of BotanizeR retrieves images and information from 
@@ -209,7 +212,7 @@ instance_credits <-
   image authors. 
   <br>
   <br>
-  In addition, images of plants in summer and winter state have been 
+  In addition, images of plants in winter state have been 
   provided by F. Brambach, C. D&ouml;nges, H. Kreft, J. Kuper and 
   H. Reichelt from 
   <a href="https://www.uni-goettingen.de/en/128741.html" target=_blank>
