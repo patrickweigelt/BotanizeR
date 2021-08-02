@@ -222,6 +222,6 @@ instance_credits <-
   International License (
   <a href="http://creativecommons.org/licenses/by-sa/4.0" target=_blank>
   CC BY-SA 4.0</a>
-  )'
+  ).'
 
 

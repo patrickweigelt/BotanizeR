@@ -122,9 +122,9 @@ hints$clonality
 
 # only floraweb image(s) + hints + map
 hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
-                           hints_floraweb = c("map", "description", "status", 
-                                              "habitat", "family", 
-                                              "German name"))
+                           hints_floraweb = c("map", "description", 
+                                              "status", "habitat", 
+                                              "family", "German name"))
 
 \dontrun{
 par(oma = c(0, 0, 0, 10.5))

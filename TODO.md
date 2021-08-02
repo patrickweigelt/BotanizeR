@@ -138,6 +138,7 @@
 * ~~Make correct easier to go to next species~~ 
 * ~~Clean info messages~~ 
 * Make online resources in Setup collapsable  
+* Line in About Tab  
 
 ## 4. Server
 * ~~proper url (e.g. gift.uni-goeetingen.de/BotanizeR)~~  

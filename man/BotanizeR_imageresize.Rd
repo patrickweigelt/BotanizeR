@@ -32,7 +32,7 @@ boundary_conditions. 1 = nearest-neighbor interpolation.
 2 = moving average interpolation. 3 = linear interpolation.
 4 = grid interpolation. 5 = cubic interpolation. 6 = lanczos interpolation.}
 
-\item{quality}{mumeric > 0 and <= 1 defining the quality of the images when
+\item{quality}{numeric > 0 and <= 1 defining the quality of the images when
 saved as *.jpg by \code{\link[imager:save.image]{imager::save.image()}}. Higher quality means less
 compression.}
 }

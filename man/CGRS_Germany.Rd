@@ -17,7 +17,7 @@ data("CGRS_Germany")
 }
 \description{
 Common European Chorological Grid Reference System (CGRS) clipped for
-Germany for plotting species ditributions from
+Germany for plotting species distributions from
 \href{https://www.floraweb.de}{FloraWeb}.
 }
 \examples{
