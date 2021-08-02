@@ -1,8 +1,11 @@
-#' Shiny application
+#' BotanizeR Shiny application
 #'
-#' Running the Shiny application of BotanizeR.
+#' Running the Shiny application of BotanizeR locally from installed BotanizeR 
+#' R package.
 #'
-#' @param run a logical, when TRUE, the Shiny application is lauched
+#' @param run a logical, when TRUE, the Shiny application is launched. Can be 
+#' set to FALSE to avoid launching the shiny app in a non-interactive 
+#' environment.
 #' 
 #' @return
 #' Shiny application.
@@ -14,11 +17,19 @@
 #'
 #' @examples
 #' # Example
-#' BotanizeR_shiny(run = FALSE)
+#' \dontrun{
+#' BotanizeR_shiny()
+#' }
 #' 
 #' @export
 
-BotanizeR_shiny <- function(run = FALSE) {
+BotanizeR_shiny <- function(run = TRUE) {
+  
+  if(!is.logical(run)){
+    stop("'run' must be a logical indicating if BotanizeR Shiny app shall be 
+         launched")
+  }
+  
   appDir <- system.file(package = "BotanizeR")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `BotanizeR`.",
@@ -27,7 +38,7 @@ BotanizeR_shiny <- function(run = FALSE) {
   
   if(run){
   shiny::runApp(appDir, display.mode = "normal")
-  } else{
+  } else {
     message("If you want to run the application, set 'run = TRUE'")
   }
 }

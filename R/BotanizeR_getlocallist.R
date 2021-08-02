@@ -1,20 +1,34 @@
-#' GBIF species list
+#' Get local species list
 #'
-#' Using coordinates and a buffer radius, this function retrieves a certain
-#' species list from [GBIF](https://www.gbif.org/) database.
+#' Using longitude and latitude coordinates and a buffer radius, this function 
+#' retrieves a plant species list from [GBIF](https://www.gbif.org/) and 
+#' formats it for use in [BotanizeR::BotanizeR_quiz()] or the BotanizeR Shiny 
+#' app. If a `backbone_list` is supplied, it will be subset for the species 
+#' found in [GBIF](https://www.gbif.org/) and returned.
 #'
-#' @param long a numeric, defining the longitude of the wanted location.
+#' @param long a numeric, defining the longitude of the wanted location in 
+#' decimal degrees.
 #' 
-#' @param lat a numeric, defining the latitude of the wanted location.
+#' @param lat a numeric, defining the latitude of the wanted location in 
+#' decimal degrees.
 #' 
 #' @param radius a numeric, defining the radius of the buffer around the
-#' wanted location.
+#' wanted location in degrees.
 #' 
-#' @param backbone_list a data.frame with the same columns as the data
-#' returned by data("BotanizeR_species").
+#' @param backbone_list a data.frame with `SPECIES` column containing the 
+#' species to be subset. If this list shall be used as `species_list` in 
+#' [BotanizeR::BotanizeR_quiz()], It needs to contain at least the following 
+#' columns: *NAMNR*, *TAXONNAME*, *SPECIES* and *GENUS*. See 
+#' [BotanizeR::BotanizeR_quiz()] for more info.
 #' 
 #' @return
-#' A species list.
+#' A `data.frame` of the same structure like `backbone_list` including only 
+#' those species found in [GBIF](https://www.gbif.org/) for the given 
+#' coordinates and radius. An additional column `FREQ`is added providing the 
+#' frequency of each for selecting more common species. If `backbone_list` is 
+#' `NA` the species list obtained from [GBIF](https://www.gbif.org/) is 
+#' formatted to contain all essential columns to run 
+#' [BotanizeR::BotanizeR_quiz()] or to use it in the BotanizeR Shiny app.
 #'
 #' @references
 #'     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
@@ -32,23 +46,23 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 1,
   # 1. Controls ----
   # Arguments
   if(!is.numeric(long)){
-    stop("'long' must be a numeric corresponding to the longitude of the wanted
-         location.")
+    stop("'long' must be a numeric > -180 and < 180 defining the longitude of 
+         the wanted location in decimal degrees.")
   }
   
   if(!is.numeric(lat)){
-    stop("'lat' must be a numeric corresponding to the latitude of the wanted
-         location.")
+    stop("'lat' must be a numeric > -90 and < 90 defining the latitude of 
+         the wanted location in decimal degrees.")
   }
   
   if(!is.numeric(radius)){
-    stop("'radius' must be a numeric corresponding to the radius of the buffer
-         around the wanted location.")
+    stop("'radius' must be a numeric defining to the radius of the buffer
+         around the wanted location in degrees.")
   }
   
   if(!is.na(backbone_list)){
     if(!is.data.frame(backbone_list)){
-      stop("'backbone_list' must be a data.frame with the same columns than
+      stop("'backbone_list' must be a data.frame with the same columns as
            the data.frame returned by data('BotanizeR_species').")
     }
   }

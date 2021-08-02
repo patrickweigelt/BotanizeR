@@ -1,7 +1,9 @@
 #'
-#' Species table for BotanizeR
+#' Chorological Grid Reference System for Germany
 #'
-#' Chorological Grid Reference System for Germany.
+#' Common European Chorological Grid Reference System (CGRS) clipped for 
+#' Germany for plotting species ditributions from 
+#' [FloraWeb](https://www.floraweb.de).
 #'
 #' @docType data
 #'
@@ -11,7 +13,9 @@
 #'
 #' @keywords datasets
 #'
-#' @source \href{https://www.eea.europa.eu/data-and-maps/data/common-european-chorological-grid-reference-system-cgrs}{Common European Chorological Grid Reference System (CGRS)}
+#' @source \href{https://www.eea.europa.eu/data-and-maps/data/common-european-
+#' chorological-grid-reference-system-cgrs}{Common European Chorological Grid 
+#' Reference System (CGRS)}
 #'
 #' @examples
 #' data(CGRS_Germany)

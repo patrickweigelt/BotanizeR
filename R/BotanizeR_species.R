@@ -1,8 +1,11 @@
 #'
 #' Species table for BotanizeR
 #'
-#' Table containing the relevant information for 5852 species. The data
-#' originate from [FloraWeb](https://www.floraweb.de).
+#' Example species list table containing the relevant information to run 
+#' [BotanizeR::BotanizeR_quiz()] and [BotanizeR::BotanizeR_shiny()] for 5852 
+#' species from [FloraWeb](https://www.floraweb.de) 
+#' (images, map and species descriptions) and/or the [Online Atlas of the 
+#' British Irish flora](https://www.brc.ac.uk/plantatlas/).
 #'
 #' @docType data
 #'
@@ -13,7 +16,9 @@
 #' @keywords datasets
 #'
 #'
-#' @source \href{https://www.floraweb.de}{FloraWeb}
+#' @source \href{https://www.floraweb.de}{FloraWeb} and 
+#' \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the 
+#' British Irish flora}
 #'
 #' @examples
 #' data(BotanizeR_species)
