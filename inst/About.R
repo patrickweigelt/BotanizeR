@@ -21,17 +21,17 @@ function(){
           <br>
           In the Quiz tab you can practice your species identification skills. 
           The app will show you random species and you are asked to provide the 
-          species name (case insensitive). You may browse through a selection of 
-          pictures and enable additional hints based on species morphological 
-          and ecological descriptions. The app gives feedback on whether your 
-          attempt was correct or not and if not, how different the actual name 
-          is and whether the genus was correct or not. The quiz keeps track of 
-          the species shown and answered correctly and uses this information to 
-          show species that ave been answered correctly less frequently and 
-          species which have not been answered correctly more frequently (if 
-          enabled). You can download the species list after practicing and 
-          upload it again to make use of the saved numbers of successes and 
-          failures when practicing again.
+          species name (case insensitive). You may browse through a selection 
+          of pictures and enable additional hints based on species 
+          morphological and ecological descriptions. The app gives feedback on 
+          whether your attempt was correct or not and if not, how different the 
+          actual name is and whether the genus was correct or not. The quiz 
+          keeps track of the species shown and answered correctly and uses this 
+          information to show species that ave been answered correctly less 
+          frequently and species which have not been answered correctly more 
+          frequently (if enabled). You can download the species list after 
+          practicing and upload it again to make use of the saved numbers of 
+          successes and failures when practicing again.
           <br>',
              ifelse(setup, '<br>
           In the Setup tab you can choose which species to practice, either by 
@@ -63,8 +63,8 @@ function(){
 		  <br>
 		  <br>
         <p style="font-size:100%;text-align:justify">
-          BotanizeR is highly flexible and easy to set up, allowing lecturers to 
-          define themselves the species list, picture base and species 
+          BotanizeR is highly flexible and easy to set up, allowing lecturers 
+          to define themselves the species list, picture base and species 
           characteristics to show to their students. Technically, BotanizeR is 
           an R-package which can be installed from 
           <a href="https://github.com/patrickweigelt/BotanizeR" target=_blank>

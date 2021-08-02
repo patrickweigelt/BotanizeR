@@ -8,14 +8,18 @@
 An object of class \code{"cross"}; see \code{\link[qtl]{read.cross}}.
 }
 \source{
-\href{https://www.floraweb.de}{FloraWeb}
+\href{https://www.floraweb.de}{FloraWeb} and
+\href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the
+British Irish flora}
 }
 \usage{
 data("BotanizeR_species")
 }
 \description{
-Table containing the relevant information for 5852 species. The data
-originate from \href{https://www.floraweb.de}{FloraWeb}.
+Example species list table containing the relevant information to run
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and \code{\link[=BotanizeR_shiny]{BotanizeR_shiny()}} for 5852
+species from \href{https://www.floraweb.de}{FloraWeb}
+(images, map and species descriptions) and/or the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British Irish flora}.
 }
 \examples{
 data(BotanizeR_species)

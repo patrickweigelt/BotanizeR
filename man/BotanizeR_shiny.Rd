@@ -2,22 +2,27 @@
 % Please edit documentation in R/BotanizeR_shiny.R
 \name{BotanizeR_shiny}
 \alias{BotanizeR_shiny}
-\title{Shiny application}
+\title{BotanizeR Shiny application}
 \usage{
-BotanizeR_shiny(run = FALSE)
+BotanizeR_shiny(run = TRUE)
 }
 \arguments{
-\item{run}{a logical, when TRUE, the Shiny application is lauched}
+\item{run}{a logical, when TRUE, the Shiny application is launched. Can be
+set to FALSE to avoid launching the shiny app in a non-interactive
+environment.}
 }
 \value{
 Shiny application.
 }
 \description{
-Running the Shiny application of BotanizeR.
+Running the Shiny application of BotanizeR locally from installed BotanizeR
+R package.
 }
 \examples{
 # Example
-BotanizeR_shiny(run = FALSE)
+\dontrun{
+BotanizeR_shiny()
+}
 
 }
 \references{

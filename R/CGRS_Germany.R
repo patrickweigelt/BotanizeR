@@ -2,7 +2,7 @@
 #' Chorological Grid Reference System for Germany
 #'
 #' Common European Chorological Grid Reference System (CGRS) clipped for 
-#' Germany for plotting species ditributions from 
+#' Germany for plotting species distributions from 
 #' [FloraWeb](https://www.floraweb.de).
 #'
 #' @docType data

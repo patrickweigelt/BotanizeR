@@ -3,18 +3,22 @@
 \docType{data}
 \name{CGRS_Germany}
 \alias{CGRS_Germany}
-\title{Species table for BotanizeR}
+\title{Chorological Grid Reference System for Germany}
 \format{
 An object of class \code{"cross"}; see \code{\link[qtl]{read.cross}}.
 }
 \source{
-\href{https://www.eea.europa.eu/data-and-maps/data/common-european-chorological-grid-reference-system-cgrs}{Common European Chorological Grid Reference System (CGRS)}
+\href{https://www.eea.europa.eu/data-and-maps/data/common-european-
+chorological-grid-reference-system-cgrs}{Common European Chorological Grid
+Reference System (CGRS)}
 }
 \usage{
 data("CGRS_Germany")
 }
 \description{
-Chorological Grid Reference System for Germany.
+Common European Chorological Grid Reference System (CGRS) clipped for
+Germany for plotting species ditributions from
+\href{https://www.floraweb.de}{FloraWeb}.
 }
 \examples{
 data(CGRS_Germany)

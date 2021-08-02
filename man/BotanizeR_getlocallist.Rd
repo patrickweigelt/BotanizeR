@@ -2,30 +2,83 @@
 % Please edit documentation in R/BotanizeR_getlocallist.R
 \name{BotanizeR_getlocallist}
 \alias{BotanizeR_getlocallist}
-\title{GBIF species list}
+\title{Get local species list}
 \usage{
-BotanizeR_getlocallist(long = NA, lat = NA, radius = 1, backbone_list = NA)
+BotanizeR_getlocallist(
+  long = NA,
+  lat = NA,
+  radius = 0.1,
+  taxonKey = 7707728,
+  limit = 10000,
+  backbone_list = NA
+)
 }
 \arguments{
-\item{long}{a numeric, defining the longitude of the wanted location.}
+\item{long}{a numeric, defining the longitude of the wanted location in
+decimal degrees.}
 
-\item{lat}{a numeric, defining the latitude of the wanted location.}
+\item{lat}{a numeric, defining the latitude of the wanted location in
+decimal degrees.}
 
 \item{radius}{a numeric, defining the radius of the buffer around the
-wanted location.}
+wanted location in degrees. \code{lat - radius} needs to be > -90 and
+\code{lat + radius} needs to be < 90.}
 
-\item{backbone_list}{a data.frame with the same columns as the data
-returned by data("BotanizeR_species").}
+\item{taxonKey}{a numeric, defining the taxonKey of the target taxonomic
+group used by \href{https://www.gbif.org/}{GBIF} passed on to \link[rgbif:occ_data]{rgbif::occ_data}.
+Default of 7707728 represents Tracheophyta. Use \link[rgbif:name_lookup]{rgbif::name_lookup} to
+find taxonKey of alternative taxa.}
+
+\item{limit}{a numeric, defining the maximum number of occurrences retrieved
+from \href{https://www.gbif.org/}{GBIF} passed on to \link[rgbif:occ_data]{rgbif::occ_data}.
+Increasing it may significantly reduce speed.}
+
+\item{backbone_list}{a data.frame with a \code{SPECIES} column containing the
+species to be subset. If this list shall be used as \code{species_list} in
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}, It needs to contain at least the following
+columns: \emph{NAMNR}, \emph{TAXONNAME}, \emph{SPECIES} and \emph{GENUS}. See
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} for more info.}
 }
 \value{
-A species list.
+A \code{data.frame} of the same structure like \code{backbone_list} including only
+those species found in \href{https://www.gbif.org/}{GBIF} for the given
+coordinates and radius. An additional column \code{FREQ}is added providing the
+frequency of each for selecting more common species. If \code{backbone_list} is
+\code{NA} the species list obtained from \href{https://www.gbif.org/}{GBIF} is
+formatted to contain all essential columns to run
+\code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} or to use it in the BotanizeR Shiny app.
 }
 \description{
-Using coordinates and a buffer radius, this function retrieves a certain
-species list from \href{https://www.gbif.org/}{GBIF} database.
+Using longitude and latitude coordinates and a buffer radius, this function
+retrieves a plant species list from \href{https://www.gbif.org/}{GBIF} and
+formats it for use in \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} or the BotanizeR Shiny
+app. If a \code{backbone_list} is supplied, it will be subset for the species
+found in \href{https://www.gbif.org/}{GBIF} and returned.
 }
 \examples{
 # Example
+
+# Species list for Germany with IDs from floraweb.de
+data(BotanizeR_species)
+
+
+# Load species list for Britain and Germany with species and IDs from 
+# https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/
+data(BotanizeR_species)
+
+# Subset the species list for species occurring in Cairngorms National Park
+BotanizeR_Cairngorms <- 
+  BotanizeR_getlocallist(long = -3.5966, lat = 57.0877, 
+                         radius = 0.5, taxonKey = 7707728, 
+                         limit = 10000, backbone_list = BotanizeR_species)
+
+
+
+# Create a new species list for the Island of Bornholm, Denmark
+BotanizeR_Bornholm <- 
+  BotanizeR_getlocallist(long = 14.9184, lat = 55.1273, 
+                         radius = 0.5, taxonKey = 7707728, 
+                         limit = 10000, backbone_list = NA)
 
 }
 \references{

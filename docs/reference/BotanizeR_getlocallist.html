@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GBIF species list — BotanizeR_getlocallist • BotanizeR</title>
+<title>Get local species list — BotanizeR_getlocallist • BotanizeR</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,12 @@
 
 
 
-<meta property="og:title" content="GBIF species list — BotanizeR_getlocallist" />
-<meta property="og:description" content="Using coordinates and a buffer radius, this function retrieves a certain
-species list from GBIF database." />
+<meta property="og:title" content="Get local species list — BotanizeR_getlocallist" />
+<meta property="og:description" content="Using longitude and latitude coordinates and a buffer radius, this function
+retrieves a plant species list from GBIF and
+formats it for use in BotanizeR_quiz() or the BotanizeR Shiny
+app. If a backbone_list is supplied, it will be subset for the species
+found in GBIF and returned." />
 
 
 
@@ -119,44 +122,79 @@ species list from GBIF database." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>GBIF species list</h1>
+    <h1>Get local species list</h1>
     
     <div class="hidden name"><code>BotanizeR_getlocallist.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Using coordinates and a buffer radius, this function retrieves a certain
-species list from <a href='https://www.gbif.org/'>GBIF</a> database.</p>
+    <p>Using longitude and latitude coordinates and a buffer radius, this function
+retrieves a plant species list from <a href='https://www.gbif.org/'>GBIF</a> and
+formats it for use in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> or the BotanizeR Shiny
+app. If a <code>backbone_list</code> is supplied, it will be subset for the species
+found in <a href='https://www.gbif.org/'>GBIF</a> and returned.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>BotanizeR_getlocallist</span><span class='op'>(</span>long <span class='op'>=</span> <span class='cn'>NA</span>, lat <span class='op'>=</span> <span class='cn'>NA</span>, radius <span class='op'>=</span> <span class='fl'>1</span>, backbone_list <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>BotanizeR_getlocallist</span><span class='op'>(</span>
+  long <span class='op'>=</span> <span class='cn'>NA</span>,
+  lat <span class='op'>=</span> <span class='cn'>NA</span>,
+  radius <span class='op'>=</span> <span class='fl'>0.1</span>,
+  taxonKey <span class='op'>=</span> <span class='fl'>7707728</span>,
+  limit <span class='op'>=</span> <span class='fl'>10000</span>,
+  backbone_list <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>long</th>
-      <td><p>a numeric, defining the longitude of the wanted location.</p></td>
+      <td><p>a numeric, defining the longitude of the wanted location in
+decimal degrees.</p></td>
     </tr>
     <tr>
       <th>lat</th>
-      <td><p>a numeric, defining the latitude of the wanted location.</p></td>
+      <td><p>a numeric, defining the latitude of the wanted location in
+decimal degrees.</p></td>
     </tr>
     <tr>
       <th>radius</th>
       <td><p>a numeric, defining the radius of the buffer around the
-wanted location.</p></td>
+wanted location in degrees. <code>lat - radius</code> needs to be &gt; -90 and
+<code>lat + radius</code> needs to be &lt; 90.</p></td>
+    </tr>
+    <tr>
+      <th>taxonKey</th>
+      <td><p>a numeric, defining the taxonKey of the target taxonomic
+group used by <a href='https://www.gbif.org/'>GBIF</a> passed on to <a href='https://docs.ropensci.org/rgbif/reference/occ_data.html'>rgbif::occ_data</a>.
+Default of 7707728 represents Tracheophyta. Use <a href='https://docs.ropensci.org/rgbif/reference/name_lookup.html'>rgbif::name_lookup</a> to
+find taxonKey of alternative taxa.</p></td>
+    </tr>
+    <tr>
+      <th>limit</th>
+      <td><p>a numeric, defining the maximum number of occurrences retrieved
+from <a href='https://www.gbif.org/'>GBIF</a> passed on to <a href='https://docs.ropensci.org/rgbif/reference/occ_data.html'>rgbif::occ_data</a>.
+Increasing it may significantly reduce speed.</p></td>
     </tr>
     <tr>
       <th>backbone_list</th>
-      <td><p>a data.frame with the same columns as the data
-returned by data("BotanizeR_species").</p></td>
+      <td><p>a data.frame with a <code>SPECIES</code> column containing the
+species to be subset. If this list shall be used as <code>species_list</code> in
+<code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code>, It needs to contain at least the following
+columns: <em>NAMNR</em>, <em>TAXONNAME</em>, <em>SPECIES</em> and <em>GENUS</em>. See
+<code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> for more info.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A species list.</p>
+    <p>A <code>data.frame</code> of the same structure like <code>backbone_list</code> including only
+those species found in <a href='https://www.gbif.org/'>GBIF</a> for the given
+coordinates and radius. An additional column <code>FREQ</code>is added providing the
+frequency of each for selecting more common species. If <code>backbone_list</code> is
+<code>NA</code> the species list obtained from <a href='https://www.gbif.org/'>GBIF</a> is
+formatted to contain all essential columns to run
+<code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> or to use it in the BotanizeR Shiny app.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     
@@ -168,6 +206,28 @@ online teaching and beyond. submitted.
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example</span>
+
+<span class='co'># Species list for Germany with IDs from floraweb.de</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>)</span>
+
+
+<span class='co'># Load species list for Britain and Germany with species and IDs from </span>
+<span class='co'># https://www.floraweb.de and https://www.brc.ac.uk/plantatlas/</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>)</span>
+
+<span class='co'># Subset the species list for species occurring in Cairngorms National Park</span>
+<span class='va'>BotanizeR_Cairngorms</span> <span class='op'>&lt;-</span> 
+  <span class='fu'>BotanizeR_getlocallist</span><span class='op'>(</span>long <span class='op'>=</span> <span class='op'>-</span><span class='fl'>3.5966</span>, lat <span class='op'>=</span> <span class='fl'>57.0877</span>, 
+                         radius <span class='op'>=</span> <span class='fl'>0.5</span>, taxonKey <span class='op'>=</span> <span class='fl'>7707728</span>, 
+                         limit <span class='op'>=</span> <span class='fl'>10000</span>, backbone_list <span class='op'>=</span> <span class='va'>BotanizeR_species</span><span class='op'>)</span>
+
+
+
+<span class='co'># Create a new species list for the Island of Bornholm, Denmark</span>
+<span class='va'>BotanizeR_Bornholm</span> <span class='op'>&lt;-</span> 
+  <span class='fu'>BotanizeR_getlocallist</span><span class='op'>(</span>long <span class='op'>=</span> <span class='fl'>14.9184</span>, lat <span class='op'>=</span> <span class='fl'>55.1273</span>, 
+                         radius <span class='op'>=</span> <span class='fl'>0.5</span>, taxonKey <span class='op'>=</span> <span class='fl'>7707728</span>, 
+                         limit <span class='op'>=</span> <span class='fl'>10000</span>, backbone_list <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>
 
 </div></pre>
   </div>

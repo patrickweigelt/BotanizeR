@@ -675,7 +675,8 @@ shinyServer(function(input, output, session) {
                 "<a target='_blank' href= 'https://www.gbif.org/'>GBIF</a>", 
                 " for a defined radius around your desired location. Longitude 
                 and latitude values should not exceed +/- 180° and +/- 90° 
-                after adding the radius."))
+                after adding the radius. Retreiving the GBIF data can take 
+                up to around 10 seconds."))
     })
     
     observeEvent(input$local_list, {
@@ -987,7 +988,7 @@ shinyServer(function(input, output, session) {
                         species_row = 
                             isolate(species_list_reactive$df_data[j,]), 
                         image_floraweb = FALSE, hints_floraweb = "map",
-                        image_ukplantatlas = FALSE, hints_ukplantatlas = NULL,                    
+                        image_ukplantatlas = FALSE, hints_ukplantatlas = NULL, 
                         hints_custom = NULL, imagelinks_custom = NULL, 
                         image_folders = NULL, only_links = TRUE)
                     
@@ -1216,7 +1217,8 @@ shinyServer(function(input, output, session) {
                                        (temp_data$SCORE+1)) *
                                   temp_data$INCLUDE)
             } else {
-                i$i <- sample(seq_len(nrow(temp_data)), 1, prob = temp_data$INCLUDE)
+                i$i <- sample(seq_len(nrow(temp_data)), 1, 
+                              prob = temp_data$INCLUDE)
             }
             
             temp_row <- temp_data[isolate(i$i),]

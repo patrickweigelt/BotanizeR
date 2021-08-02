@@ -92,7 +92,7 @@ write.csv(floraweb_species_trained, "floraweb_species_trained.csv", row.names = 
 ```
 
 
-You can add own species descriptions or other hints as well is link to additional online images into additional columns of the species list data.frame. Alternatively you can specify a folder woith images on your local computer. Image files names need to include species names.
+You can add own species descriptions or other hints as well is link to additional online images into additional columns of the species list data.frame. Alternatively you can specify a folder with images on your local computer. Image files names need to include species names.
 ```{r custom, eval=FALSE}
 ### example for three species with custom hints and images from their Wikipedia page
 custom_species <- floraweb_species[which(floraweb_species$SPECIES %in% c("Acer campestre","Erica carnea","Melampyrum nemorosum")),]

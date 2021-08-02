@@ -2,7 +2,7 @@
 % Please edit documentation in R/BotanizeR_imageresize.R
 \name{BotanizeR_imageresize}
 \alias{BotanizeR_imageresize}
-\title{Resizing images}
+\title{Batch resize images}
 \usage{
 BotanizeR_imageresize(
   image_folders = NULL,
@@ -13,28 +13,54 @@ BotanizeR_imageresize(
 )
 }
 \arguments{
-\item{image_folders}{character vector that defines a specific folder from
-which the user wants to retrieve images}
+\item{image_folders}{character vector defining folders where images
+that shall be resized are stored.}
 
-\item{image_width}{number to define the width of the images.}
+\item{image_width}{number defining the width of the resized images as number
+of pixels.}
 
-\item{max_height}{number to define the height of the images.}
+\item{max_height}{number defining the maximum height of the resized images.
+If \code{NA}, \code{max_height} is ignored and all images are resized to a width of
+\code{image_width}. If \code{max_height} is defined images are resized to a width of
+\code{image_width} only if a height of \code{max_height} is not exceeded. Otherwise
+they will be resized to a height of \code{max_height}.}
 
-\item{int_type}{number to define the type of the images.}
+\item{int_type}{number indicating the method of interpolation used in
+\code{\link[imager:resize]{imager::resize()}}: -1 = no interpolation: raw memory resizing.
+0 = no interpolation: additional space is filled according to
+boundary_conditions. 1 = nearest-neighbor interpolation.
+2 = moving average interpolation. 3 = linear interpolation.
+4 = grid interpolation. 5 = cubic interpolation. 6 = lanczos interpolation.}
 
-\item{quality}{number to define the quality of the images.}
+\item{quality}{mumeric > 0 and <= 1 defining the quality of the images when
+saved as *.jpg by \code{\link[imager:save.image]{imager::save.image()}}. Higher quality means less
+compression.}
 }
 \value{
-Resized images.
+Resized images will be saved at the same location where the input folders
+are located but folder names will be expanded about
+\code{paste("_",image_width,sep="")}.
 }
 \description{
-Batch resize images for plotting in BotanizeR quiz.
+Batch resize images for plotting in \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} or
+BotanizeR Shiny app maintaining aspect ratio.
 }
 \details{
-Resizing images so they fit in the Shiny application.
+Resizing images to make them fit and load faster in the
+BotanizeR Shiny application and \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}}.
 }
 \examples{
 # Example
+
+\dontrun{
+BotanizeR_imageresize(image_folders = "inst/WWW/images_to_resize", 
+                      image_width = 560, max_height = 700, quality = 1)
+                      
+BotanizeR_imageresize(image_folders = c("inst/WWW/images_to_resize_1", 
+                                        "inst/WWW/images_to_resize_2"), 
+                      image_width = 560, max_height = 700, 
+                      quality = 1, int_type = 5)
+}
 
 }
 \references{

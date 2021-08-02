@@ -112,9 +112,9 @@
 #' 
 #' # only floraweb image(s) + hints + map
 #' hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
-#'                            hints_floraweb = c("map", "description", "status", 
-#'                                               "habitat", "family", 
-#'                                               "German name"))
+#'                            hints_floraweb = c("map", "description", 
+#'                                               "status", "habitat", 
+#'                                               "family", "German name"))
 #' 
 #' \dontrun{
 #' par(oma = c(0, 0, 0, 10.5))
@@ -588,7 +588,7 @@ BotanizeR_collect <-
             
             download.file(
               paste0(
-                "https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",
+            "https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",
                 taxon_ID_map),
               destfile = file.path(dir, "map.csv"), quiet = TRUE)
             map <- read.csv(
@@ -707,9 +707,10 @@ BotanizeR_collect <-
         }
         
         if(hints_ukplantatlas[i] == "familyuk" & length(infos) >= 1){
-          hints[[length(hints)+1]] <- paste("Family:",
-                                            gsub("(.*›)(.*ceae|.*ferae)(›.*)",
-                                                 "\\2", infos[[1]]))
+          hints[[length(hints)+1]] <- 
+            paste("Family:",
+                  gsub("(.*›)(.*ceae|.*ferae)(›.*)", 
+                       "\\2", infos[[1]]))
           names(hints)[length(hints)] <- hints_ukplantatlas[i]
         }
         

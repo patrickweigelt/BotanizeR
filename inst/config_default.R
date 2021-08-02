@@ -61,8 +61,8 @@ BotanizeR_URL <- ""
 ### System path
 
 # If your setup requires to add a folder location to all relative paths used in 
-# the app (species list location, image locations), add it as a character string 
-# here (e.g. "~/ShinyApps/BotanizeR/")
+# the app (species list location, image locations), add it as a character 
+# string here (e.g. "~/ShinyApps/BotanizeR/")
 
 system_path <- ""
 

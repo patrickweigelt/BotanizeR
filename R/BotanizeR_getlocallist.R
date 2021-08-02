@@ -142,9 +142,13 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 0.1,
     
     if(!is.null(species)){
       if(length(which(species$taxonRank == "SPECIES")) > 0){
-        species_count <- as.data.frame.table(table(species$species[which(species$taxonRank == "SPECIES")]))
+        species_count <- 
+          as.data.frame.table(
+            table(species$species[which(species$taxonRank == "SPECIES")]))
         names(species_count)[1] <- "species"
-        species <- unique(species[which(species$taxonRank == "SPECIES"),c("acceptedScientificName","genus","species")])
+        species <- 
+          unique(species[which(species$taxonRank == "SPECIES"),
+                         c("acceptedScientificName","genus","species")])
         
         species <- dplyr::left_join(species_count, species, by = "species")
         
@@ -157,8 +161,8 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 0.1,
         species$SCORE <- 0
         species$ATTEMPTS <- 0
         species$INCLUDE <- 1
-        species <- species[,c("NAMNR", "TAXONNAME", "SPECIES", "GENUS", "COUNT",
-                              "SCORE", "ATTEMPTS", "INCLUDE", "FREQ")]
+        species <- species[,c("NAMNR", "TAXONNAME", "SPECIES", "GENUS", 
+                              "COUNT", "SCORE", "ATTEMPTS", "INCLUDE", "FREQ")]
       }
     }
     
@@ -168,7 +172,9 @@ BotanizeR_getlocallist <- function(long = NA, lat = NA, radius = 0.1,
     
     if(!is.null(species)){
       if(length(which(!is.na(species$species))) > 0){
-        species <- as.data.frame.table(table(species$species[!is.na(species$species)]))
+        species <- 
+          as.data.frame.table(
+            table(species$species[!is.na(species$species)]))
         names(species) <- c("SPECIES","FREQ")
         species <- dplyr::inner_join(backbone_list, species, by = "SPECIES")
         return(species)

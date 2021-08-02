@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Resizing images — BotanizeR_imageresize • BotanizeR</title>
+<title>Batch resize images — BotanizeR_imageresize • BotanizeR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Resizing images — BotanizeR_imageresize" />
-<meta property="og:description" content="Batch resize images for plotting in BotanizeR quiz." />
+<meta property="og:title" content="Batch resize images — BotanizeR_imageresize" />
+<meta property="og:description" content="Batch resize images for plotting in BotanizeR_quiz() or
+BotanizeR Shiny app maintaining aspect ratio." />
 
 
 
@@ -118,13 +119,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Resizing images</h1>
+    <h1>Batch resize images</h1>
     
     <div class="hidden name"><code>BotanizeR_imageresize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Batch resize images for plotting in BotanizeR quiz.</p>
+    <p>Batch resize images for plotting in <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code> or
+BotanizeR Shiny app maintaining aspect ratio.</p>
     </div>
 
     <pre class="usage"><span class='fu'>BotanizeR_imageresize</span><span class='op'>(</span>
@@ -140,33 +142,48 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>image_folders</th>
-      <td><p>character vector that defines a specific folder from
-which the user wants to retrieve images</p></td>
+      <td><p>character vector defining folders where images
+that shall be resized are stored.</p></td>
     </tr>
     <tr>
       <th>image_width</th>
-      <td><p>number to define the width of the images.</p></td>
+      <td><p>number defining the width of the resized images as number
+of pixels.</p></td>
     </tr>
     <tr>
       <th>max_height</th>
-      <td><p>number to define the height of the images.</p></td>
+      <td><p>number defining the maximum height of the resized images.
+If <code>NA</code>, <code>max_height</code> is ignored and all images are resized to a width of
+<code>image_width</code>. If <code>max_height</code> is defined images are resized to a width of
+<code>image_width</code> only if a height of <code>max_height</code> is not exceeded. Otherwise
+they will be resized to a height of <code>max_height</code>.</p></td>
     </tr>
     <tr>
       <th>int_type</th>
-      <td><p>number to define the type of the images.</p></td>
+      <td><p>number indicating the method of interpolation used in
+<code><a href='https://rdrr.io/pkg/imager/man/resize.html'>imager::resize()</a></code>: -1 = no interpolation: raw memory resizing.
+0 = no interpolation: additional space is filled according to
+boundary_conditions. 1 = nearest-neighbor interpolation.
+2 = moving average interpolation. 3 = linear interpolation.
+4 = grid interpolation. 5 = cubic interpolation. 6 = lanczos interpolation.</p></td>
     </tr>
     <tr>
       <th>quality</th>
-      <td><p>number to define the quality of the images.</p></td>
+      <td><p>mumeric &gt; 0 and &lt;= 1 defining the quality of the images when
+saved as *.jpg by <code><a href='https://rdrr.io/pkg/imager/man/save.image.html'>imager::save.image()</a></code>. Higher quality means less
+compression.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Resized images.</p>
+    <p>Resized images will be saved at the same location where the input folders
+are located but folder names will be expanded about
+<code><a href='https://rdrr.io/r/base/paste.html'>paste("_",image_width,sep="")</a></code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Resizing images so they fit in the Shiny application.</p>
+    <p>Resizing images to make them fit and load faster in the
+BotanizeR Shiny application and <code><a href='BotanizeR_quiz.html'>BotanizeR_quiz()</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     
@@ -181,6 +198,16 @@ online teaching and beyond. submitted.
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>BotanizeR_imageresize</span><span class='op'>(</span>image_folders <span class='op'>=</span> <span class='st'>"inst/WWW/images_to_resize"</span>, 
+                      image_width <span class='op'>=</span> <span class='fl'>560</span>, max_height <span class='op'>=</span> <span class='fl'>700</span>, quality <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+                      
+<span class='fu'>BotanizeR_imageresize</span><span class='op'>(</span>image_folders <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"inst/WWW/images_to_resize_1"</span>, 
+                                        <span class='st'>"inst/WWW/images_to_resize_2"</span><span class='op'>)</span>, 
+                      image_width <span class='op'>=</span> <span class='fl'>560</span>, max_height <span class='op'>=</span> <span class='fl'>700</span>, 
+                      quality <span class='op'>=</span> <span class='fl'>1</span>, int_type <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 </div></pre>
   </div>

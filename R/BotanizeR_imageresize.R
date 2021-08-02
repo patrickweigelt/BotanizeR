@@ -22,7 +22,7 @@
 #' 2 = moving average interpolation. 3 = linear interpolation. 
 #' 4 = grid interpolation. 5 = cubic interpolation. 6 = lanczos interpolation.
 #' 
-#' @param quality mumeric > 0 and <= 1 defining the quality of the images when
+#' @param quality numeric > 0 and <= 1 defining the quality of the images when
 #' saved as *.jpg by [imager::save.image()]. Higher quality means less 
 #' compression.
 #' 
