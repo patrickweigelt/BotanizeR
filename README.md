@@ -75,7 +75,7 @@ BotanizeR_shiny(run = TRUE)
 ## 4. References and dependencies
 `BotanizeR` depends on `dplyr`, `htmltools`, `httr`, `imager`, `magick`,
 `rgbif`, `rgeos`, `sf`, `shiny`, `shinyBS`, `shinyFiles`, `shinythemes`,
-`slickR`, `sp` and `XML`.
+`shinyjs`, `slickR`, `sp` and `XML`.
 
 **Sources**  
 Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  

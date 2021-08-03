@@ -27,6 +27,7 @@ Imports:
   shinyBS,
   shinyFiles,
   shinythemes,
+  shinyjs,
   slickR,
   sp,
   XML

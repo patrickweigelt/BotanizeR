@@ -6,6 +6,7 @@ library(shinythemes)
 library(slickR)
 library(shinyFiles)
 library(shinyBS)
+library(shinyjs)
 
 # Load default config
 source("config_default.R")
@@ -199,7 +200,17 @@ tabPanel(
 ## Setup -----------------------------------------------------------------------
 if(setup){tabPanel(
   h1(id = "panel3", "Setup"),
-  fluidRow(
+  fluidRow(useShinyjs(),
+           tags$script(HTML(
+             "
+      $(document).on('shiny:inputchanged', function(event) {
+        if (event.name === 'local_list') {
+          document.getElementById('local_list_status').innerHTML = 
+          '<i>Loading...</i>';
+        }
+      });
+      "
+           )),
     column(4, style="padding-right: 7%;",
            h4("Species list"),
            br(),
@@ -229,14 +240,14 @@ if(setup){tabPanel(
                                    step = 0.00001, min = -90, max = 90)
                ),
                column(width = 3, style="min-width: 100px",
-                      numericInput("radius", "Radius:", 0.1, 
+                      numericInput("radius", "Radius:", 0.02, 
                                    step = 0.01, min = 0.01, max = 10)
                ),
                column(width = 3, style="min-width: 100px; margin-top: 25px;",
                       actionButton("local_list", "Subset list")
                )
              )},
-           if(gbif) htmlOutput("local_list_error"),
+           if(gbif) htmlOutput("local_list_status"),
            br(),
            HTML("<b>Download the species list</b>"),
            br(),

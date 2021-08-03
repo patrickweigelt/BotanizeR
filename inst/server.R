@@ -369,7 +369,7 @@ shinyServer(function(input, output, session) {
         } 
         
         output$upload_error <- renderUI("")
-        output$local_list_error <- renderUI("")
+        output$local_list_status <- renderUI("")
         
         species_list_reactive$df_data <- 
             temp_species_list[order(temp_species_list$SPECIES),]
@@ -517,7 +517,6 @@ shinyServer(function(input, output, session) {
         HTML(upload_text)
     })
     output$upload_error <- renderUI("")
-    output$local_list_error <- renderUI("")
     
     # The second upload note in the quiz pop-up only works with its own output
     output$upload_note_2 <- renderUI({
@@ -666,6 +665,8 @@ shinyServer(function(input, output, session) {
     
     ### Local GBIF list ----
     
+    output$local_list_status <- renderUI("")
+    
     # Subset species list based on GBIF records for defined coordinates
     
     output$locallist_note <- renderUI({
@@ -676,17 +677,20 @@ shinyServer(function(input, output, session) {
                 " for a defined radius around your desired location. Longitude 
                 and latitude values should not exceed +/- 180° and +/- 90° 
                 after adding the radius. Retreiving the GBIF data can take 
-                up to a minute. Consider a small radius."))
+                up to a minute. If so, consider a smaller radius."))
     })
     
     observeEvent(input$local_list, {
         #print(paste("Longitude:",input$longitude))
         #print(paste("Latitude:",input$latitude))
         
-        output$local_list_error <- renderUI("")
-        
         counts_reactive$omit <- TRUE
         
+        # output$local_list_status <- renderUI({
+        #     HTML("<p style='color:#CD2626';><i>
+        #                  Loading...</i></p>")
+        # }) # solved via Javascript in ui
+
         try(species_list_local <- 
                 BotanizeR_getlocallist(lat = input$latitude, 
                                        long = input$longitude, 
@@ -704,16 +708,20 @@ shinyServer(function(input, output, session) {
                     sum(species_list_local$COUNT > 0)
                 counts_reactive$init_score_species <- 
                     sum(species_list_local$SCORE > 0)
+                output$local_list_status <- renderUI({
+                    HTML("<p style='color:green; margin-bottom:inherit;'><i>
+                         Done</i></p>")
+                })
             } else {
-                output$local_list_error <- renderUI({
-                    HTML("<p style='color:#CD2626';><i>
+                output$local_list_status <- renderUI({
+                    HTML("<p style='color:#CD2626; margin-bottom:inherit;'><i>
                          No species from backbone list found for given 
                          coordinates!</i></p>")
                 })
             }
         } else {
-            output$local_list_error <- renderUI({
-                HTML("<p style='color:#CD2626';><i>
+            output$local_list_status <- renderUI({
+                HTML("<p style='color:#CD2626; margin-bottom:inherit;'><i>
                      GBIF occurrences could not be loaded. 
                      Check coordinates and radius!</i></p>")
             })
