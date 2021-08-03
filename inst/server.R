@@ -676,7 +676,7 @@ shinyServer(function(input, output, session) {
                 "<a target='_blank' href= 'https://www.gbif.org/'>GBIF</a>", 
                 " for a defined radius around your desired location. Longitude 
                 and latitude values should not exceed +/- 180° and +/- 90° 
-                after adding the radius. Retreiving the GBIF data can take 
+                after adding the radius. Retrieving the GBIF data can take 
                 up to a minute. If so, consider a smaller radius."))
     })
     
