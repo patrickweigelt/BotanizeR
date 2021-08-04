@@ -2,7 +2,8 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  BotanizeR_config: BotanizeR_config.html
   BotanizeR_functions: BotanizeR_functions.html
   BotanizeR_Shiny: BotanizeR_Shiny.html
-last_built: 2021-08-02T17:13Z
+last_built: 2021-08-04T21:10Z
 

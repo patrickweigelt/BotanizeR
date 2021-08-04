@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Little quiz game to memorize the plant species of Germany • BotanizeR</title>
+<title>BotanizeR quiz for memorizing the plant species • BotanizeR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Little quiz game to memorize the plant species of Germany">
-<meta property="og:description" content="Navigates through species from floraweb.de (or a defined subset thereof), shows pictures and descriptions and other hints and let's the user guess the species name. Number of tries and attempts are used to calculate scores that will be used to update probabilities for the random sampling of subsequent species.">
+<script src="pkgdown.js"></script><meta property="og:title" content="BotanizeR quiz for memorizing the plant species">
+<meta property="og:description" content="BotanizeR is an R-package with Shiny app designed to help botany students and other people interested in plants to learn and distinguish plant diagnostic characters, memorize plant species, and train their identification skills.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/BotanizeR_config.html">BotanizeR config</a>
+    </li>
+    <li>
       <a href="articles/BotanizeR_functions.html">BotanizeR functions</a>
     </li>
     <li>
@@ -76,87 +79,105 @@
   <div class="contents col-md-9">
 <div id="botanizer-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#botanizer-" class="anchor"></a>BotanizeR <img src="figures/biodiv_gottingen_logo.png" align="right" alt="" width="200">
+<a href="#botanizer-" class="anchor"></a>BotanizeR <img src="reference/figures/biodiv_gottingen_logo.png" align="right" alt="" width="200">
 </h1></div>
-<p>The package website is <strong><a href="https://patrickweigelt.github.io/BotanizeR/index.html">here</a></strong>.</p>
-<p>A quiz game to memorize plant species names and characteristics</p>
-<p><a href="https://www.r-project.org/Licenses/GPL-3"><img src="https://img.shields.io/badge/Licence-GPL--3-blue.svg" alt="licence"></a></p>
-<div id="1-installation" class="section level2">
+<p><br><br><a href="https://www.r-project.org/Licenses/GPL-3"><img src="https://img.shields.io/badge/Licence-GPL--3-blue.svg" alt="licence"></a><br><br> BotanizeR is an R-package with Shiny app designed to help botany students and other people interested in plants to learn and distinguish plant diagnostic characters, memorize plant species, and train their identification skills. Students can browse a species list, images, plant characteristics, habitat descriptions and distribution information or play a quiz where images of a random species are shown and students have to guess the correct species. BotanizeR is highly flexible allowing lecturers to define their own species lists and to provide images and further useful information, or choose from linked online content from selected botanical online resources. A Quiz and Species overview pages can be made available via the package’s Shiny application or played within R directly.</p>
+<div id="1-tutorials" class="section level2">
 <h2 class="hasAnchor">
-<a href="#1-installation" class="anchor"></a>1. Installation</h2>
+<a href="#1-tutorials" class="anchor"></a>1. Tutorials</h2>
+<p>Here, we provide tutorials on <br></p>
+<ul>
+<li>
+<strong><a href="https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_functions.html">how to use the package’s functions</a></strong><br>
+</li>
+<li>
+<strong><a href="https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_Shiny.html">how to use the BotanizeR Shiny app</a></strong><br>
+</li>
+<li><strong><a href="https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_config.html">how to set up and customize the Shiny app</a></strong></li>
+</ul>
+</div>
+<div id="2-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#2-functions" class="anchor"></a>2. Functions</h2>
+<p>An overview of all functions and data is given <strong><a href="https://patrickweigelt.github.io/BotanizeR/reference/index.html">here</a></strong>.</p>
+</div>
+<div id="3-installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#3-installation" class="anchor"></a>3. Installation</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
 <span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/patrickweigelt/BotanizeR"</span><span class="op">)</span>
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patrickweigelt.github.io/BotanizeR/">BotanizeR</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div id="2-tutorial" class="section level2">
+<div id="4-first-steps" class="section level2">
 <h2 class="hasAnchor">
-<a href="#2-tutorial" class="anchor"></a>2. Tutorial</h2>
+<a href="#4-first-steps" class="anchor"></a>4. First steps</h2>
+<div id="shiny-app" class="section level3">
+<h3 class="hasAnchor">
+<a href="#shiny-app" class="anchor"></a>Shiny app</h3>
+<p>You can start the Shiny application with the function <code><a href="reference/BotanizeR_shiny.html">BotanizeR_shiny()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Species list for Germany with IDs from floraweb.de</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">floraweb_species</span><span class="op">)</span>
-
-<span class="co"># Subset for about 300 species students in Göttingen learn</span>
-<span class="va">floraweb_species</span> <span class="op">&lt;-</span> <span class="va">floraweb_species</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">floraweb_species</span><span class="op">$</span><span class="va">SUMMER</span><span class="op">==</span><span class="fl">1</span> <span class="op">|</span> <span class="va">floraweb_species</span><span class="op">$</span><span class="va">BioDiv2005</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span>,<span class="op">]</span>
-
-<span class="co"># Type in species name, or press enter for next hint or type "skip" and press </span>
-<span class="co"># enter for next species or type "exit" to end quiz and save results</span>
-<span class="va">floraweb_species_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz</a></span><span class="op">(</span>species_list <span class="op">=</span> <span class="va">floraweb_species</span>, 
-                                           hints_floraweb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"description"</span>,<span class="st">"status"</span>,
-                                                     <span class="st">"habitat"</span>,<span class="st">"family"</span>,<span class="st">"German name"</span><span class="op">)</span>,
-                                                     case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit</span>
-<span class="va">floraweb_species_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz</a></span><span class="op">(</span>species_list <span class="op">=</span> <span class="va">floraweb_species</span>, 
-                                           hints_floraweb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"map"</span>,<span class="st">"description"</span>,<span class="st">"status"</span>,
-                                                     <span class="st">"habitat"</span>,<span class="st">"family"</span>,<span class="st">"German name"</span><span class="op">)</span>,
-                                                     case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># If you want to keep track of your progress, you can save the species list with updated scores locally and load it in the next session</span>
-
-<span class="co"># Initial saving</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">floraweb_species_trained</span>, <span class="st">"floraweb_species_trained.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Load species list</span>
-<span class="va">floraweb_species_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"floraweb_species_trained.csv"</span><span class="op">)</span>
-
-<span class="co"># Practice</span>
-<span class="va">floraweb_species_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz</a></span><span class="op">(</span>species_list <span class="op">=</span> <span class="va">floraweb_species_trained</span>,
-                                           hints_floraweb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"map"</span>,<span class="st">"description"</span>,<span class="st">"status"</span>,<span class="st">"habitat"</span>,
-                                          <span class="st">"family"</span>,<span class="st">"German name"</span><span class="op">)</span>, case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Save species list</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">floraweb_species_trained</span>, <span class="st">"floraweb_species_trained.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-
-
-<span class="co">### example for three species with custom hints and images</span>
-<span class="va">custom_species</span> <span class="op">&lt;-</span> <span class="va">floraweb_species</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">floraweb_species</span><span class="op">$</span><span class="va">SPECIES</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Acer campestre"</span>,<span class="st">"Erica carnea"</span>,<span class="st">"Melampyrum nemorosum"</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span>
-
-<span class="va">custom_species_trained</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz</a></span><span class="op">(</span>species_list <span class="op">=</span> <span class="va">custom_species</span>, image_floraweb<span class="op">=</span><span class="cn">TRUE</span>,
-                                         hints_floraweb <span class="op">=</span> <span class="cn">NULL</span>,
-                                         hints_custom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ownhint_1"</span>,<span class="st">"ownhint_2"</span><span class="op">)</span>, 
-                                         imagelinks_custom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"imagelink_1"</span>,<span class="st">"imagelink_2"</span><span class="op">)</span>, 
-                                         image_folders <span class="op">=</span> <span class="cn">NULL</span>, case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-                                    </code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="reference/BotanizeR_shiny.html">BotanizeR_shiny</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="3-shiny-application" class="section level2">
-<h2 class="hasAnchor">
-<a href="#3-shiny-application" class="anchor"></a>3. Shiny application</h2>
-<p>You can start the application with the function <code><a href="reference/BotanizeR_shiny.html">BotanizeR_shiny()</a></code>.</p>
+<div id="running-the-console-quiz" class="section level3">
+<h3 class="hasAnchor">
+<a href="#running-the-console-quiz" class="anchor"></a>Running the console quiz</h3>
+<p>You can run the console version of the quiz using <code><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/BotanizeR_shiny.html">BotanizeR_shiny</a></span><span class="op">(</span>run <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># Load species list for UK, Ireland and Germany based on floraweb.de and the </span>
+<span class="co"># Online Atlas of the British and Irish flora </span>
+<span class="co"># (https://www.brc.ac.uk/plantatlas/)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">BotanizeR_species</span><span class="op">)</span>
+
+<span class="co"># Subset for about 700 species known from Sussex, UK</span>
+<span class="va">BotanizeR_Sussex</span> <span class="op">&lt;-</span> 
+  <span class="va">BotanizeR_species</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">BotanizeR_species</span><span class="op">$</span><span class="va">UK_Ireland_Sussex</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span>, <span class="op">]</span>
+
+<span class="co"># Type in species name, or press enter for next hint or type "skip" and</span>
+<span class="co"># press enter for next species or type "exit" to end quiz and save results</span>
+<span class="va">BotanizeR_example_practiced</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="reference/BotanizeR_quiz.html">BotanizeR_quiz</a></span><span class="op">(</span>species_list <span class="op">=</span> <span class="va">BotanizeR_example</span>,
+                 image_floraweb <span class="op">=</span> <span class="cn">FALSE</span>, image_ukplantatlas <span class="op">=</span> <span class="cn">TRUE</span>, 
+                 hints_ukplantatlas <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mapuk'</span>, <span class="st">'familyuk'</span>, <span class="st">'ecology'</span>, 
+                                         <span class="st">'statusuk'</span>, <span class="st">'trends'</span>, <span class="st">'perennation'</span>,
+                                         <span class="st">'lifeform'</span>, <span class="st">'woodiness'</span>, 
+                                         <span class="st">'clonality'</span><span class="op">)</span>, 
+                 hints_floraweb <span class="op">=</span> <span class="cn">NULL</span>, case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="co"># If you want to keep track of your progress, you can save the species list</span>
+<span class="co"># with updated scores locally and load it in the next session</span></code></pre></div>
 </div>
-<div id="4-references-and-dependencies" class="section level2">
+</div>
+<div id="5-examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#4-references-and-dependencies" class="anchor"></a>4. References and dependencies</h2>
-<p><code>BotanizeR</code> depends on <code>dplyr</code>, <code>htmltools</code>, <code>httr</code>, <code>imager</code>, <code>magick</code>, <code>rgbif</code>, <code>rgeos</code>, <code>sf</code>, <code>shiny</code>, <code>shinyBS</code>, <code>shinyFiles</code>, <code>shinythemes</code>, <code>slickR</code>, <code>sp</code> and <code>XML</code>.</p>
-<p><strong>Sources</strong><br>
-Bundesamt für Naturschutz (BfN) <a href="http://www.floraweb.de">http://www.floraweb.de</a><br>
+<a href="#5-examples" class="anchor"></a>5. Examples</h2>
+<p>To showcase the flexibililty of BotanizeR we present 4 use cases:<br></p>
+<p><strong>1) <a href="https://gift.uni-goettingen.de/shiny/BotanizeR/" class="uri">https://gift.uni-goettingen.de/shiny/BotanizeR/</a></strong></p>
+<p>This particular instance of the BotanizeR Shiny app exemplifies a few use cases. You can practice species from the Floras of Germany, Britain and Ireland based on information retrieved live from the websites of <a href="http://www.floraweb.de">FloraWeb</a> and the <a href="https://www.brc.ac.uk/plantatlas/">Online Atlas of the British and Irish flora</a>. You can choose which of the Floras to practice species from, which species subset to use and which information from each of the websites to show.This instance of BotanizeR is based on the example data and default settings of the BotanizeR R package and can be customized and used for plant identification classes across central Europe.</p>
+<p><strong>2) <a href="https://gift.uni-goettingen.de/shiny/BotanizeR_winter/" class="uri">https://gift.uni-goettingen.de/shiny/BotanizeR_winter/</a></strong></p>
+<p>In this more customized instance of BotanizeR you can practice 128 woody species from Germany based on images of various plant characteristics in winter state. The Setup page is disabled and the species have to be identified by images of bark, twig, and bud characteristics only. Only the German name, family and floristic status in Germany are drawn in addition from <a href="http://www.floraweb.de">FloraWeb</a>.</p>
+<p><strong>3) <a href="https://gift.uni-goettingen.de/shiny/BotanizeR_summer/" class="uri">https://gift.uni-goettingen.de/shiny/BotanizeR_summer/</a></strong></p>
+<p>Here, you can practice 214 forest indicator species from Germany. In the settings tab, you can enable and disable images and hints from <a href="http://www.floraweb.de">FloraWeb</a> and the <a href="https://www.brc.ac.uk/plantatlas/">Online Atlas of the British and Irish flora</a> as well as images from a local folder on the server including detailed images of plant characteristics like leaves, flowers, fruits, bark etc. You can also enable or disable additional hints drawn from the species list like the taxonomic group, family, German name, Ellenberg indicator values or flowering time.</p>
+<p><strong>4) <a href="https://gift.uni-goettingen.de/shiny/BotanizeR_Indonesia/" class="uri">https://gift.uni-goettingen.de/shiny/BotanizeR_Indonesia/</a></strong></p>
+<p>This instance of BotanizeR exemplifies two use cases from tropical regions. Here you can practice 113 common wayside plant species of lowland Jambi Province, Sumatra <a href="https://doi.org/10.1016/j.biocon.2017.07.020">Rembold et al., 2017</a> or 107 common tree species from Lore Lindu National Park, Sulawesi <a href="https://doi.org/10.1016/j.ppees.2017.06.003">Brambach et al., 2017</a>. You can hoose which of the Floras to practice species from and which additional hints to show.</p>
+</div>
+<div id="6-references-and-dependencies" class="section level2">
+<h2 class="hasAnchor">
+<a href="#6-references-and-dependencies" class="anchor"></a>6. References and dependencies</h2>
+<div id="dependencies" class="section level3">
+<h3 class="hasAnchor">
+<a href="#dependencies" class="anchor"></a>Dependencies</h3>
+<p><code>BotanizeR</code> depends on <code>dplyr</code>, <code>htmltools</code>, <code>httr</code>, <code>imager</code>, <code>magick</code>, <code>rgbif</code>, <code>rgeos</code>, <code>sf</code>, <code>shiny</code>, <code>shinyBS</code>, <code>shinyFiles</code>, <code>shinythemes</code>, <code>shinyjs</code>, <code>slickR</code>, <code>sp</code> and <code>XML</code>.</p>
+</div>
+<div id="references" class="section level3">
+<h3 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h3>
+<p>Bundesamt für Naturschutz (BfN): <a href="http://www.floraweb.de">http://www.floraweb.de</a><br>
 Image authors: <a href="https://www.floraweb.de/ueberfloraweb/bildautoren.html">https://www.floraweb.de/ueberfloraweb/bildautoren.html</a></p>
-<p>Online Atlas of the British and Irish flora <a href="https://www.brc.ac.uk/plantatlas/">https://www.brc.ac.uk/plantatlas/</a><br>
+<p>Online Atlas of the British and Irish flora: <a href="https://www.brc.ac.uk/plantatlas/">https://www.brc.ac.uk/plantatlas/</a><br>
 Image authors: <a href="https://www.brc.ac.uk/plantatlas/content/photos">https://www.brc.ac.uk/plantatlas/content/photos</a></p>
+</div>
 </div>
 </div>
   </div>
