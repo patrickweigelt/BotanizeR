@@ -1,9 +1,7 @@
 
-# BotanizeR <img src="figures/biodiv_gottingen_logo.png" align="right" alt="" 
-width="200" />
+# BotanizeR <img src="figures/biodiv_gottingen_logo.png" align="right" alt="" width="200" />
 <br>
-[![licence](https://img.shields.io/badge/Licence-GPL--3-blue.svg)](https://
-www.r-project.org/Licenses/GPL-3)
+[![licence](https://img.shields.io/badge/Licence-GPL--3-blue.svg)](https://www.r-project.org/Licenses/GPL-3)
 <br>
 <br>
 BotanizeR is an R-package with Shiny app designed to help botany students and 
@@ -22,12 +20,9 @@ application or played within R directly.
 ## 1. Tutorials
 
 Here, we provide tutorials on <br>
-- **[how to use the package's functions](https://patrickweigelt.github.io/
-BotanizeR/articles/BotanizeR_functions.html)**  
-- **[how to use the BotanizeR Shiny app](https://patrickweigelt.github.io/
-BotanizeR/articles/BotanizeR_Shiny.html)**  
-- **[how to set up and customize the Shiny app](https://
-patrickweigelt.github.io/BotanizeR/articles/BotanizeR_config.html)**  
+- **[how to use the package's functions](https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_functions.html)**  
+- **[how to use the BotanizeR Shiny app](https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_Shiny.html)**  
+- **[how to set up and customize the Shiny app](https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_config.html)**  
 
 
 ## 2. Functions
@@ -93,8 +88,8 @@ This particular instance of the BotanizeR Shiny app exemplifies a few
 use cases. You can practice species from the Floras of 
 Germany, Britain and Ireland based on information retrieved live from the 
 websites of [FloraWeb](http://www.floraweb.de) and the 
-[Online Atlas of the British and Irish flora](https://www.brc.ac.uk/
-plantatlas/). You can choose which of the Floras to practice species from, 
+[Online Atlas of the British and Irish flora](https://www.brc.ac.uk/plantatlas/). 
+You can choose which of the Floras to practice species from, 
 which species subset to use and which information from each of the websites to 
 show.This instance of BotanizeR is based on the example data and default 
 settings of the BotanizeR R package and can be customized and used for plant 
@@ -114,8 +109,8 @@ family and floristic status in Germany are drawn in addition from
 Here, you can practice 214 forest indicator species from Germany. In the 
 settings tab, you can enable and disable images and hints from 
 [FloraWeb](http://www.floraweb.de) and the 
-[Online Atlas of the British and Irish flora](https://www.brc.ac.uk/
-plantatlas/) as well as images from a local folder on the server including 
+[Online Atlas of the British and Irish flora](https://www.brc.ac.uk/plantatlas/) 
+as well as images from a local folder on the server including 
 detailed images of plant characteristics like leaves, flowers, fruits, bark 
 etc. You can also enable or disable additional hints drawn from the species 
 list like the taxonomic group, family, German name, Ellenberg indicator values 
@@ -144,14 +139,12 @@ to show.
 Bundesamt für Naturschutz (BfN): 
 [http://www.floraweb.de](http://www.floraweb.de)  
 Image authors: 
-[https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://
-www.floraweb.de/ueberfloraweb/bildautoren.html)
+[https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
 
 Online Atlas of the British and Irish flora: 
 [https://www.brc.ac.uk/plantatlas/](https://www.brc.ac.uk/plantatlas/)  
 Image authors: 
-[https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/
-plantatlas/content/photos)  
+[https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/plantatlas/content/photos)  
 
 
 
