@@ -3,7 +3,6 @@
 <br><br>
 [![licence](https://img.shields.io/badge/Licence-GPL--3-blue.svg)](https://www.r-project.org/Licenses/GPL-3)  
 <br>
-<br>
 BotanizeR is an R-package with Shiny app designed to help botany students and 
 other people interested in plants to learn and distinguish plant diagnostic 
 characters, memorize plant species, and train their identification skills. 
