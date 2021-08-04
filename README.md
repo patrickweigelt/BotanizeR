@@ -26,7 +26,7 @@ Here, we provide tutorials on <br>
 
 ## 2. Functions
 
-An overview over all functions and data is given 
+An overview of all functions and data is given 
 **[here](https://patrickweigelt.github.io/BotanizeR/reference/index.html)**.  
 
 
