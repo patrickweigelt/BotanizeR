@@ -108,7 +108,10 @@ dedicated columns of the species list, or by supplying local folders with
 jpg or png images. When running the Shiny app locally (on the students 
 computer) these folders need to be on the local computer. If the Shiny app is 
 running on a server, these folders can be supplied by the lecturer on the 
-server (see below).
+server (see below).The images inside the folder need to 
+include the species names in their file names using " " or "_" to delimit 
+genus and epithet. Consider using `BotanizeR_imageresize()` for batch-rescaling 
+the images.
 
 In addition, Images can be sources from selected online resources currently
 incorporated into BotanizeR: [FloraWeb](https://www.floraweb.de) and the 
@@ -198,7 +201,7 @@ A useful tutorial for setting up a shiny server can be found here:
 https://www.digitalocean.com/community/tutorials/how-to-set-up-shiny-server-on-ubuntu-16-04
 
 A comprehensive example instance of BotanizeR showcasing all functionality can 
-be found at https://gift.uni-goettingen.de/shiny/BotanizeR/ 
+be found at https://gift.uni-goettingen.de/shiny/BotanizeR/  
 
 ```{r, fig.label = "Figure 1. BotanizeR Quiz tab", out.width = "100%", echo = FALSE}
 knitr::include_graphics("../man/figures/BotanizeR_printscreen1.png")
