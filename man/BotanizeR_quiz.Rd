@@ -131,15 +131,11 @@ BotanizeR_Sussex <-
   BotanizeR_species[which(BotanizeR_species$UK_Ireland_Sussex==1), ]
 
 
-# Subset including only one species (Acer campestre) for predictable outcome
-BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
-                                              "Acer campestre"),]
-
 \dontrun{
 # Type in species name, or press enter for next hint or type "skip" and
 # press enter for next species or type "exit" to end quiz and save results
-BotanizeR_example_practiced <- 
-  BotanizeR_quiz(species_list = BotanizeR_example,
+BotanizeR_Sussex_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_Sussex,
                  image_floraweb = FALSE, image_ukplantatlas = TRUE, 
                  hints_ukplantatlas =  c('mapuk', 'familyuk', 'ecology', 
                                          'statusuk', 'trends', 'perennation',
@@ -155,14 +151,10 @@ BotanizeR_Germany <-
                             BotanizeR_species$Germany_BioDiv==1), ]
 
 
-# Subset including only one species (Acer campestre) for predictable outcome
-BotanizeR_example = BotanizeR_species[which(BotanizeR_species$SPECIES ==
-                                              "Acer campestre"),]
-
 # Type in species name, or press enter for next hint or type "skip" and
 # press enter for next species or type "exit" to end quiz and save results
-BotanizeR_example_practiced <- 
-  BotanizeR_quiz(species_list = BotanizeR_example, 
+BotanizeR_Germany_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_Germany, 
                  hints_floraweb = c("description", "status",
                                     "habitat","family","German name"), 
                  case_sensitive = FALSE)

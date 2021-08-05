@@ -19,7 +19,7 @@ data("BotanizeR_species")
 Example species list table containing the relevant information to run
 \code{\link[=BotanizeR_quiz]{BotanizeR_quiz()}} and \code{\link[=BotanizeR_shiny]{BotanizeR_shiny()}} for 5852
 species from \href{https://www.floraweb.de}{FloraWeb}
-(images, map and species descriptions) and/or the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British Irish flora}.
+and the \href{https://www.brc.ac.uk/plantatlas/}{Online Atlas of the British Irish flora}.
 }
 \examples{
 data(BotanizeR_species)

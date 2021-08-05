@@ -306,15 +306,11 @@ online teaching and beyond. submitted.
   <span class='va'>BotanizeR_species</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>$</span><span class='va'>UK_Ireland_Sussex</span><span class='op'>==</span><span class='fl'>1</span><span class='op'>)</span>, <span class='op'>]</span>
 
 
-<span class='co'># Subset including only one species (Acer campestre) for predictable outcome</span>
-<span class='va'>BotanizeR_example</span> <span class='op'>=</span> <span class='va'>BotanizeR_species</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>$</span><span class='va'>SPECIES</span> <span class='op'>==</span>
-                                              <span class='st'>"Acer campestre"</span><span class='op'>)</span>,<span class='op'>]</span>
-
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Type in species name, or press enter for next hint or type "skip" and</span>
 <span class='co'># press enter for next species or type "exit" to end quiz and save results</span>
-<span class='va'>BotanizeR_example_practiced</span> <span class='op'>&lt;-</span> 
-  <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>species_list <span class='op'>=</span> <span class='va'>BotanizeR_example</span>,
+<span class='va'>BotanizeR_Sussex_practiced</span> <span class='op'>&lt;-</span> 
+  <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>species_list <span class='op'>=</span> <span class='va'>BotanizeR_Sussex</span>,
                  image_floraweb <span class='op'>=</span> <span class='cn'>FALSE</span>, image_ukplantatlas <span class='op'>=</span> <span class='cn'>TRUE</span>, 
                  hints_ukplantatlas <span class='op'>=</span>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'mapuk'</span>, <span class='st'>'familyuk'</span>, <span class='st'>'ecology'</span>, 
                                          <span class='st'>'statusuk'</span>, <span class='st'>'trends'</span>, <span class='st'>'perennation'</span>,
@@ -330,14 +326,10 @@ online teaching and beyond. submitted.
                             <span class='va'>BotanizeR_species</span><span class='op'>$</span><span class='va'>Germany_BioDiv</span><span class='op'>==</span><span class='fl'>1</span><span class='op'>)</span>, <span class='op'>]</span>
 
 
-<span class='co'># Subset including only one species (Acer campestre) for predictable outcome</span>
-<span class='va'>BotanizeR_example</span> <span class='op'>=</span> <span class='va'>BotanizeR_species</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>BotanizeR_species</span><span class='op'>$</span><span class='va'>SPECIES</span> <span class='op'>==</span>
-                                              <span class='st'>"Acer campestre"</span><span class='op'>)</span>,<span class='op'>]</span>
-
 <span class='co'># Type in species name, or press enter for next hint or type "skip" and</span>
 <span class='co'># press enter for next species or type "exit" to end quiz and save results</span>
-<span class='va'>BotanizeR_example_practiced</span> <span class='op'>&lt;-</span> 
-  <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>species_list <span class='op'>=</span> <span class='va'>BotanizeR_example</span>, 
+<span class='va'>BotanizeR_Germany_practiced</span> <span class='op'>&lt;-</span> 
+  <span class='fu'>BotanizeR_quiz</span><span class='op'>(</span>species_list <span class='op'>=</span> <span class='va'>BotanizeR_Germany</span>, 
                  hints_floraweb <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"description"</span>, <span class='st'>"status"</span>,
                                     <span class='st'>"habitat"</span>,<span class='st'>"family"</span>,<span class='st'>"German name"</span><span class='op'>)</span>, 
                  case_sensitive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
