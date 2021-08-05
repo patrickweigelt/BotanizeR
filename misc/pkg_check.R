@@ -7,7 +7,6 @@ roxygen2::roxygenise()
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_site()
 
-
 # Misspellings
 devtools::spell_check()
 
@@ -20,7 +19,6 @@ goodpractice::gp()
 # Test coverage of the package
 covr::package_coverage()
 
-
 # library(checkmate)
-?build_site
+# ?build_site
 
