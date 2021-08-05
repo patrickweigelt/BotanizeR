@@ -52,6 +52,10 @@ how to create own content to present in BotanizeR and how to customize the
 Shiny app.
 
 
+# Shiny
+
+
+
 
 # Species List
 
@@ -178,22 +182,30 @@ hints$lifeform
 ```
 
 
+# BotanizeR Shiny app
+
+## Getting started
+
+The most convenient way to play the BotanizeR quiz and to study selected plant 
+species based on images and descriptions is the BotanizeR Shiny app. When the 
+BotanizeR R package is installed, the Shiny application can be started locally 
+using the function `BotanizeR_shiny()`. Alternatively, one can clone the 
+BotanizeR GitHub repository (https://github.com/patrickweigelt/BotanizeR) and 
+run the shiny app from RStudio. This option offers most flexibility for 
+modifying the app as all code can easily be changed. For teaching purposes the 
+Shiny app would ideally be set up on a shiny server which students can visit 
+online. 
+
+A useful tutorial for setting up a shiny server can be found here:
+https://www.digitalocean.com/community/tutorials/how-to-set-up-shiny-server-on-ubuntu-16-04
+
+A comprehensive example instance of BotanizeR showcasing all functionality can 
+be found at https://gift.uni-goettingen.de/shiny/BotanizeR/ 
 
 
 
+## Setup tab
 
-# Shiny app
-
-
-## BotanizeR_shiny
-
-# Setup tab
-
-# Quiz tab
-
-# Species tab
-
-# References
 
 
 Bundesamt für Naturschutz (BfN): 
