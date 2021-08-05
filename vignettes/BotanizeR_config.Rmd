@@ -22,7 +22,7 @@ text-align: justify}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
-                      fig.width = 8, fig.height = 8)
+                      fig.width = 7, fig.height = 5)
 # Packages --------------------------------------------------------------------
 suppressPackageStartupMessages({
   suppressWarnings({
@@ -34,13 +34,157 @@ options(tinytex.verbose = TRUE)
 ```
 
 
-# Overview
-
-BotanizeR.
+# Overview  
 
 \newpage
 
-# Main function
+BotanizeR is an R-package with Shiny app designed to help botany students and 
+other people interested in plants to learn and distinguish plant diagnostic 
+characters, memorize plant species, and train their identification skills. 
+Students can browse a species list, images, plant characteristics, habitat 
+descriptions and distribution information or play a quiz where images of a 
+random species are shown and students have to guess the correct species.
+
+Lecturers can flexibly define their own species lists and provide images and 
+further useful information, or choose from linked online content from selected 
+botanical online resources to show in BotanizeR. In this Tutorial, we explain 
+how to create own content to present in BotanizeR and how to customize the 
+Shiny app.
+
+
+
+# Species List
+
+A new species list for BotanizeR needs to be a `data.frame` containing at least 
+the following columns: *NAMNR*, *TAXONNAME*, *SPECIES* and *GENUS*. The *SPECIES* 
+column includes the species name (genus and epithet; character or factor) to be 
+guessed and looked up in the online resources or image folders. The *TAXONNAME* 
+column includes the full species name including additional information like, 
+for example the authority (character or factor). The *GENUS* column includes 
+the corresponding genus name (character or factor). *NAMNR* contains the ID 
+(numeric) of the species used by [FloraWeb](https://www.floraweb.de). In 
+case FloraWeb content is not retrieved, this may be NA.
+
+In addition, the species list  should include the numeric columns *COUNT*, 
+*SCORE* and *ATTEMPTS* where the number of times a species was 
+practiced, how often it was guessed correctly and how many attempts were needed 
+will be recorded. At the start these columns include zeros only. In addition, 
+the column *INCLUDE* indicates whether a species shall be included in the app 
+or not. Here, the default value is 1.
+
+In addition, the species list may contain columns to filter by, as 
+well as columns including own descriptive hints (named like 
+*ownhint_Description*, *ownhint_Distribution*, etc.) and links (URLs) to images 
+(*imagelink_1*, *imagelink_2* etc.). These columns can be filled by the 
+lecturer in advance but can also be modified and expanded by the student 
+after downloading the list.
+
+The R package includes an example species list 
+containing the relevant information to run `BotanizeR_quiz` or the BotanizeR 
+Shiny app for 5852 vascular plant species from 
+[FloraWeb](https://www.floraweb.de) and the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/).
+
+
+```{r Installation, eval=FALSE}
+library(BotanizeR)
+```
+```{r BotanizeR_species}
+data(BotanizeR_species)
+BotanizeR_species[c(13:15), 
+                  c("NAMNR", # FloraWeb ID
+                    "TAXONNAME","SPECIES","GENUS", # Names to display and guess
+                    "UK_Ireland", "Germany", # Columns to make subsets
+                    "COUNT", "SCORE", "ATTEMPTS", "INCLUDE", # Quiz controls            
+                    "ownhint_English_name", "ownhint_Description", # Own hints
+                    "imagelink_1", "imagelink_2")] # Own image links
+```
+
+
+# Images
+
+Images can be supplied like indicated above by including image URLs into 
+dedicated columns of the species list, or by supplying local folders with 
+jpg or png images. When running the Shiny app locally (on the students 
+computer) these folders need to be on the local computer. If the Shiny app is 
+running on a server, these folders can be supplied by the lecturer on the 
+server (see below).
+
+In addition, Images can be sources from selected online resources currently
+incorporated into BotanizeR: [FloraWeb](https://www.floraweb.de) and the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/).
+All images, from own image links, image folders, or online resources are 
+collected for use in BotanizeR by the `BotanizeR_collect()` function which is 
+called within the Shiny app and `BotanizeR_quiz()`:
+
+```{r BotanizeR_collect, fig.width = 7, fig.height = 4}
+# Select Acer campestre as example species
+species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                        "Acer campestre"),]
+
+
+# Load images: UK plant atlas, FloraWeb and own image links
+hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
+                           image_ukplantatlas = TRUE, 
+                           imagelinks_custom = c("imagelink_1","imagelink_2"))
+
+par(mfrow=c(2,3), mar = rep(0.2, 4), oma = rep(0, 4))
+plot(hints$image[[1]], axes = FALSE)
+plot(hints$image[[2]], axes = FALSE)
+plot(hints$image[[3]], axes = FALSE)
+plot(hints$image[[4]], axes = FALSE)
+plot(hints$image[[5]], axes = FALSE)
+plot(hints$image[[6]], axes = FALSE)
+
+
+# To load images from your local computer, specify an image folder with
+# pictures included.
+
+## Not run: 
+hints <- BotanizeR_collect(species_row, 
+                           image_folders = c("images/Asteraceae_Britain",
+                                             "images/Trees"))
+## End(Not run)
+```
+
+
+# Descriptive hints
+
+Descriptive hints are drawn from the ownhint columns of the species list 
+data.frame as indicated above or from selected online resources currently
+incorporated into BotanizeR: [FloraWeb](https://www.floraweb.de) and the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/).
+Again this information is collected by `BotanizeR_collect()` inside
+the Shiny app and `BotanizeR_quiz()`:
+
+```{r BotanizeR_collect_hints}
+
+# Load hints: UK plant atlas, FloraWeb and own hints 
+hints <- BotanizeR_collect(species_row,
+                           hints_floraweb = c("description", 
+                                              "status", "habitat", 
+                                              "family", "German name"),
+                           hints_ukplantatlas = c("familyuk", 
+                                                  "ecology", "statusuk", 
+                                                  "trends", "perennation",
+                                                  "lifeform", "woodiness", 
+                                                  "clonality"),
+                           hints_custom = c("ownhint_English_name", 
+                                            "ownhint_Description", 
+                                            "ownhint_Distribution"))
+hints$statusuk
+hints$clonality
+hints$lifeform
+```
+
+
+
+
+
+
+# Shiny app
+
+
 ## BotanizeR_shiny
 
 # Setup tab
@@ -51,9 +195,15 @@ BotanizeR.
 
 # References
 
-Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
 
-Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
+Bundesamt für Naturschutz (BfN): 
+[http://www.floraweb.de](http://www.floraweb.de)  
+Image authors: 
+[https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
 
+Online Atlas of the British and Irish flora: 
+[https://www.brc.ac.uk/plantatlas/](https://www.brc.ac.uk/plantatlas/)  
+Image authors: 
+[https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/plantatlas/content/photos)  
 
 
