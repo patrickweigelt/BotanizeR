@@ -36,8 +36,6 @@ options(tinytex.verbose = TRUE)
 
 # Overview  
 
-\newpage
-
 BotanizeR is an R-package with Shiny app designed to help botany students and 
 other people interested in plants to learn and distinguish plant diagnostic 
 characters, memorize plant species, and train their identification skills. 
@@ -51,10 +49,7 @@ botanical online resources to show in BotanizeR. In this Tutorial, we explain
 how to create own content to present in BotanizeR and how to customize the 
 Shiny app.
 
-
-# Shiny
-
-
+\newpage
 
 
 # Species List
@@ -103,6 +98,7 @@ BotanizeR_species[c(13:15),
                     "ownhint_English_name", "ownhint_Description", # Own hints
                     "imagelink_1", "imagelink_2")] # Own image links
 ```
+\newpage
 
 
 # Images
@@ -150,6 +146,7 @@ hints <- BotanizeR_collect(species_row,
                                              "images/Trees"))
 ## End(Not run)
 ```
+\newpage
 
 
 # Descriptive hints
@@ -180,6 +177,7 @@ hints$statusuk
 hints$clonality
 hints$lifeform
 ```
+\newpage
 
 
 # BotanizeR Shiny app
@@ -202,11 +200,226 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-shiny-server-on-u
 A comprehensive example instance of BotanizeR showcasing all functionality can 
 be found at https://gift.uni-goettingen.de/shiny/BotanizeR/ 
 
+![Quiz tab](../man/figures/BotanizeR_printscreen1.png)
 
 
-## Setup tab
+## Config files
+
+In order to customize the BotanizeR Shiny app, the config.R file in the Shiny 
+App's folder can be modified. Here one can define, which species lists 
+and resources to use, what settings to start with and what setup options to 
+make available in the app. The BotanizeR Shiny folder includes a 
+config_default.R and a config.R files Changes to the configuration should be 
+made in config.R. Variables not defined will be drawn from config_default.R  
 
 
+Here, we go step by step through the variables set in the config files:
+
+### Setup
+
+Shall the setup tab be shown in the app allowing students to choose from 
+available species lists, images and descriptive hints to show or shall the 
+setup tab be hidden?
+
+```{r BotanizeR_setup_1}
+setup <- TRUE 
+# Set to FALSE if setup tab shall be hidden.
+```
+
+Shall online resources in setup tab be shown or shall only custom images and 
+hints be available to activate and deactivate?
+
+
+```{r BotanizeR_setup_2}
+online_resources <- TRUE 
+# Set to FALSE if content from online resources like www.floraweb.de or  
+# https://www.brc.ac.uk/plantatlas/ shall be removed from setup tab.
+```
+
+
+Shall the option to subset the species list(s) by [GBIF](https://www.gbif.org/) 
+occurrences be available in the setup tab?
+
+```{r BotanizeR_setup_3}
+gbif <- TRUE
+# Set to FALSE if the option to subset the provided backbone species lists by 
+# gbif occurrences for a user-defined radius around user-defined coordinates
+# shall not be available in the setup tab.
+```
+
+Shall species in the quiz be sampled based on probabilities updated depending 
+on students successes and failures?
+
+```{r BotanizeR_setup_4}
+dynamic_probabilities <- TRUE
+# Set to FALSE if species in the quiz shall be drawn with equal probabilities 
+```
+
+Do you want to include a Google analytics ID to track traffic to your BotanizeR 
+instance?
+
+```{r BotanizeR_setup_5}
+analytics <- FALSE
+# Put your Google analytics ID as character string (e.g. "UX-123456789-1") if 
+# you want to evaluate access to your BotanizeR instance. 
+```
+
+
+BotanizeR URL for tweeting about BotanizeR on Twitter:  
+
+```{r BotanizeR_setup_6}
+BotanizeR_URL <- ""
+# Provide the URL of your BotanizeR instance 
+# (e.g. "https://gift.uni-goettingen.de/shiny/BotanizeR/") to be included in 
+# twitter tweets produced from inside the app
+```
+
+
+Does your setup require adding a folder location to all relative paths used in 
+the app (species list location, image locations)? 
+
+```{r BotanizeR_setup_7}
+system_path <- ""
+# If so, add it as a character string here (e.g. "~/ShinyApps/BotanizeR/")
+# Not needed under normal setup conditions
+```
+![Setup tab](../man/figures/BotanizeR_printscreen3.png)
+
+
+### Species list  
+
+File  
+
+Provide a csv file (system_path defined above will be added in front) of the 
+backbone species list used in BotanizeR. If not 
+supplied (`species_list_path <- ""`), `BotanizeR_species.rda` from the 
+BotanizeR R package including a comprehensive species list of Germany and Great 
+Britain will be loaded.
+
+```{r BotanizeR_list_1}
+species_list_path <- ""
+# Add filepath/name of your species list as character string here (e.g. 
+# "species_list.csv")
+```
+
+Species list filters  
+
+Define Species list filters, i.e. columns by which the backbone species list 
+can be filtered by the student. These columns need to be numeric including 0 
+and 1 indicating whether or not to include a species in the given subset (e.g. 
+c("Region_A","Orchidaceae")). If set to "All species" the only option shown in 
+the species list drop down of the setup tab will be "All species" and no 
+filtering will be possible.
+
+```{r BotanizeR_list_2}
+species_list_filter <- "All species"
+# Change according to the filtering columns in your species list
+# species_list_filter <- c("All species", "Germany", "UK_Ireland")
+```
+
+Selected species list  
+
+Define which species list subset shall be selected at the start. If set to 
+"All species" no filter will be applied.
+
+```{r BotanizeR_list_3}
+species_list_selected <- "All species" 
+# Needs to be one out of species_list_filter
+```
+
+### Hints and images  
+
+Images from online resources  
+
+Indicate whether images from [FloraWeb](https://www.floraweb.de) and/or the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/) 
+shall be shown from the start. If set to FALSE but setup and online_resources 
+are set to TRUE, the online resources can be activated by the user within the 
+setup tab.
+
+```{r BotanizeR_hints_1}
+image_floraweb <- TRUE
+image_ukplantatlas <- TRUE
+# Set to FALSE if online resources shall not be available from the start on
+```
+
+Images folders  
+
+Provide the path to folders including images of the target species to show
+in the BotanizeR app at the start. The images inside the folder need to 
+include the species names in their file names using " " or "_" to delimit 
+genus and epithet.
+
+```{r BotanizeR_hints_2}
+image_folders <- NULL
+# Change for example to c("WWW/pictures_Angiosperms","WWW/drawings_Region_A")
+# The system_path defined above will be added in front
+```
+
+Images from image link columns
+
+Indicate columns in the species list with URLs of images online to be shown
+in BotanizeR at the start. Column names need to be named like imagelink_1, 
+imagelink_2 etc. and can be enabled and disabled in the setup tab if setup is 
+set to TRUE above.
+
+```{r BotanizeR_hints_3}
+imagelinks_custom <- NULL
+# Change for example to c("imagelink_1", "imagelink_2")
+```
+
+Hints from online resources
+
+Indicate which of the hints available from [FloraWeb](https://www.floraweb.de) 
+and/or the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/) 
+shall be shown from the start. If set to NULL but setup and online_resources 
+are set to TRUE, the online hints can be activated by the user within the setup 
+tab.
+
+```{r BotanizeR_hints_4}
+hints_floraweb <- c("map","description", "status", "habitat", "family",
+                   "German name")
+
+hints_ukplantatlas <- c("mapuk","familyuk","ecology","statusuk","trends",
+                       "perennation","lifeform","woodiness","clonality")
+# Set to NULL if online hints shall be disabled at the start
+```
+
+Hints from own hint columns
+
+Indicate columns with descriptive hints that shall be shown from the start. 
+Column names need to be named like ownhint_HintName. If set to NULL but setup
+is to TRUE above, the hints can be activated by the user within the setup tab.
+
+```{r BotanizeR_hints_5}
+hints_custom <- NULL
+# Change for example to  c("ownhint_English_name")
+```
+
+### About
+
+The about tab contains two paragraphs specifically about the given instance of 
+BotanizeR. Add text (html) describing your instance of BotanizeR and your 
+sources of images, hints and species lists to be shown in addition to our 
+general description of the app in the about tab. For more fundamental changes,
+modify about.R directly.
+
+```{r BotanizeR_about}
+instance_description <- 
+  'This particular instance of the BotanizeR Shiny app...' 
+
+instance_credits <- 
+  'This instance of BotanizeR retrieves images and information from 
+  <a href="https://www.floraweb.de/" target=_blank>FloraWeb</a> and the 
+  <a href="https://www.brc.ac.uk/plantatlas/" target=_blank>
+  UK & Ireland Plant Atlas</a>. 
+  Please visit these websites for more information about sources and 
+  image authors'
+# Change according to your needs
+```
+
+# References
 
 Bundesamt für Naturschutz (BfN): 
 [http://www.floraweb.de](http://www.floraweb.de)  
