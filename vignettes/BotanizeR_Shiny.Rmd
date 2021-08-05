@@ -69,7 +69,7 @@ automatically shows you all the possible hints.To change species, you can click
 the 'New plant' button or hit the arrow up on your keyboard. A new species will
 then appear.
 
-![Quiz tab](man/figures/BotanizeR_printscreen1.png)
+![Quiz tab](../man/figures/BotanizeR_printscreen1.png)
 
 <br>
 
@@ -81,7 +81,7 @@ in the Setup tab. Second, you can highlight you score and see in a graphical
 way how much you performed. You can even share your score by using the Twitter
 button (Figure 2).
 
-![Quiz statistics](man/figures/BotanizeR_printscreen2.png)
+![Quiz statistics](../man/figures/BotanizeR_printscreen2.png)
 
 Finally, on this tab, you have the opportunity to download the species list
 after practicing and upload it again to make use of the saved numbers of
