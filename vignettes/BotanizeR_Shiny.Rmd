@@ -69,7 +69,9 @@ automatically shows you all the possible hints.To change species, you can click
 the 'New plant' button or hit the arrow up on your keyboard. A new species will
 then appear.
 
-![Quiz tab](../man/figures/BotanizeR_printscreen1.png)
+```{r, fig.label = "Figure 1. Quiz tab", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen1.png")
+```
 
 <br>
 
@@ -79,34 +81,144 @@ your score. The app will pick up more often species which you struggle to
 identify and will tend to omit the ones you know. This feature can be disabled
 in the Setup tab. Second, you can highlight you score and see in a graphical
 way how much you performed. You can even share your score by using the Twitter
-button (Figure 2).
+button (Fig. 2).
 
-![Quiz statistics](../man/figures/BotanizeR_printscreen2.png)
+```{r, fig.label = "Figure 2. Quiz statistics", out.width = "50%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen2.png")
+```
 
-Finally, on this tab, you have the opportunity to download the species list
-after practicing and upload it again to make use of the saved numbers of
-successes and failures when practicing again. This option is available by
-clicking the button 'Upload/Download progress'.
+## Uploading/downloading a table
+
+Finally, you have the opportunity to download the species list after
+practicing. This option is available by clicking the button
+'Upload/Download progress' (Figure 3).
+<br>
+
+```{r, fig.label = "Figure 3. Uploading/downloading progress", out.width = "60%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen_updownload.png")
+```
+
+<br>
+If you want to keep track of your past progress, you can then upload your list
+again. The number of successes and failures can then affect the probability to
+pick a certain species from the species list.
+<br>
+The functionality 'Upload' can also be used to run the quiz on a specific list
+of interest. For example, if you want to practice only the orchid species from
+Germany, you can upload a table with only this subset of species.
+<br>
+<br>
+**Please note that these tables need to formatted in a specific way.**
+<br>
+Indeed, several columns need to be incorporated in the table. If they are not
+present, the Shiny app will not be able to use your data. The best way to have
+a table with the columns needed is first to directly download the species list
+already available within the Shiny app. In a second step, you can remove/add
+certain rows to update the species list. Finally, you can update your table.
+<br>
+While the existing columns should be kept, you also have the possibility to
+add extra columns that will give you supplementary hints. In the Setup tab,
+you can for example see that four extra hints are available (English_name of
+the species, French name, Description and Distribution).
+<br>
+**If you want to add an hint, create a column with the name 'ownhint_YourHint'**
 
 \newpage
 
 # Setup tab
 
-In the Setup tab you can choose which species to practice, either by choosing from a predefined set of species lists or by uploading a customized species list. You can subset the species list by those species found in GBIF for a defined radius around a desired location. You can also define which hints and images to make available in the Species overview and Quiz tabs based on all the resources available in this instance of BotanizeR and hints you added to the species list.
+In the Setup tab you can modify a few options to customize your quiz. Here is
+what you can do:
+
+```{r, fig.label = "Figure 4. Uploading/downloading progress", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen3.png")
+```
+
+<br>
+
+*Select a species list*
+Here you can choose from which list you want to practise. You can either choose
+from a predefined list or upload your own list, as described above in the Quiz
+tab section. Upload lists will be available in the dropdown menu as soon as you
+upload them into the app.
+<br><br>
+*Upload a list* <br>
+Same principle than in the Quiz tab. You can upload your own species list. The
+table needs to have certain columns.
+<br>
+
+*Subset by local species* <br>
+You can here subset the species list by those species found in GBIF for a
+defined radius around a desired location. By default 10000 species are
+retrieved since this option is based on the code of `BotanizeR_getlocallist()`.
+*Note that this function can take a while.* If it is too long, consider
+reducing the radius.
+<br><br>
+*Download the species list* <br>
+As described in the Quiz tab, you can download the species table after
+practicing it with the quiz if you want ot keep track of your score.
+<br><br>
+*Custom material* <br>
+Here you define which supplementary hints and images to make available in the
+Species and Quiz tabs. The hints are added to the species table in new columns.
+Column names should be named **ownhint_YourHint**. You can also add personal
+images to display the species. These images can either be retrieved from a
+local folder on your computer (**Image folders**) or be added manually in the
+species table in dedicated columns named **imagelink_X**, X being a number.
+In these columns, you can add URL links to certain images.
+<br>
+For example, in Figure 5, we illustrate how to add an own hint for a species
+(its English name), and a own link for another image (Wikipedia link).
+<br>
+```{r, fig.label = "Figure 5. Own hint and image", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen_speciestable.png")
+```
+<br><br>
+*Quiz controls* <br>
+Here you define whether the probabilies to sample species should be based on
+your previous score or not. It is by default activated.
+<br><br>
+*Online resources* <br>
+Here you tick or untick the available checkboxes that correspond to the two
+available online resources that come with BotanizeR: Floraweb and the Online
+Atlas of the British and Irish flora.
 
 \newpage
 
 # Species tab
 
-In the Species tab, you can retrieve all deposited information for each species.
+In the Species tab, you can retrieve all information for each species using the drop down menu. The information available is dependent upon what you
+tick/untick and upload in the Setup tab.
+
+```{r, fig.label = "Figure 6. Species tab", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen_speciestab.png")
+```
+
+Note that when the species list is long, it can be quite tedious to find the
+species you search for. To avoid this, you can simply type the species name or
+part of it in the drop down menu and then directly click it (Fig. 7).
+
+```{r, fig.label = "Figure 7. Species list menu", out.width = "40%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen_specieslist.png")
+```
+
+\newpage
+
+# About tab
+
+This tab sums up the information of this vignette and credits sources and
+authors.
 
 \newpage
 
 # References
 
-Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
+Bundesamt für Naturschutz (BfN): 
+[http://www.floraweb.de](http://www.floraweb.de)  
+Image authors: 
+[https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
 
-Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
-
-
-
+Online Atlas of the British and Irish flora: 
+[https://www.brc.ac.uk/plantatlas/](https://www.brc.ac.uk/plantatlas/)  
+Image authors: 
+[https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/plantatlas/content/photos)  
