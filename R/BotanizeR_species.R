@@ -4,7 +4,7 @@
 #' Example species list table containing the relevant information to run 
 #' [BotanizeR::BotanizeR_quiz()] and [BotanizeR::BotanizeR_shiny()] for 5852 
 #' species from [FloraWeb](https://www.floraweb.de) 
-#' (images, map and species descriptions) and/or the [Online Atlas of the 
+#' and the [Online Atlas of the 
 #' British Irish flora](https://www.brc.ac.uk/plantatlas/).
 #'
 #' @docType data

@@ -23,11 +23,12 @@ text-align: justify}
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
-                      fig.width = 8, fig.height = 8)
+                      fig.width = 7, fig.height = 5)
 # Packages --------------------------------------------------------------------
 suppressPackageStartupMessages({
   suppressWarnings({
-    library(dplyr)
+    library(BotanizeR)
+    library(sf)
   })
 })
 
@@ -37,78 +38,354 @@ options(tinytex.verbose = TRUE)
 ```
 
 
-# Overview
+# Overview  
 
-BotanizeR.
+BotanizeR
 
 \newpage
 
-# Main function
-## BotanizeR_quiz
-After running the main function BotanizeR_quiz() you need to click into the console to type the species names in there. If you have no clou, press enter and the next hint will appear (you have ten tries). If you type the name slightly wrong the function will tell you. If the genus is correct it will also tell you. It shows several photos if available. If you want to skip a species write "skip". If you want to cancel the quiz write "exit". Don't hit Esc if you want to save your progress. The function counts your attempts and successes and uses this as sampling probabilities for choosing the species randomly. The better you know a species the less likely it will be shown again.
+BotanizeR is an R-package with Shiny app designed to help botany students and 
+other people interested in plants to learn and distinguish plant diagnostic 
+characters, memorize plant species, and train their identification skills. 
+Students can browse a species list, images, plant characteristics, habitat 
+descriptions and distribution information or play a quiz where images of a 
+random species are shown and students have to guess the correct species. 
+BotanizeR is highly flexible allowing lecturers to define their own species 
+lists and to provide images and further useful information, or choose from 
+linked online content from selected botanical online resources.
+A Quiz and Species overview pages can be made available via the package’s Shiny 
+application or played within R directly. 
 
-```{r example, eval=FALSE}
+# Installation
+```{r Installation, eval=FALSE}
 library(devtools)
 install_github("https://github.com/patrickweigelt/BotanizeR")
 
 library(BotanizeR)
-
-# Species list for Germany with IDs from floraweb.de
-data(floraweb_species)
-
-# Subset for about 300 species students in Göttingen learn
-floraweb_species <- floraweb_species[which(floraweb_species$SUMMER==1 | floraweb_species$BioDiv2005==1),]
-
-# Type in species name, or press enter for next hint or type "skip" and press 
-# enter for next species or type "exit" to end quiz and save results
-floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
-                                           hints_floraweb = c("description","status",
-                                                     "habitat","family","German name"),
-                                                     case_sensitive = FALSE)
-
-# If you want to include distribution maps as hints add "map" to hints; This increases the download times a bit
-floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species, 
-                                           hints_floraweb = c("map","description","status",
-                                                     "habitat","family","German name"),
-                                                     case_sensitive = FALSE)
 ```
 
 
-If you want to keep track of your progress, you can save the species list with updated scores locally and load it in the next session
-```{r practicing, eval=FALSE}
-# Initial saving
-write.csv(floraweb_species_trained, "floraweb_species_trained.csv", row.names = FALSE)
 
-# Load species list
-floraweb_species_trained <- read.csv("floraweb_species_trained.csv")
+# Functions
 
-# Practice
-floraweb_species_trained <- BotanizeR_quiz(species_list = floraweb_species_trained,
-                                           hints_floraweb = c("map","description","status","habitat",
-                                          "family","German name"), case_sensitive = FALSE)
+The BotanizeR R package includes functions to collect species level information 
+from defined reources, to play the BotanizeR quiz, to prepare content for the 
+quiz (batch resizing images, creating a local species list) and for running the 
+BotanizeR Shiny app.  
 
-# Save species list
-write.csv(floraweb_species_trained, "floraweb_species_trained.csv", row.names = FALSE)
+
+## BotanizeR_species
+
+`BotanizeR_species` is an example dataset comprising 
+a species list containing the relevant information to run 
+`BotanizeR_quiz` or the BotanizeR Shiny app for 5852 
+vascular plant species from [FloraWeb](https://www.floraweb.de) 
+and the [Online Atlas of the British Irish flora](https://www.brc.ac.uk/
+plantatlas/).
+
+```{r BotanizeR_species}
+data(BotanizeR_species)
+BotanizeR_species[c(1:4), 
+                  c("NAMNR", # FloraWeb ID
+                    "TAXONNAME","SPECIES","GENUS", # Names to display and guess
+                    "UK_Ireland", "Germany", # Columns to make subsets
+                    "COUNT", "SCORE", "ATTEMPTS", "INCLUDE", # Quiz controls            
+                    "ownhint_English_name", "ownhint_Description", # Own hints
+                    "imagelink_1", "imagelink_2")] # Own image links
+```
+
+## BotanizeR_getlocallist
+
+`BotanizeR_getlocallist()` uses longitude and latitude coordinates and a defined 
+buffer radius to retrieve a plant species list from 
+[GBIF](https://www.gbif.org/) and formats it for use in 
+`BotanizeR_quiz` or the BotanizeR Shiny app. If a `backbone_list` 
+is supplied, it will be subset for the species found in 
+[GBIF](https://www.gbif.org/) and returned.
+
+```{r BotanizeR_getlocallist}
+# Subset the species list for species occurring in Cairngorms National Park
+BotanizeR_Cairngorms <- 
+  BotanizeR_getlocallist(long = -3.5966, lat = 57.0877, 
+                         radius = 0.5, taxonKey = 7707728, 
+                         limit = 500, backbone_list = BotanizeR_species)
+nrow(BotanizeR_Cairngorms)
+
+
+# Create a new species list for the Island of Bornholm, Denmark
+BotanizeR_Bornholm <- 
+  BotanizeR_getlocallist(long = 14.9184, lat = 55.1273, 
+                         radius = 0.5, taxonKey = 7707728, 
+                         limit = 500, backbone_list = NA)
+nrow(BotanizeR_Bornholm)
+```
+
+## BotanizeR_imageresize
+
+`BotanizeR_imageresize()` batch resizes all jpg and png images found in 
+defined folders for plotting in `BotanizeR_quiz()` or the BotanizeR Shiny app.  
+You define the new width of the images and optionally a maximum height which 
+shall not be exceeded. Aspect ratios are maintained. `BotanizeR_quiz()` and the 
+BotanizeR Shiny app can both resize images on the fly, however, to reduce 
+traffic and loading time, it makes sense to reduce the size of large images in 
+advance using `BotanizeR_imageresize()`.
+
+```{r BotanizeR_imageresize, eval=FALSE}
+## Not run: 
+BotanizeR_imageresize(
+  image_folders = c("inst/WWW/images_1",  # define 1 ore more folders
+                    "inst/WWW/images_2"), # with images to resize 
+                      image_width = 560, max_height = 700, # new maximum extent
+                      quality = 1, int_type = 5) # quality and interpolation 
+                                                 # type as in imager::resize()
+
+## End(Not run)
+```
+
+## BotanizeR_collect
+
+`BotanizeR_collect()` Collects information from online resources like 
+[FloraWeb](https://www.floraweb.de) (images, map and species descriptions) 
+and/or the [Online Atlas of the British Irish flora](https://www.brc.ac.uk/
+plantatlas/) as well as from user defined image folders and columns in the 
+`species_list` data.frame and formats them for showing them as hints in 
+`BotanizeR_quiz()` or the BotanizeR Shiny app. This function does not have to 
+be run standalone outside the quiz, but running it exemplifies how 
+`BotanizeR_quiz()` and the BotanizeR Shiny app retrieve the information to be 
+shown and how own information needs to be supplied via image folders or colunms 
+of the `species_list` data.frame.
+
+
+```{r BotanizeR_collect}
+# Select Acer campestre as example species
+species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+                                        "Acer campestre"),]
+
+
+# Load hints: only UK plant atlas image(s) + hints + map
+hints <- BotanizeR_collect(species_row, image_ukplantatlas = TRUE, 
+                           hints_ukplantatlas = c("mapuk", "familyuk", 
+                                                 "ecology", "statusuk", 
+                                                 "trends", "perennation",
+                                                 "lifeform", "woodiness", 
+                                                 "clonality"))
+
+par(mar = rep(0.5, 4), oma = rep(0, 4))
+plot(hints$image[[2]], axes = FALSE)
+
+plot(hints$mapuk)
+
+hints$statusuk
+hints$clonality
+
+
+# Load hints: only FloraWeb image(s) + hints + map
+hints <- BotanizeR_collect(species_row, image_floraweb = TRUE, 
+                           hints_floraweb = c("map", "description", 
+                                              "status", "habitat", 
+                                              "family", "German name"))
+
+par(mar = rep(0.5, 4), oma = rep(0, 4))
+plot(hints$image[[1]], axes = FALSE)
+
+par(oma = c(0, 0, 0, 10.5))
+plot(hints$map[[1]], pal = hints$map[[2]], key.pos = 4, main = "")
+
+hints$family
+
+
+# Load hints: only images from custom image links + custom hints
+hints <- BotanizeR_collect(species_row, image_floraweb = FALSE,
+                           hints_custom = c("ownhint_English_name", 
+                                            "ownhint_Description", 
+                                            "ownhint_Distribution"),
+                           imagelinks_custom = c("imagelink_1", 
+                                                 "imagelink_2"))
+par(mar = rep(0.5, 4), oma = rep(0, 4))
+plot(hints$image[[2]], axes = FALSE)
+
+hints$ownhint_English_name
+
+
+# Load hints: only returning image links instead of actual images
+hints <- BotanizeR_collect(species_row, image_floraweb = TRUE,
+                           image_ukplantatlas = TRUE, 
+                           imagelinks_custom = c("imagelink_1", 
+                                                 "imagelink_2"),
+                           hints_ukplantatlas = c("mapuk", "familyuk"),
+                           only_links = TRUE)
+hints$images[[1]]
+
+# To load images from your local computer, specify an image folder with
+# pictures included. File names need to include the species names.
+
+## Not run: 
+hints <- BotanizeR_collect(species_row, 
+                           image_folders = c("images/Asteraceae_Britain",
+                                             "images/Trees"))
+## End(Not run)
 ```
 
 
-You can add own species descriptions or other hints as well is link to additional online images into additional columns of the species list data.frame. Alternatively you can specify a folder with images on your local computer. Image files names need to include species names.
+## BotanizeR_quiz
+
+`BotanizeR_quiz()` runs the console version of the BotanizeR quiz. It navigates 
+randomly through a `species_list`, shows defined pictures and descriptions and 
+other hints from `BotanizeR_collect()` and let's you guess the species 
+name. The Number of tries and attempts are used to calculate scores that will 
+be used to update probabilities for the random sampling of subsequent species. 
+The better you know a species the less likely it will be shown again.  
+<br>
+After running the main function BotanizeR_quiz() you need to click into the 
+console to type the species names in there. If you have no clou, press _enter_ 
+and the next hint will appear (you have `max_attempts` tries). If you type the 
+name slightly wrong the function will tell you. If the genus is correct it will 
+also tell you. It shows several photos if available. If you want to skip a 
+species write 'skip'. If you want to cancel the quiz write 'exit'. Don't hit 
+_Esc_ if you want to save your progress.   
+
+An example for species from Sussex, UK based on the 
+[Online Atlas of the British Irish flora](https://www.brc.ac.uk/plantatlas/):  
+
+```{r BotanizeR_quiz, eval=FALSE}
+
+# Subset for about 700 species known from Sussex, UK
+BotanizeR_Sussex <- 
+  BotanizeR_species[which(BotanizeR_species$UK_Ireland_Sussex==1), ]
+
+
+# Type in species name, or press enter for next hint or type 'skip' and
+# press enter for next species or type 'exit' to end quiz and save results
+BotanizeR_UK_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_example,
+                 image_floraweb = FALSE, image_ukplantatlas = TRUE, 
+                 hints_ukplantatlas =  c('mapuk', 'familyuk', 'ecology', 
+                                         'statusuk', 'trends', 'perennation',
+                                         'lifeform', 'woodiness', 
+                                         'clonality'), 
+                 hints_floraweb = NULL, 
+                 case_sensitive = FALSE)
+
+```
+
+An example for species from Göttingen, Germany based on 
+[FloraWeb](https://www.floraweb.de):  
+
+```{r BotanizeR_quiz_Germany, eval=FALSE}
+# Subset for about 300 species students in Goettingen, Germany, learn
+BotanizeR_Germany <- 
+  BotanizeR_species[which(BotanizeR_species$Germany_summer==1 | 
+                            BotanizeR_species$Germany_BioDiv==1), ]
+
+
+# Type in species name, or press enter for next hint or type "skip" and
+# press enter for next species or type "exit" to end quiz and save results
+BotanizeR_Germany_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_Germany, 
+                 hints_floraweb = c("description", "status",
+                                    "habitat","family","German name"), 
+                 case_sensitive = FALSE)
+
+
+# If you want to include distribution maps as hints add "map" to hints;
+# This increases the download times a bit
+BotanizeR_Germany_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_Germany,
+                 hints_floraweb = c("map", "description", "status", 
+                                    "habitat", "family", "German name"), 
+                 case_sensitive = FALSE)
+
+```
+
+If you want to keep track of your progress, you can save the species list with 
+updated scores locally and load it again in the next session:
+
+```{r BotanizeR_quiz_saving, eval=FALSE}
+
+## Not run: 
+
+# Saving results from above
+write.csv(BotanizeR_Germany_practiced, 
+          "BotanizeR_Germany_practiced.csv", row.names = FALSE)
+
+# Loading previously saved pratcicing results
+BotanizeR_Germany_practiced <- read.csv("BotanizeR_Germany_practiced.csv")
+
+# Practicing
+BotanizeR_Germany_practiced <- 
+  BotanizeR_quiz(species_list = BotanizeR_Germany_practiced, 
+                 hints_floraweb = c("description", "status",
+                                    "habitat","family","German name"), 
+                 case_sensitive = FALSE)
+
+# Saving results again
+write.csv(BotanizeR_Germany_practiced, "BotanizeR_Germany_practiced.csv", 
+          row.names = FALSE)
+
+## End(Not run)```
+```
+
+
+You can add own species descriptions or other hints as well is link to 
+additional online images into additional columns of the species list 
+data.frame. Alternatively you can specify a folder with images on your local 
+computer. Image file names need to include species names.
+
 ```{r custom, eval=FALSE}
-### example for three species with custom hints and images from their Wikipedia page
-custom_species <- floraweb_species[which(floraweb_species$SPECIES %in% c("Acer campestre","Erica carnea","Melampyrum nemorosum")),]
+# example for three species with custom hints and images from their Wikipedia page
+BotanizeR_species_custom <-  BotanizeR_species[
+  which(BotanizeR_Germany$species %in% c("Acer campestre", 
+                                         "Erica carnea",
+                                         "Melampyrum nemorosum")),]
 
-custom_species_trained <- BotanizeR_quiz(species_list = custom_species, image_floraweb=TRUE,
-                                         hints_floraweb = NULL,
-                                         hints_custom = c("ownhint_1","ownhint_2"), 
-                                         imagelinks_custom = c("imagelink_1","imagelink_2"), 
-                                         image_folders = NULL, case_sensitive = FALSE)
+custom_species_trained <- 
+  BotanizeR_quiz(species_list = BotanizeR_species_custom, 
+                 image_floraweb = TRUE, hints_floraweb = NULL, 
+                 hints_custom = c("ownhint_Description","ownhint_Distribution"),
+                 imagelinks_custom = c("imagelink_1", "imagelink_2"), 
+                 image_folders = NULL, case_sensitive = FALSE)
+
 ```
+
+
+## BotanizeR_shiny
+
+The most convenient way to play the BotanizeR quiz and to study selected plant 
+species based on images and descriptions is the BotanizeR Shiny app. When the 
+BotanizeR R package is installed, you can start the Shiny application using the 
+function `BotanizeR_shiny()`.  
+
+```{r BotanizeR_shiny, eval=FALSE}
+BotanizeR_shiny()
+```
+
+Alternatively, you can clone the BotanizeR GitHub 
+repository (https://github.com/patrickweigelt/BotanizeR) and run the shiny app 
+from RStudio. This option offers most flexibility for modifying the app. For 
+teaching purposes the Shiny app would ideally be set up on a shiny server which 
+students can visit online. A comprehensive example instance of BotanizeR 
+showcasing all functionality can be found at 
+https://gift.uni-goettingen.de/shiny/BotanizeR/ 
+
+Two more tutorials, one on how to use the Shiny app and one on how to set it up 
+can be found here:  
+
+- **[how to use the BotanizeR Shiny app](https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_Shiny.html)**  
+- **[how to set up and customize the Shiny app](https://patrickweigelt.github.io/BotanizeR/articles/BotanizeR_config.html)**  
+
+
 
 # References
 
-Bundesamt für Naturschutz (BfN) [http://www.floraweb.de](http://www.floraweb.de)  
+Bundesamt für Naturschutz (BfN): 
+[http://www.floraweb.de](http://www.floraweb.de)  
+Image authors: 
+[https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
 
-Image authors: [https://www.floraweb.de/ueberfloraweb/bildautoren.html](https://www.floraweb.de/ueberfloraweb/bildautoren.html)
+Online Atlas of the British and Irish flora: 
+[https://www.brc.ac.uk/plantatlas/](https://www.brc.ac.uk/plantatlas/)  
+Image authors: 
+[https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/plantatlas/content/photos)  
 
 
 
