@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BotanizeR Shiny • BotanizeR</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -13,6 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="BotanizeR Shiny">
 <meta property="og:description" content="BotanizeR">
+<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -97,28 +104,36 @@ text-align: justify}
 <div id="overview" class="section level1">
 <h1 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h1>
-<p>BotanizeR.</p>
+<p>This tutorial illustrates how to use the BotanizeR Shiny application. It is based on the following <a href="https://gift.uni-goettingen.de/shiny/BotanizeR/">instance</a>.</p>
+<p>When you load this webpage, you first arrive on the Quiz tab.</p>
 <div style="page-break-after: always;"></div>
-</div>
-<div id="main-function" class="section level1">
-<h1 class="hasAnchor">
-<a href="#main-function" class="anchor"></a>Main function</h1>
-<div id="botanizer_shiny" class="section level2">
-<h2 class="hasAnchor">
-<a href="#botanizer_shiny" class="anchor"></a>BotanizeR_shiny</h2>
-</div>
-</div>
-<div id="setup-tab" class="section level1">
-<h1 class="hasAnchor">
-<a href="#setup-tab" class="anchor"></a>Setup tab</h1>
 </div>
 <div id="quiz-tab" class="section level1">
 <h1 class="hasAnchor">
 <a href="#quiz-tab" class="anchor"></a>Quiz tab</h1>
+<p>Here you can practice your species identification skills in a playful way. Pictures of a random species will appear on the screen. If several pictures are available, you can switch pictures by clicking the left and right arrows on the picture’s side. <br> On the left, several checkboxes are made available. When clicking them, dedicated clues appear on the right side. On Figure 1, information about the ecology and the clonality of the species are displayed. Sources of the pictures are also available below these hints and the picture, and you can click them to get redirected to the relevant websites. <br> To enter your answer, you need to write in the bar called ‘Species name’. As indicated below, to submit your answer you need to hit ‘Enter’ on your keyboard or to click the ‘Submit’ button on the bottom. The app then tells you whether your attempt was correct or by how many characters your answer is differing from the truth. The app also recognizes whether you have guessed the right genus of the species. If you cannot find what species it is, you can always hit the arrow down on your keyboard or click the ‘Answer’ button to reveal the species’s name. Finding the answer, on your own or with the solution, automatically shows you all the possible hints.To change species, you can click the ‘New plant’ button or hit the arrow up on your keyboard. A new species will then appear.</p>
+<div class="figure">
+<img src="../man/figures/BotanizeR_printscreen1.png" alt=""><p class="caption">Quiz tab</p>
+</div>
+<p><br></p>
+<p>The quiz keeps track of the species shown and and of your score. This is useful in two ways: first, the probability to pick a certain species will depend on your score. The app will pick up more often species which you struggle to identify and will tend to omit the ones you know. This feature can be disabled in the Setup tab. Second, you can highlight you score and see in a graphical way how much you performed. You can even share your score by using the Twitter button (Figure 2).</p>
+<div class="figure">
+<img src="../man/figures/BotanizeR_printscreen2.png" alt=""><p class="caption">Quiz statistics</p>
+</div>
+<p>Finally, on this tab, you have the opportunity to download the species list after practicing and upload it again to make use of the saved numbers of successes and failures when practicing again. This option is available by clicking the button ‘Upload/Download progress’.</p>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="setup-tab" class="section level1">
+<h1 class="hasAnchor">
+<a href="#setup-tab" class="anchor"></a>Setup tab</h1>
+<p>In the Setup tab you can choose which species to practice, either by choosing from a predefined set of species lists or by uploading a customized species list. You can subset the species list by those species found in GBIF for a defined radius around a desired location. You can also define which hints and images to make available in the Species overview and Quiz tabs based on all the resources available in this instance of BotanizeR and hints you added to the species list.</p>
+<div style="page-break-after: always;"></div>
 </div>
 <div id="species-tab" class="section level1">
 <h1 class="hasAnchor">
 <a href="#species-tab" class="anchor"></a>Species tab</h1>
+<p>In the Species tab, you can retrieve all deposited information for each species.</p>
+<div style="page-break-after: always;"></div>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
