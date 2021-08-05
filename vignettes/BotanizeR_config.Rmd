@@ -200,7 +200,9 @@ https://www.digitalocean.com/community/tutorials/how-to-set-up-shiny-server-on-u
 A comprehensive example instance of BotanizeR showcasing all functionality can 
 be found at https://gift.uni-goettingen.de/shiny/BotanizeR/ 
 
-![Quiz tab](../man/figures/BotanizeR_printscreen1.png)
+```{r, fig.label = "Figure 1. BotanizeR Quiz tab", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen1.png")
+```
 
 
 ## Config files
@@ -283,7 +285,10 @@ system_path <- ""
 # If so, add it as a character string here (e.g. "~/ShinyApps/BotanizeR/")
 # Not needed under normal setup conditions
 ```
-![Setup tab](../man/figures/BotanizeR_printscreen3.png)
+
+```{r, fig.label = "Figure 1. Setup tab", out.width = "100%", echo = FALSE}
+knitr::include_graphics("../man/figures/BotanizeR_printscreen3.png")
+```
 
 
 ### Species list  
