@@ -95,8 +95,8 @@ species_list_filter <- c("All species","Germany","Germany_BioDiv",
 
 ### Species list
 
-# Define species list selected at the start (Needs to be one out of 
-# species_list_filter), If set to "All species" no filter will be applied.
+# Define species list selected at the start (needs to be one out of 
+# species_list_filter). If set to "All species" no filter will be applied.
 
 species_list_selected <- "UK_Ireland_Sussex" 
 
@@ -166,11 +166,11 @@ hints_custom <- c("ownhint_English_name", "ownhint_French_name")
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-# 3. About ----
+# 4. About ----
 
 # Add text (html) describing your instance of BotanizeR and your sources of
 # images, hints and species lists to be shown in addition to our general 
-# description of the app in the about tab. For more fundcamental changes,
+# description of the app in the about tab. For more fundamental changes,
 # modify about.R directly.
 
 instance_description <- 
@@ -208,7 +208,7 @@ instance_credits <-
   <a href="https://www.floraweb.de/" target=_blank>FloraWeb</a> and the 
   <a href="https://www.brc.ac.uk/plantatlas/" target=_blank>
   UK & Ireland Plant Atlas</a>. 
-  Please visit these websites for more informationan about sources and 
+  Please visit these websites for more information about sources and 
   image authors. 
   <br>
   <br>
