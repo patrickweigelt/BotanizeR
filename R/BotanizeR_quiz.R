@@ -126,7 +126,7 @@
 #'                                          'lifeform', 'woodiness', 
 #'                                          'clonality'), 
 #'                  hints_floraweb = NULL, 
-#'                  case_sensitive = FALSE)#'
+#'                  case_sensitive = FALSE)
 #' 
 #' 
 #' # Subset for about 300 species students in Goettingen, Germany, learn

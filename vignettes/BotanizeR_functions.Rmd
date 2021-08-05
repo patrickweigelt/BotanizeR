@@ -40,8 +40,6 @@ options(tinytex.verbose = TRUE)
 
 # Overview  
 
-BotanizeR
-
 \newpage
 
 BotanizeR is an R-package with Shiny app designed to help botany students and 
