@@ -161,6 +161,9 @@
 #'                                              "images/Trees"))
 #' }
 #' 
+#' @importFrom utils download.file
+#' @importFrom utils read.csv
+#' 
 #' @export
 
 BotanizeR_collect <-
