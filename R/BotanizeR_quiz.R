@@ -170,6 +170,9 @@
 #'   image_folders = NULL, case_sensitive = FALSE)
 #' }
 #' 
+#' @importFrom utils adist
+#' @importFrom graphics par
+#' 
 #' @export
 
 BotanizeR_quiz <- function(

@@ -117,7 +117,8 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
       for(i in seq_along(image_files)){
         
         # load
-        image_i <- load.image(file.path(image_folders[k], image_files[i]))
+        image_i <- imager::load.image(file.path(image_folders[k],
+                                                image_files[i]))
         
         # resize
         if(!is.na(max_height) &
