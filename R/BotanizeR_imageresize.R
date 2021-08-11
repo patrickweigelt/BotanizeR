@@ -120,6 +120,20 @@ BotanizeR_imageresize <- function(image_folders = NULL, image_width = NA,
         image_i <- imager::load.image(file.path(image_folders[k],
                                                 image_files[i]))
         
+        # rotate according to exif
+        try(exif <- exifr::read_exif(file.path(image_folders[k],
+                                           image_files[i]), tags="orientation"))
+        
+        if(!is.null(exif) & "Orientation" %in% names(exif)){
+          if (exif$Orientation == 3){
+            image_i <- imager::imrotate(image_i, 180)
+          } else if (exif$Orientation == 6){
+            image_i <- imager::imrotate(image_i, 90)
+          } else if (exif$Orientation == 8){
+            image_i <- imager::imrotate(image_i, 270)
+          }   
+        }
+        
         # resize
         if(!is.na(max_height) &
            (image_width/nrow(image_i)*ncol(image_i)) > max_height){
