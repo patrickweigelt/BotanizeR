@@ -65,8 +65,9 @@ BotanizeR_imageresize(image_folders = c("inst/WWW/images_to_resize_1",
 }
 \references{
 \preformatted{Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
-R-package with Shiny-App for practicing plant identification in times of
-online teaching and beyond. submitted.
+R package with Shiny app to practice plant identification for 
+online teaching and beyond. PLANTS, PEOPLE, PLANET, 
+https://doi.org/10.1002/ppp3.10226.
 }
 }
 \seealso{

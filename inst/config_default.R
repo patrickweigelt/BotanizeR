@@ -213,8 +213,8 @@ instance_credits <-
   image authors. 
   <br>
   <br>
-  In addition, images of plants around Göttingen, Germany and woody plants in 
-  winter state have been 
+  In addition, images of plants around G&ouml;ttingen, Germany and woody plants 
+  in winter state have been 
   provided by F. Brambach, C. D&ouml;nges, H. Kreft, J. Kuper and 
   H. Reichelt from 
   <a href="https://www.uni-goettingen.de/en/128741.html" target=_blank>
