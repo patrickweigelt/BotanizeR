@@ -68,7 +68,9 @@ function(){
           characteristics to show to their students. Technically, BotanizeR is 
           an R-package which can be installed from 
           <a href="https://github.com/patrickweigelt/BotanizeR" target=_blank>
-          GitHub</a>. 
+          GitHub</a>. Tutorials on how to setup BotanizeR are vailable 
+          <a href="https://patrickweigelt.github.io/BotanizeR/index.html" 
+          target=_blank>here</a>.
           The quiz can be played within R or better RStudio or alternatively it 
           can be made available via the package&rsquo;s Shiny app. The Shiny 
           app can be launched locally after installing the package or on a 
@@ -104,6 +106,17 @@ function(){
 		     </p>
 		  </div>  
       <br>
+		  <span style="color:#64645F;font-weight: bold;">Citation</span>
+		  <div style="max-width:1000px; word-wrap:break-word;">
+		     <p style="text-align:justify">
+		     Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible 
+         R package with Shiny app to practice plant identification for 
+         online teaching and beyond. <i>PLANTS, PEOPLE, PLANET</i>, 
+         <a href="https://doi.org/10.1002/ppp3.10226" target=_blank>
+         https://doi.org/10.1002/ppp3.10226</a>.
+		     </p>
+		  </div>  
+		  <br>
 		  <span style="color:#64645F;font-weight:bold;">License</span>
 		  <div style="max-width:1000px; word-wrap:break-word;">
 		     <p style="text-align:justify;">

@@ -12,7 +12,7 @@ random species are shown and students have to guess the correct species.
 BotanizeR is highly flexible allowing lecturers to define their own species 
 lists and to provide images and further useful information, or choose from 
 linked online content from selected botanical online resources.
-A Quiz and Species overview pages can be made available via the package’s Shiny 
+A Quiz and Species overview pages can be made available via the package's Shiny 
 application or played within R directly. 
 
 
@@ -144,6 +144,12 @@ Online Atlas of the British and Irish flora:
 [https://www.brc.ac.uk/plantatlas/](https://www.brc.ac.uk/plantatlas/)  
 Image authors: 
 [https://www.brc.ac.uk/plantatlas/content/photos](https://www.brc.ac.uk/plantatlas/content/photos)  
+
+
+Weigelt, P., Denelle, P., Brambach, F. & Kreft, H. (2021) A flexible
+R package with Shiny app to practice plant identification for 
+online teaching and beyond. *PLANTS, PEOPLE, PLANET*, 
+[https://doi.org/10.1002/ppp3.10226](https://doi.org/10.1002/ppp3.10226).
 
 
 
