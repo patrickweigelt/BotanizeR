@@ -1696,9 +1696,12 @@ shinyServer(function(input, output, session) {
         # output$real_answer_print <- 
         # renderText(isolate(reactive_species$species))
         output$real_answer_print <- 
-            renderText(isolate(species_list_reactive$df_data$TAXONNAME[which(
-                isolate(species_list_reactive$df_data$SPECIES) == 
-                    isolate(reactive_species$species))]))
+            renderUI({
+                HTML(isolate(species_list_reactive$df_data$TAXONNAME[which(
+                    isolate(species_list_reactive$df_data$SPECIES) == 
+                        isolate(reactive_species$species))]
+                ))
+            })
         
         if(!answered_reactive$answered & !answered_reactive$cheated){
             answered_reactive$cheated <- TRUE 
