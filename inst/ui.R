@@ -152,7 +152,7 @@ tabPanel(
            div(p(htmlOutput("answer_status"), 
                  style = "font-weight=500; color: #000000;"),
                style = "min-height:75px"),
-           div(h5(em(textOutput("real_answer_print"), 
+           div(h5(em(uiOutput("real_answer_print"), 
                      style = "color: green; font-style: bold")),
                style = "height:40px; text-indent:20px; 
                         display:table-cell; vertical-align:middle"),
