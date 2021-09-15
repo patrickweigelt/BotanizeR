@@ -404,7 +404,7 @@ shinyServer(function(input, output, session) {
                     nrow(species_list_reactive$df_data),
                     " species; ", 
                     sum(species_list_reactive$df_data$INCLUDE),
-                    " included; ", 
+                    " included in quiz; ", 
                     sum(species_list_reactive$df_data$COUNT>0),
                     " practiced.</i><p>"))
     })
@@ -473,7 +473,7 @@ shinyServer(function(input, output, session) {
                                 if(sum(species_list_clean$INCLUDE)>0){
                                     return(species_list_clean)
                                 } else {
-                                    return("No species indicated as included.")
+                                    return("No species indicated as included in quiz.")
                                 }
                             } else {
                                 return("Not all entries of the columns 'COUNT', 
@@ -598,7 +598,7 @@ shinyServer(function(input, output, session) {
                             nrow(species_list_uploaded),
                             " species; ", 
                             sum(species_list_uploaded$INCLUDE),
-                            " included; ", 
+                            " included in quiz; ", 
                             sum(species_list_uploaded$COUNT>0),
                             " practiced.</i></p>"))
             })
