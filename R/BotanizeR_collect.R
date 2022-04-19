@@ -344,7 +344,7 @@ BotanizeR_collect <-
           
           download.file(
             # paste0("https://www.floraweb.de/pflanzenarten/",
-            paste0("https://www.floraweb.de/xsql/",
+            paste0("https://www.floraweb.de",
                    grep("foto\\.xsql",
                         XML::xpathApply(html_main, "//a[@class='imglink']",
                                         XML::xmlAttrs)[[1]], value = TRUE)), 
