@@ -366,7 +366,7 @@ BotanizeR_collect <-
                                                XML::xmlAttrs)),
                              value = TRUE)
           
-          if(photolinks[1] != "/bilder/arten/"){
+          if(length(photolinks) > 0 & photolinks[1] != "/bilder/arten/"){
             if(only_links){
               hints[[1]][[1]] <- paste0("https://www.floraweb.de",
                                         gsub("\\.\\.", "", photolinks[1]))
