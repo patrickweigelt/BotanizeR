@@ -323,11 +323,14 @@ BotanizeR_collect <-
         html_main <- XML::htmlTreeParse(file = file.path(dir, "main.txt"),
                                         isURL = FALSE, isHTML = TRUE,
                                         useInternalNodes = TRUE)
-        #infos_main <- XML::xpathApply(html_main, "//div[@id='content']//p",
-        #                              XML::xmlValue)})
-        infos_main <- XML::xpathApply(html_main, "//section//p",
-                                      XML::xmlValue)})
-      
+        # infos_main <- XML::xpathApply(html_main, "//div[@id='content']//p",
+        #                               XML::xmlValue)})
+        # infos_main <- XML::xpathApply(html_main, "//section//p",
+        #                               XML::xmlValue)
+        infos_main <- XML::xpathApply(html_main, "//li[@class='artenliste-portrait']",
+                                    XML::xmlValue)
+      })
+
       if(image_floraweb & exists("html_main")){
         
         # download.file(
@@ -356,7 +359,9 @@ BotanizeR_collect <-
           #                                "//div[@id='content']//p",
           #                                XML::xmlValue)
           infos_photo <- XML::xpathApply(html_photo, "//section//p",
-                                         XML::xmlValue)
+                                          XML::xmlValue)
+          # infos_photo <- XML::xpathApply(html_photo, "//a[@class='glossar']",
+          #                                XML::xmlValue)
           # photolink <- XML::xpathApply(html_photo,
           #                              "//div[@id='content']//img",
           #                              XML::xmlAttrs)[[1]][3]
@@ -641,7 +646,7 @@ BotanizeR_collect <-
           if(floraweb_image){
             description <- paste0(
               "Bestimmungshilfe/Morphologie:\n",
-              infos_photo[[which(infos_photo == "Bestimmungshilfe:") + 1]])
+              infos_photo[[1]])
           } else {
             description <- gsub("Morphologie:", "Morphologie:\n",
                                 infos_biology[[2]])
@@ -652,15 +657,15 @@ BotanizeR_collect <-
         }
         
         if(hints_floraweb[i] == "status" & exists("infos_main")){
-          hints[[i+1]] <- paste0(infos_main[[5]],"; \n",infos_main[[6]])
+          hints[[i+1]] <- gsub(" +"," ",gsub("\\*\\:","",gsub("; \\n","",paste0(infos_main[[4]],"; \n",infos_main[[5]]))))
         }
         
         if(hints_floraweb[i] == "family" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[4]])
+          hints[[i+1]] <- paste(infos_main[[3]])
         }
         
         if(hints_floraweb[i] == "German name" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[3]])
+          hints[[i+1]] <- paste(infos_main[[2]])
         }
         
         if(hints_floraweb[i] == "habitat" & exists("infos_ecology")){
