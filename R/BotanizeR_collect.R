@@ -657,7 +657,10 @@ BotanizeR_collect <-
         }
         
         if(hints_floraweb[i] == "status" & exists("infos_main")){
-          hints[[i+1]] <- gsub(" +"," ",gsub("\\*\\:","",gsub("; \\n","",paste0(infos_main[[4]],"; \n",infos_main[[5]]))))
+          hints[[i+1]] <- gsub(" +"," ",
+                               gsub("; \\n","",
+                                    paste0(infos_main[[4]], 
+                                           "; \n",infos_main[[5]])))
         }
         
         if(hints_floraweb[i] == "family" & exists("infos_main")){
