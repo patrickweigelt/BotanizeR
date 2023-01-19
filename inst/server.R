@@ -18,7 +18,7 @@ shinyServer(function(input, output, session) {
     chorology <- NULL
     
     # Load custom starting config
-    source("config.R")
+    source("config_Triglav.R")
     
     # Load list of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
@@ -781,15 +781,49 @@ shinyServer(function(input, output, session) {
     
     ### Render Options ----
     
+    # Family subset
+    output$select_family <- renderUI({
+      selectizeInput("family_list", "Select family",
+                     choices = 
+                       c("all",
+                         unique(
+                           species_list_reactive$df_data$ownhint_Family)),
+                     selected = "all")
+    })
+    
     # Dynamic dropdown
     output$select_plant <- renderUI({
-        selectizeInput("plant_list", "Plant list",
+        selectizeInput("plant_list", "Select species",
                        choices = species_list_reactive$df_data$SPECIES,
                        selected = species_list_reactive$df_data$SPECIES[1],
                        options = list(maxOptions = length(
                            species_list_reactive$df_data$SPECIES)))
     })
     
+    observeEvent(input$family_list, ignoreInit = TRUE, { #ignoreNULL = FALSE, { 
+      print(paste("Family:", input$family_list))
+      if(input$family_list != "all"){
+        updateSelectizeInput(
+        inputId = "plant_list",
+        choices = species_list_reactive$df_data$SPECIES[which(
+          species_list_reactive$df_data$ownhint_Family == input$family_list)],
+        selected = species_list_reactive$df_data$SPECIES[which(
+          species_list_reactive$df_data$ownhint_Family == 
+            input$family_list)][1],
+        options = list(maxOptions = length(
+          species_list_reactive$df_data$SPECIES[which(
+            species_list_reactive$df_data$ownhint_Family == 
+              input$family_list)])))
+      } else {
+        updateSelectizeInput(
+          inputId = "plant_list",
+          choices = species_list_reactive$df_data$SPECIES,
+          selected = species_list_reactive$df_data$SPECIES[1],
+          options = list(maxOptions = length(
+            species_list_reactive$df_data$SPECIES)))
+      }
+    })
+
     # Dynamic checkboxes
     output$options <- renderUI({
         checkboxGroupInput(inputId = "options", label = "Show:",
@@ -823,43 +857,105 @@ shinyServer(function(input, output, session) {
     
     # Previous plant
     observeEvent(input$previous_plant, {
-        current_species <- which(species_list_reactive$df_data$SPECIES == 
-                                     input$plant_list)
+      
+      if(input$family_list != "all"){
+        
+        current_species <- which(species_list_reactive$df_data$SPECIES[
+          which(species_list_reactive$df_data$ownhint_Family ==
+                  input$family_list)] ==
+            input$plant_list)
         
         if(current_species > 1){
-            updateSelectizeInput(session, "plant_list",
-                                 choices = 
-                                     species_list_reactive$df_data$SPECIES,
-                                 selected = 
-                                     species_list_reactive$df_data$SPECIES[
-                                         current_species - 1],
-                                 options = 
-                                     list(maxOptions = length(
-                                         species_list_reactive$df_data$SPECIES)
-                                     ))
+          updateSelectizeInput(
+            session, "plant_list",
+            choices = 
+              species_list_reactive$df_data$SPECIES[which(
+                species_list_reactive$df_data$ownhint_Family
+                == input$family_list)],
+            selected = 
+              species_list_reactive$df_data$SPECIES[which(
+                species_list_reactive$df_data$ownhint_Family
+                == input$family_list)][current_species - 1],
+            options = 
+              list(maxOptions = length(
+                species_list_reactive$df_data$SPECIES[which(
+                  species_list_reactive$df_data$ownhint_Family
+                  == input$family_list)])
+              ))
         }
+      } else {
+        
+        current_species <- which(species_list_reactive$df_data$SPECIES == 
+                                   input$plant_list)
+        
+        if(current_species > 1){
+          updateSelectizeInput(session, "plant_list",
+                               choices = 
+                                 species_list_reactive$df_data$SPECIES,
+                               selected = 
+                                 species_list_reactive$df_data$SPECIES[
+                                   current_species - 1],
+                               options = 
+                                 list(maxOptions = length(
+                                   species_list_reactive$df_data$SPECIES)
+                                 ))
+        }
+      }
     })
     
     # Next plant
     observeEvent(input$next_plant, {
-        current_species <- which(species_list_reactive$df_data$SPECIES == 
-                                     input$plant_list)
-        
-        if(current_species < length(species_list_reactive$df_data$SPECIES)){
-            updateSelectizeInput(session, "plant_list",
-                                 choices = 
-                                     species_list_reactive$df_data$SPECIES,
-                                 selected = 
-                                     species_list_reactive$df_data$SPECIES[
-                                         current_species + 1],
-                                 options = 
-                                     list(maxOptions = length(
-                                         species_list_reactive$df_data$SPECIES)
-                                     ))
+
+      if(input$family_list != "all"){
+
+        current_species <- which(species_list_reactive$df_data$SPECIES[
+          which(species_list_reactive$df_data$ownhint_Family ==
+                  input$family_list)] ==
+            input$plant_list)
+
+        if(current_species < length(species_list_reactive$df_data$SPECIES[
+          which(species_list_reactive$df_data$ownhint_Family ==
+                input$family_list)])){
+          updateSelectizeInput(
+            session, "plant_list",
+            choices =
+              species_list_reactive$df_data$SPECIES[which(
+                species_list_reactive$df_data$ownhint_Family
+                == input$family_list)],
+            selected =
+              species_list_reactive$df_data$SPECIES[which(
+                species_list_reactive$df_data$ownhint_Family
+                == input$family_list)][
+                  current_species + 1],
+            options =
+              list(maxOptions = length(
+                species_list_reactive$df_data$SPECIES[which(
+                  species_list_reactive$df_data$ownhint_Family
+                  == input$family_list)])
+              ))
         }
         
+      } else {
+
+        current_species <- which(species_list_reactive$df_data$SPECIES ==
+                                   input$plant_list)
+
+        if(current_species < length(species_list_reactive$df_data$SPECIES)){
+          updateSelectizeInput(session, "plant_list",
+                               choices =
+                                 species_list_reactive$df_data$SPECIES,
+                               selected =
+                                 species_list_reactive$df_data$SPECIES[
+                                   current_species + 1],
+                               options =
+                                 list(maxOptions = length(
+                                   species_list_reactive$df_data$SPECIES)
+                                 ))
+        }
+      }
     })
-    
+
+
     observe({
         req(input$plant_list)
         
