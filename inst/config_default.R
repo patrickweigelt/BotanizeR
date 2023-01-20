@@ -36,9 +36,19 @@ gbif <- TRUE
 ### Dynamic species sampling probabilities
 
 # Set to FALSE if species in the quiz shall be drawn with equal probabilities 
-# not updated depending on practicing successes and failures.
+# by default not updated depending on practicing successes and failures.
 
 dynamic_probabilities <- TRUE
+
+
+### Simplified taxon names
+
+# Set to FALSE if taxon names in the quiz by default need to contain all 
+# details given in the species list including hybrid markers and infraspecific 
+# information. If set to TRUE the binomial of genus name and epithet is 
+# sufficient to answer the quiz questions by default.
+
+simplified_names <- TRUE
 
 
 ### Google analytics

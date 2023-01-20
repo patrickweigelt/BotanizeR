@@ -53,7 +53,8 @@ shinyServer(function(input, output, session) {
                                       init_count_species = 0,
                                       init_score_species = 0,
                                       omit = FALSE,
-                                      dynamic = dynamic_probabilities)
+                                      dynamic = dynamic_probabilities,
+                                      simple = simplified_names)
     
     # Define lookup tables for hint variables and their labels
     hints_floraweb_lookup <- 
@@ -109,7 +110,11 @@ shinyServer(function(input, output, session) {
     
     ### Probabilities
     observeEvent(input$quiz_probs, ignoreInit = TRUE, {
-        counts_reactive$dynamic <- (input$quiz_probs == "dynamic")
+      counts_reactive$dynamic <- (input$quiz_probs == "dynamic")
+    })
+
+    observeEvent(input$quiz_answer, ignoreInit = TRUE, {
+      counts_reactive$simple <- (input$quiz_answer == "simple")
     })
     
     ## Online resources ----
@@ -1710,122 +1715,137 @@ shinyServer(function(input, output, session) {
         })
         
         observeEvent(input$submit, {
+          isolate({
+            answer <- as.character(input$sp_answer)
+          })
+          
+          if(isolate(counts_reactive$simple)){
             isolate({
-                answer <- as.character(input$sp_answer)
+              correct_answer <- reactive_species$species
+              correct_answer <- gsub(" +"," ",correct_answer)
+              correct_answer <- gsub(" . "," ",correct_answer)
+              correct_answer <- gsub("^. ","",correct_answer)
+              if (length(strsplit(correct_answer, " ")[[1]]) > 2){
+                correct_answer <- paste(
+                  strsplit(correct_answer, " ")[[1]][1:2], collapse = " ")
+              }
+            })          
+          } else {
+            
+            isolate({
+              correct_answer <- reactive_species$species
             })
-            if (tolower(answer) == tolower(isolate(reactive_species$species))){
-                output$answer_status <- renderUI(
-                    HTML(paste0(
-                        "<p style='border:3px; border-style:solid;
+          }
+          
+          if (tolower(answer) == tolower(isolate(correct_answer))){
+            output$answer_status <- renderUI(
+              HTML(paste0(
+                "<p style='border:3px; border-style:solid;
                             border-color:#38772d; padding: 1em;
                             background-color:#73f75b;
                             box-shadow: 3px 5px #666666;
                             text-align: center;
                             max-width: 300px'>
                             <font size=5 color=\"#38772d\"><b>",
-                        "Correct",
-                        "</font></b></p>"))
-                )
-                
-                # Setting answered
-                if(!answered_reactive$answered & !answered_reactive$cheated){
-                    answered_reactive$answered <- TRUE
-                    print(paste("answered =", answered_reactive$answered))
-                }
-                
-                # enable checkboxes
-                updateCheckboxGroupInput(
-                    session,
-                    inputId = "quiz_options",
-                    choices = name_hints(c(hints_floraweb_lookup$show[which(
-                        hints_floraweb_lookup$variable %in% 
-                            hints_reactive$hints_floraweb & 
-                            hints_floraweb_lookup$show != "Map")],
-                        hints_ukplantatlas_lookup$show[which(
-                            hints_ukplantatlas_lookup$variable %in% 
-                                hints_reactive$hints_ukplantatlas & 
-                                hints_ukplantatlas_lookup$show != "Map UK")],
-                        hints_reactive$hints_custom)),
-                    selected = c(hints_floraweb_lookup$show[which(
-                        hints_floraweb_lookup$variable %in% 
-                            hints_reactive$hints_floraweb & 
-                            hints_floraweb_lookup$show != "Map")],
-                        hints_ukplantatlas_lookup$show[which(
-                            hints_ukplantatlas_lookup$variable %in% 
-                                hints_reactive$hints_ukplantatlas & 
-                                hints_ukplantatlas_lookup$show != "Map UK")],
-                        hints_reactive$hints_custom))
-                
-            } else { 
-                char_diff <-
-                    paste0(adist(tolower(answer), 
-                                 tolower(isolate(reactive_species$species))),
-                           ifelse(adist(tolower(answer), 
-                                        tolower(isolate(
-                                            reactive_species$species))) > 1,
-                                  " characters"," character"),
-                           " different")
-                
-                genus <- species_list_reactive$df_data[isolate(i$i), "GENUS"]
-                
-                if(nchar(answer)>0){
-                    genus_correct <- paste0(
-                        ifelse(strsplit(tolower(answer), " ")[[1]][1] == 
-                                   tolower(genus), "Genus correct<br>",
-                               "<br>"))
-                } else {
-                    genus_correct <- "" 
-                }
-                
-                output$answer_status <- renderUI(HTML(paste0(
-                    "<font color=\"#FF0000\">", char_diff,
-                    "</font><font color=\"#00CC00\"><br>",
-                    genus_correct, "</font></br>")))
+                "Correct",
+                "</font></b></p>"))
+            )
+            
+            # Setting answered
+            if(!answered_reactive$answered & !answered_reactive$cheated){
+              answered_reactive$answered <- TRUE
+              print(paste("answered =", answered_reactive$answered))
             }
+            
+            # enable checkboxes
+            updateCheckboxGroupInput(
+              session,
+              inputId = "quiz_options",
+              choices = name_hints(c(hints_floraweb_lookup$show[which(
+                hints_floraweb_lookup$variable %in% 
+                  hints_reactive$hints_floraweb & 
+                  hints_floraweb_lookup$show != "Map")],
+                hints_ukplantatlas_lookup$show[which(
+                  hints_ukplantatlas_lookup$variable %in% 
+                    hints_reactive$hints_ukplantatlas & 
+                    hints_ukplantatlas_lookup$show != "Map UK")],
+                hints_reactive$hints_custom)),
+              selected = c(hints_floraweb_lookup$show[which(
+                hints_floraweb_lookup$variable %in% 
+                  hints_reactive$hints_floraweb & 
+                  hints_floraweb_lookup$show != "Map")],
+                hints_ukplantatlas_lookup$show[which(
+                  hints_ukplantatlas_lookup$variable %in% 
+                    hints_reactive$hints_ukplantatlas & 
+                    hints_ukplantatlas_lookup$show != "Map UK")],
+                hints_reactive$hints_custom))
+            
+          } else { 
+            char_diff <-
+              paste0(adist(tolower(answer), 
+                           tolower(correct_answer)),
+                     ifelse(adist(tolower(answer), 
+                                  tolower(correct_answer)) > 1,
+                            " characters"," character"),
+                     " different")
+            
+            genus <- species_list_reactive$df_data[isolate(i$i), "GENUS"]
+            
+            if(nchar(answer)>0){
+              genus_correct <- paste0(
+                ifelse(strsplit(tolower(answer), " ")[[1]][1] == 
+                         tolower(genus), "Genus correct<br>",
+                       "<br>"))
+            } else {
+              genus_correct <- "" 
+            }
+            
+            output$answer_status <- renderUI(HTML(paste0(
+              "<font color=\"#FF0000\">", char_diff,
+              "</font><font color=\"#00CC00\"><br>",
+              genus_correct, "</font></br>")))
+          }
         })
     })
     
     ### Real answer ----
     observeEvent(input$real_answer, {
-        # updateTextInput(session, "sp_answer", "Species name", 
-        # value = isolate(reactive_species$species))
-        # output$real_answer_print <- 
-        # renderText(isolate(reactive_species$species))
-        output$real_answer_print <- 
-            renderUI({
-                HTML(isolate(species_list_reactive$df_data$TAXONNAME[which(
-                    isolate(species_list_reactive$df_data$SPECIES) == 
-                        isolate(reactive_species$species))]
-                ))
-            })
+      
+      output$real_answer_print <- 
+        renderUI({
+          HTML(isolate(species_list_reactive$df_data$TAXONNAME[which(
+            isolate(species_list_reactive$df_data$SPECIES) == 
+              isolate(reactive_species$species))]
+          ))
+        })
+      
+      if(!answered_reactive$answered & !answered_reactive$cheated){
+        answered_reactive$cheated <- TRUE 
+        print(paste("cheated =", answered_reactive$cheated))
         
-        if(!answered_reactive$answered & !answered_reactive$cheated){
-            answered_reactive$cheated <- TRUE 
-            print(paste("cheated =", answered_reactive$cheated))
-            
-            # enable checkboxes
-            updateCheckboxGroupInput(
-                session,
-                inputId = "quiz_options",
-                choices = name_hints(c(hints_floraweb_lookup$show[which(
-                    hints_floraweb_lookup$variable %in% 
-                        hints_reactive$hints_floraweb & 
-                        hints_floraweb_lookup$show != "Map")],
-                    hints_ukplantatlas_lookup$show[which(
-                        hints_ukplantatlas_lookup$variable %in% 
-                            hints_reactive$hints_ukplantatlas & 
-                            hints_ukplantatlas_lookup$show != "Map UK")],
-                    hints_reactive$hints_custom)),
-                selected = c(hints_floraweb_lookup$show[which(
-                    hints_floraweb_lookup$variable %in% 
-                        hints_reactive$hints_floraweb & 
-                        hints_floraweb_lookup$show != "Map")],
-                    hints_ukplantatlas_lookup$show[which(
-                        hints_ukplantatlas_lookup$variable %in% 
-                            hints_reactive$hints_ukplantatlas & 
-                            hints_ukplantatlas_lookup$show != "Map UK")],
-                    hints_reactive$hints_custom))
-        }
+        # enable checkboxes
+        updateCheckboxGroupInput(
+          session,
+          inputId = "quiz_options",
+          choices = name_hints(c(hints_floraweb_lookup$show[which(
+            hints_floraweb_lookup$variable %in% 
+              hints_reactive$hints_floraweb & 
+              hints_floraweb_lookup$show != "Map")],
+            hints_ukplantatlas_lookup$show[which(
+              hints_ukplantatlas_lookup$variable %in% 
+                hints_reactive$hints_ukplantatlas & 
+                hints_ukplantatlas_lookup$show != "Map UK")],
+            hints_reactive$hints_custom)),
+          selected = c(hints_floraweb_lookup$show[which(
+            hints_floraweb_lookup$variable %in% 
+              hints_reactive$hints_floraweb & 
+              hints_floraweb_lookup$show != "Map")],
+            hints_ukplantatlas_lookup$show[which(
+              hints_ukplantatlas_lookup$variable %in% 
+                hints_reactive$hints_ukplantatlas & 
+                hints_ukplantatlas_lookup$show != "Map UK")],
+            hints_reactive$hints_custom))
+      }
     })
     
     ### Summary statistics ----

@@ -291,6 +291,17 @@ if(setup){tabPanel(
                         choices = c("dynamic","uniform"),
                         selected = ifelse(dynamic_probabilities, "dynamic", 
                                           "uniform")),
+           br(),
+           HTML("Shall complete taxon names be required as answers in the quiz 
+           or shall binomial names of genus and epithet be sufficient, 
+           ignoring hybrid markers and infraspecific information?"),
+           br(),
+           br(),
+           radioButtons("quiz_answer", "Required taxon name detail",
+                        choices = c("simple","complete"),
+                        selected = ifelse(simplified_names, "simple", 
+                                          "complete")),
+
            br()
     ),
     if(online_resources) {
