@@ -18,7 +18,7 @@ shinyServer(function(input, output, session) {
     chorology <- NULL
     
     # Load custom starting config
-    source("config_Triglav.R")
+    source("config.R")
     
     # Load list of species that have a chorology map
     chorology_list <- read.table("NAMNR_chorology.txt")
@@ -858,7 +858,7 @@ shinyServer(function(input, output, session) {
     # Previous plant
     observeEvent(input$previous_plant, {
       
-      if(input$family_list != "all"){
+      if("ownhint_Family" %in% hints_custom && input$family_list != "all"){
         
         current_species <- which(species_list_reactive$df_data$SPECIES[
           which(species_list_reactive$df_data$ownhint_Family ==
@@ -906,7 +906,7 @@ shinyServer(function(input, output, session) {
     # Next plant
     observeEvent(input$next_plant, {
 
-      if(input$family_list != "all"){
+      if("ownhint_Family" %in% hints_custom && input$family_list != "all"){
 
         current_species <- which(species_list_reactive$df_data$SPECIES[
           which(species_list_reactive$df_data$ownhint_Family ==
