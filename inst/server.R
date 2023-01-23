@@ -791,8 +791,8 @@ shinyServer(function(input, output, session) {
       selectizeInput("family_list", "Select family",
                      choices = 
                        c("all",
-                         unique(
-                           species_list_reactive$df_data$ownhint_Family)),
+                         sort(unique(
+                           species_list_reactive$df_data$ownhint_Family))),
                      selected = "all")
     })
     
@@ -1721,8 +1721,8 @@ shinyServer(function(input, output, session) {
           
           if(isolate(counts_reactive$simple)){
             isolate({
-              correct_answer <- reactive_species$species
-              correct_answer <- gsub(" +"," ",correct_answer)
+              correct_answer_long <- reactive_species$species
+              correct_answer <- gsub(" +"," ",correct_answer_long)
               correct_answer <- gsub(" . "," ",correct_answer)
               correct_answer <- gsub("^. ","",correct_answer)
               if (length(strsplit(correct_answer, " ")[[1]]) > 2){
@@ -1733,11 +1733,13 @@ shinyServer(function(input, output, session) {
           } else {
             
             isolate({
-              correct_answer <- reactive_species$species
+              correct_answer_long <- reactive_species$species
+              correct_answer <- correct_answer_long
             })
           }
           
-          if (tolower(answer) == tolower(isolate(correct_answer))){
+          if (tolower(answer) == tolower(correct_answer) | 
+              tolower(answer) == tolower(correct_answer_long)){
             output$answer_status <- renderUI(
               HTML(paste0(
                 "<p style='border:3px; border-style:solid;
