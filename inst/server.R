@@ -792,7 +792,7 @@ shinyServer(function(input, output, session) {
                      choices = 
                        c("all",
                          sort(unique(
-                           species_list_reactive$df_data$ownhint_Family))),
+                           species_list_reactive$df_data$ownhint_Famil))),
                      selected = "all")
     })
     
@@ -811,13 +811,13 @@ shinyServer(function(input, output, session) {
         updateSelectizeInput(
         inputId = "plant_list",
         choices = species_list_reactive$df_data$SPECIES[which(
-          species_list_reactive$df_data$ownhint_Family == input$family_list)],
+          species_list_reactive$df_data$ownhint_Famil == input$family_list)],
         selected = species_list_reactive$df_data$SPECIES[which(
-          species_list_reactive$df_data$ownhint_Family == 
+          species_list_reactive$df_data$ownhint_Famil == 
             input$family_list)][1],
         options = list(maxOptions = length(
           species_list_reactive$df_data$SPECIES[which(
-            species_list_reactive$df_data$ownhint_Family == 
+            species_list_reactive$df_data$ownhint_Famil == 
               input$family_list)])))
       } else {
         updateSelectizeInput(
@@ -863,10 +863,10 @@ shinyServer(function(input, output, session) {
     # Previous plant
     observeEvent(input$previous_plant, {
       
-      if("ownhint_Family" %in% hints_custom && input$family_list != "all"){
+      if(any(grepl("ownhint_Famil", hints_custom)) && input$family_list != "all"){
         
         current_species <- which(species_list_reactive$df_data$SPECIES[
-          which(species_list_reactive$df_data$ownhint_Family ==
+          which(species_list_reactive$df_data$ownhint_Famil ==
                   input$family_list)] ==
             input$plant_list)
         
@@ -875,16 +875,16 @@ shinyServer(function(input, output, session) {
             session, "plant_list",
             choices = 
               species_list_reactive$df_data$SPECIES[which(
-                species_list_reactive$df_data$ownhint_Family
+                species_list_reactive$df_data$ownhint_Famil
                 == input$family_list)],
             selected = 
               species_list_reactive$df_data$SPECIES[which(
-                species_list_reactive$df_data$ownhint_Family
+                species_list_reactive$df_data$ownhint_Famil
                 == input$family_list)][current_species - 1],
             options = 
               list(maxOptions = length(
                 species_list_reactive$df_data$SPECIES[which(
-                  species_list_reactive$df_data$ownhint_Family
+                  species_list_reactive$df_data$ownhint_Famil
                   == input$family_list)])
               ))
         }
@@ -911,31 +911,31 @@ shinyServer(function(input, output, session) {
     # Next plant
     observeEvent(input$next_plant, {
 
-      if("ownhint_Family" %in% hints_custom && input$family_list != "all"){
+      if(any(grepl("ownhint_Famil", hints_custom)) && input$family_list != "all"){
 
         current_species <- which(species_list_reactive$df_data$SPECIES[
-          which(species_list_reactive$df_data$ownhint_Family ==
+          which(species_list_reactive$df_data$ownhint_Famil ==
                   input$family_list)] ==
             input$plant_list)
 
         if(current_species < length(species_list_reactive$df_data$SPECIES[
-          which(species_list_reactive$df_data$ownhint_Family ==
+          which(species_list_reactive$df_data$ownhint_Famil ==
                 input$family_list)])){
           updateSelectizeInput(
             session, "plant_list",
             choices =
               species_list_reactive$df_data$SPECIES[which(
-                species_list_reactive$df_data$ownhint_Family
+                species_list_reactive$df_data$ownhint_Famil
                 == input$family_list)],
             selected =
               species_list_reactive$df_data$SPECIES[which(
-                species_list_reactive$df_data$ownhint_Family
+                species_list_reactive$df_data$ownhint_Famil
                 == input$family_list)][
                   current_species + 1],
             options =
               list(maxOptions = length(
                 species_list_reactive$df_data$SPECIES[which(
-                  species_list_reactive$df_data$ownhint_Family
+                  species_list_reactive$df_data$ownhint_Famil
                   == input$family_list)])
               ))
         }
