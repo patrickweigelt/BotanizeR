@@ -863,7 +863,8 @@ shinyServer(function(input, output, session) {
     # Previous plant
     observeEvent(input$previous_plant, {
       
-      if(any(grepl("ownhint_Famil", hints_custom)) && input$family_list != "all"){
+      if(any(grepl("ownhint_Famil", hints_custom)) && 
+         input$family_list != "all"){
         
         current_species <- which(species_list_reactive$df_data$SPECIES[
           which(species_list_reactive$df_data$ownhint_Famil ==

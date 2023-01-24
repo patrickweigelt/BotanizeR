@@ -156,7 +156,7 @@ of the `species_list` data.frame.
 
 ```{r BotanizeR_collect}
 # Select Acer campestre as example species
-species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+species_row <- BotanizeR_species[which(BotanizeR_species$SPECIES ==
                                         "Acer campestre"),]
 
 

@@ -122,7 +122,7 @@ called within the Shiny app and `BotanizeR_quiz()`:
 
 ```{r BotanizeR_collect, fig.width = 7, fig.height = 4}
 # Select Acer campestre as example species
-species_row = BotanizeR_species[which(BotanizeR_species$SPECIES ==
+species_row <- BotanizeR_species[which(BotanizeR_species$SPECIES ==
                                         "Acer campestre"),]
 
 
