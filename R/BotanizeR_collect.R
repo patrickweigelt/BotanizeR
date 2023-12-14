@@ -777,5 +777,5 @@ BotanizeR_collect <-
     }
     
     hints <- hints[which(!vapply(hints, is.null, FUN.VALUE = TRUE))]
-    return(hints)
+    return(hints) # end
   } 
