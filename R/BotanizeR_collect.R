@@ -341,14 +341,14 @@ BotanizeR_collect <-
         # Photo
         if(length(XML::xpathApply(html_main, "//a[@class='imglink']",
                                   XML::xmlAttrs)) > 0 & 
-           grepl("foto\\.xsql",
+           grepl("foto\\.php",
                  XML::xpathApply(html_main, "//a[@class='imglink']",
                                  XML::xmlAttrs))[1]){
           
           download.file(
             # paste0("https://www.floraweb.de/pflanzenarten/",
             paste0("https://www.floraweb.de",
-                   grep("foto\\.xsql",
+                   grep("foto\\.php",
                         XML::xpathApply(html_main, "//a[@class='imglink']",
                                         XML::xmlAttrs)[[1]], value = TRUE)), 
             destfile = file.path(dir, "photo.txt"), quiet = TRUE)
@@ -545,9 +545,20 @@ BotanizeR_collect <-
                                                               "ecology.txt"),
                                              isURL = FALSE, isHTML = TRUE,
                                              useInternalNodes = TRUE)
+          # infos_ecology <- XML::xpathApply(html_ecology,
+          #                                  "//section//p",
+          #                                  XML::xmlValue)
           infos_ecology <- XML::xpathApply(html_ecology,
-                                           "//section//p",
+                                           "//h3//following-sibling::text()",
                                            XML::xmlValue)
+          
+          if(infos_ecology[[1]] == "Formation"){
+            infos_ecology <- 
+              infos_ecology[1:(which(!grepl("\\r\\n\\t\\t", 
+                                                infos_ecology))[2]-1)]
+            infos_ecology <- paste(infos_ecology, collapse = "")
+            infos_ecology <- gsub("\\r|\\t", "", infos_ecology)
+          }
         })
       }
       
@@ -561,9 +572,17 @@ BotanizeR_collect <-
                                                               "biology.txt"),
                                              isURL = FALSE, isHTML = TRUE,
                                              useInternalNodes = TRUE)
+          # infos_biology <- XML::xpathApply(html_biology,
+          #                                  "//section//p",
+          #                                  XML::xmlValue)
           infos_biology <- XML::xpathApply(html_biology,
-                                           "//section//p",
+                                           "//h4//following-sibling::text()",
                                            XML::xmlValue)
+          if("Morphologische Beschreibung" %in% infos_biology){
+            infos_biology <- 
+              infos_biology[which(infos_biology == "Morphologische Beschreibung")+2]
+          }
+          
         })
       }
       
@@ -597,12 +616,14 @@ BotanizeR_collect <-
             
             download.file(
               paste0(
-            "https://www.floraweb.de/pflanzenarten/download_afe.xsql?suchnr=",
+            "https://floraweb.de/php/download_afe.php?suchnr=",
                 taxon_ID_map),
               destfile = file.path(dir, "map.csv"), quiet = TRUE)
             map <- read.csv(
               file.path(dir, "map.csv"),
-              skip = 41)[-1, c("CGRSNAME", "AFE_SYMBOLCODE", "AFESYMBOL_TEXT")]
+              skip = 1)[-1, c("CGRSNAME", "AFE_SYMBOLCODE", "AFE_SYMBOLTEXT")]
+            map <- map[1:which(map$CGRSNAME=="")-1,]
+            map$AFE_SYMBOLCODE <- as.numeric(map$AFE_SYMBOLCODE)
             
             map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE == 4)] <- 2
             map$AFE_SYMBOLCODE[which(map$AFE_SYMBOLCODE == 5)] <- 3
@@ -646,10 +667,11 @@ BotanizeR_collect <-
           if(floraweb_image){
             description <- paste0(
               "Bestimmungshilfe/Morphologie:\n",
-              infos_photo[[1]])
+              infos_photo[[3]])
           } else {
-            description <- gsub("Morphologie:", "Morphologie:\n",
-                                infos_biology[[2]])
+            description <- paste0(
+              "Bestimmungshilfe/Morphologie:\n",
+              infos_biology[[1]])
           }
           if(!grepl("keine Angaben", description)){
             hints[[i+1]] <- description
@@ -672,9 +694,9 @@ BotanizeR_collect <-
         }
         
         if(hints_floraweb[i] == "habitat" & exists("infos_ecology")){
-          if(infos_ecology[[2]] !=
+          if(infos_ecology[[1]] !=
              "Formation: \r\nTaxon keiner Formation zugeordnet "){
-            hints[[i+1]] <- paste(infos_ecology[[2]])
+            hints[[i+1]] <- paste(infos_ecology[[1]])
           }
         }
         
