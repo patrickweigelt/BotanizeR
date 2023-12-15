@@ -554,7 +554,7 @@ BotanizeR_collect <-
           
           if(infos_ecology[[1]] == "Formation"){
             infos_ecology <- 
-              infos_ecology[2:(which(!grepl("\\r\\n\\t", 
+              infos_ecology[2:(which(!grepl("\\n\\t", 
                                                 infos_ecology))[2]-1)]
             infos_ecology <- paste(infos_ecology, collapse = "; ")
             infos_ecology <- paste("Habitat:", gsub("\\r|\\n|\\t", "", infos_ecology))
