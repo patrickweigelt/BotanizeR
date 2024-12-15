@@ -327,8 +327,10 @@ BotanizeR_collect <-
         #                               XML::xmlValue)})
         # infos_main <- XML::xpathApply(html_main, "//section//p",
         #                               XML::xmlValue)
-        infos_main <- XML::xpathApply(html_main, "//li[@class='artenliste-portrait']",
-                                    XML::xmlValue)
+        # infos_main <- XML::xpathApply(html_main, "//li[@class='artenliste-portrait']",
+        #                             XML::xmlValue)
+        # infos_main <- XML::xpathApply(html_main, '//*[@id="index"]/div/div/article')
+        
       })
 
       if(image_floraweb & exists("html_main")){
@@ -339,63 +341,73 @@ BotanizeR_collect <-
         #   destfile = file.path(dir,"photo.txt"), quiet = TRUE)
         
         # Photo
-        if(length(XML::xpathApply(html_main, "//a[@class='imglink']",
-                                  XML::xmlAttrs)) > 0 & 
-           grepl("foto\\.php",
-                 XML::xpathApply(html_main, "//a[@class='imglink']",
-                                 XML::xmlAttrs))[1]){
-          
-          download.file(
-            # paste0("https://www.floraweb.de/pflanzenarten/",
-            paste0("https://www.floraweb.de",
-                   grep("foto\\.php",
-                        XML::xpathApply(html_main, "//a[@class='imglink']",
-                                        XML::xmlAttrs)[[1]], value = TRUE)), 
-            destfile = file.path(dir, "photo.txt"), quiet = TRUE)
-          html_photo <- XML::htmlTreeParse(file = file.path(dir, "photo.txt"),
-                                           isURL = FALSE, isHTML = TRUE,
-                                           useInternalNodes = TRUE)
-          # infos_photo <- XML::xpathApply(html_photo,
-          #                                "//div[@id='content']//p",
-          #                                XML::xmlValue)
-          infos_photo <- XML::xpathApply(html_photo, "//section//p",
-                                          XML::xmlValue)
-          # infos_photo <- XML::xpathApply(html_photo, "//a[@class='glossar']",
-          #                                XML::xmlValue)
-          # photolink <- XML::xpathApply(html_photo,
-          #                              "//div[@id='content']//img",
-          #                              XML::xmlAttrs)[[1]][3]
-          photolinks <- grep("bilder",
-                             unlist(
-                               XML::xpathApply(html_photo, "//section//img",
-                                               XML::xmlAttrs)),
-                             value = TRUE)
-          
-          if(length(photolinks) > 0 & photolinks[1] != "/bilder/arten/"){
-            if(only_links){
-              hints[[1]][[1]] <- paste0("https://www.floraweb.de",
-                                        gsub("\\.\\.", "", photolinks[1]))
-              floraweb_image <- TRUE  
-            } else {
-              try({hints[[1]][[1]] <- imager::load.image(
-                paste0("https://www.floraweb.de",
-                       gsub("\\.\\.", "", photolinks[1])))
-              floraweb_image <- TRUE       
-              }, silent = TRUE)
+        if(length(XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/a/img',
+                                  XML::xmlAttrs)) > 0){
+          if(grepl("/bilder/arten/",
+                   XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/a/img',
+                                   XML::xmlAttrs)[[1]][2])){
+            # 
+            # download.file(
+            #   # paste0("https://www.floraweb.de/pflanzenarten/",
+            #   paste0("https://www.floraweb.de",
+            #          grep("foto\\.php",
+            #               XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/a',
+            #                               XML::xmlAttrs)[[1]], value = TRUE))[1], 
+            #   destfile = file.path(dir, "photo.txt"), quiet = TRUE)
+            # html_photo <- XML::htmlTreeParse(file = file.path(dir, "photo.txt"),
+            #                                  isURL = FALSE, isHTML = TRUE,
+            #                                  useInternalNodes = TRUE)
+            # infos_photo <- XML::xpathApply(html_photo,
+            #                                "//div[@id='content']//p",
+            #                                XML::xmlValue)
+            # infos_photo <- XML::xpathApply(html_photo, "//section//p",
+            #                                XML::xmlValue)
+            # infos_photo <- XML::xpathApply(html_photo, "//a[@class='glossar']",
+            #                                XML::xmlValue)
+            # photolink <- XML::xpathApply(html_photo,
+            #                              "//div[@id='content']//img",
+            #                              XML::xmlAttrs)[[1]][3]
+            photolinks <- XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/a/img',
+                                          XML::xmlAttrs)[[1]][2]
+            
+            
+            if(length(XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/div[1]/div/a/img',
+                                      XML::xmlAttrs)) > 0){
+              if(grepl("/bilder/arten/",
+                       XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/div[1]/div/a/img',
+                                       XML::xmlAttrs)[[1]][1])){
+                
+                photolinks[2] <- gsub("\\.tmb", "", XML::xpathApply(html_main, '//*[@id="index"]/div/div/article/section/div/div[1]/div[2]/div[1]/div/a/img',
+                                                                    XML::xmlAttrs)[[1]][1])
+              }
             }
-            if (length(photolinks) > 1){ # check for cases with more than two
-              # images and put loop here
+            
+            if(length(photolinks) > 0 & photolinks[1] != "/bilder/arten/"){
               if(only_links){
-                hints[[1]][[2]] <- paste0("https://www.floraweb.de",
-                                          gsub("\\.\\.", "",
-                                               gsub("\\.tmb", "",
-                                                    photolinks[2])))
+                hints[[1]][[1]] <- paste0("https://www.floraweb.de",
+                                          gsub("\\.\\.", "", photolinks[1]))
+                floraweb_image <- TRUE  
               } else {
-                try(hints[[1]][[2]] <- imager::load.image(
+                try({hints[[1]][[1]] <- imager::load.image(
                   paste0("https://www.floraweb.de",
-                         gsub("\\.\\.", "", gsub("\\.tmb", "",
-                                                 photolinks[2])))),
-                  silent = TRUE)
+                         gsub("\\.\\.", "", photolinks[1])))
+                floraweb_image <- TRUE       
+                }, silent = TRUE)
+              }
+              if (length(photolinks) > 1){ # check for cases with more than two
+                # images and put loop here
+                if(only_links){
+                  hints[[1]][[2]] <- paste0("https://www.floraweb.de",
+                                            gsub("\\.\\.", "",
+                                                 gsub("\\.tmb", "",
+                                                      photolinks[2])))
+                } else {
+                  try(hints[[1]][[2]] <- imager::load.image(
+                    paste0("https://www.floraweb.de",
+                           gsub("\\.\\.", "", gsub("\\.tmb", "",
+                                                   photolinks[2])))),
+                    silent = TRUE)
+                }
               }
             }
           }
@@ -535,56 +547,57 @@ BotanizeR_collect <-
     if(!is.na(species_row$NAMNR) & species_row$NAMNR != "" &
        length(hints_floraweb)>0) { 
       
-      # ecology
-      if("habitat" %in% hints_floraweb){
-        try({download.file(
-          paste0("https://www.floraweb.de/xsql/oekologie.xsql?suchnr=",
-                 species_row$NAMNR, "&"), 
-          destfile = file.path(dir,"ecology.txt"), quiet = TRUE)
-          html_ecology <- XML::htmlTreeParse(file = file.path(dir,
-                                                              "ecology.txt"),
-                                             isURL = FALSE, isHTML = TRUE,
-                                             useInternalNodes = TRUE)
-          # infos_ecology <- XML::xpathApply(html_ecology,
-          #                                  "//section//p",
-          #                                  XML::xmlValue)
-          infos_ecology <- XML::xpathApply(html_ecology,
-                                           "//h3//following-sibling::text()",
-                                           XML::xmlValue)
-          
-          if(infos_ecology[[1]] == "Formation"){
-            infos_ecology <- 
-              infos_ecology[2:(which(!grepl("\\n\\t", 
-                                                infos_ecology))[2]-1)]
-            infos_ecology <- paste(infos_ecology, collapse = "; ")
-            infos_ecology <- paste("Habitat:", gsub("\\r|\\n|\\t", "", infos_ecology))
-          }
-        })
-      }
+      # # ecology
+      # if("habitat" %in% hints_floraweb){
+      #   try({download.file(
+      #     paste0("https://www.floraweb.de/xsql/oekologie.xsql?suchnr=",
+      #            species_row$NAMNR, "&"), 
+      #     destfile = file.path(dir,"ecology.txt"), quiet = TRUE)
+      #     html_ecology <- XML::htmlTreeParse(file = file.path(dir,
+      #                                                         "ecology.txt"),
+      #                                        isURL = FALSE, isHTML = TRUE,
+      #                                        useInternalNodes = TRUE)
+      #     # infos_ecology <- XML::xpathApply(html_ecology,
+      #     #                                  "//section//p",
+      #     #                                  XML::xmlValue)
+      #     infos_ecology <- XML::xpathApply(html_ecology,
+      #                                      "//tr[@class='border-top']",
+      #                                      # "//tr//following-sibling::text()",
+      #                                      XML::xmlValue)
+      #     
+      #     if(infos_ecology[[1]] == "Formation"){
+      #       infos_ecology <- 
+      #         infos_ecology[2:(which(!grepl("\\n\\t", 
+      #                                           infos_ecology))[2]-1)]
+      #       infos_ecology <- paste(infos_ecology, collapse = "; ")
+      #       infos_ecology <- paste("Habitat:", gsub("\\r|\\n|\\t", "", infos_ecology))
+      #     }
+      #   })
+      # }
       
-      # biology
-      if("description" %in% hints_floraweb & floraweb_image == FALSE){
-        try({download.file(
-          paste0("https://www.floraweb.de/xsql/biologie.xsql?suchnr=",
-                 species_row$NAMNR, "&"),
-          destfile = file.path(dir, "biology.txt"), quiet = TRUE)
-          html_biology <- XML::htmlTreeParse(file = file.path(dir,
-                                                              "biology.txt"),
-                                             isURL = FALSE, isHTML = TRUE,
-                                             useInternalNodes = TRUE)
-          # infos_biology <- XML::xpathApply(html_biology,
-          #                                  "//section//p",
-          #                                  XML::xmlValue)
-          infos_biology <- XML::xpathApply(html_biology,
-                                           "//h4//following-sibling::text()",
-                                           XML::xmlValue)
-          if("Morphologische Beschreibung" %in% infos_biology){
-            infos_biology <- 
-              infos_biology[which(infos_biology == "Morphologische Beschreibung")+2]
-          }
-          
-        })
-      }
+      # # biology
+      # if("description" %in% hints_floraweb & floraweb_image == FALSE){
+      #   try({download.file(
+      #     paste0("https://www.floraweb.de/xsql/biologie.xsql?suchnr=",
+      #            species_row$NAMNR, "&"),
+      #     destfile = file.path(dir, "biology.txt"), quiet = TRUE)
+      #     html_biology <- XML::htmlTreeParse(file = file.path(dir,
+      #                                                         "biology.txt"),
+      #                                        isURL = FALSE, isHTML = TRUE,
+      #                                        useInternalNodes = TRUE)
+      #     # infos_biology <- XML::xpathApply(html_biology,
+      #     #                                  "//section//p",
+      #     #                                  XML::xmlValue)
+      #     infos_biology <- XML::xpathApply(html_biology,
+      #                                      "//h4//following-sibling::text()",
+      #                                      XML::xmlValue)
+      #     if("Morphologische Beschreibung" %in% infos_biology){
+      #       infos_biology <- 
+      #         infos_biology[which(infos_biology == "Morphologische Beschreibung")+2]
+      #     }
+      #     
+      #   })
+      # }
       
       # Map
       map <- NA
@@ -662,41 +675,69 @@ BotanizeR_collect <-
       
       for (i in seq_along(hints_floraweb)){
         
-        if(hints_floraweb[i] == "description" & (exists("infos_photo") |
-                                                 exists("infos_biology"))){
-          if(floraweb_image){
-            description <- paste0(
-              "Bestimmungshilfe/Morphologie:\n",
-              infos_photo[[3]])
-          } else {
-            description <- paste0(
-              "Bestimmungshilfe/Morphologie:\n",
-              infos_biology[[1]])
-          }
-          if(!grepl("keine Angaben", description)){
+        if(hints_floraweb[i] == "description" & exists("html_main")){
+          # if(floraweb_image){
+          #   description <- paste0(
+          #     "Bestimmungshilfe/Morphologie:\n",
+          #     infos_photo[[3]])
+          # } else {
+          description <- gsub(
+            "^Beschreibung", "Beschreibung:",
+            XML::xpathApply(html_main, "//div[@class='overview-box']/p", XML::xmlValue)[1])
+          # }
+          if(!is.null(description) & !grepl("keine Angaben", description)){
             hints[[i+1]] <- description
           }
         }
         
-        if(hints_floraweb[i] == "status" & exists("infos_main")){
-          hints[[i+1]] <- gsub(" +"," ",
-                               gsub("; \\n","",
-                                    paste0(infos_main[[4]], 
-                                           "; \n",infos_main[[5]])))
+        if(hints_floraweb[i] == "status" & exists("html_main")){
+          hints[[i+1]] <- gsub("\\n","",
+                               gsub("\\r","",
+                                    gsub("\\t","",
+                                         gsub(" +"," ",
+                                              paste0("Status:", 
+                                                     XML::xpathApply(html_main, "//td[@class='note-column']", XML::xmlValue)[[1]], 
+                                                     ";\n",
+                                                     XML::xpathApply(html_main, "//td[@class='note-column']", XML::xmlValue)[[2]])))))
         }
         
-        if(hints_floraweb[i] == "family" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[3]])
+        if(hints_floraweb[i] == "family" & exists("html_main")){
+          
+          hints[[i+1]] <- paste0("Familie: ",
+                                 strsplit(      
+                                   gsub("^ ","",
+                                        gsub("\\n","",
+                                             gsub("\\r","",
+                                                  gsub(" +"," ",
+                                                       XML::xpathApply(html_main, "//div[@id='taxonomy']/div/ul/li", XML::xmlValue)[[1]]))))," ")[[1]][1])
         }
         
-        if(hints_floraweb[i] == "German name" & exists("infos_main")){
-          hints[[i+1]] <- paste(infos_main[[2]])
+        if(hints_floraweb[i] == "German name" & exists("html_main")){
+         
+          name_details <- strsplit(      
+            gsub("^ ","",
+                 gsub("\\n","",
+                      gsub("\\r","",
+                           gsub(" +"," ",
+                                XML::xpathApply(html_main, "//div[@id='taxonomy']/div/ul/li", XML::xmlValue)[[1]])))),"\\(|\\)")[[1]]
+          
+          hints[[i+1]] <- paste(gsub("Art ","", grep("Art ",name_details, value = TRUE)), collapse = ", ")
         }
         
-        if(hints_floraweb[i] == "habitat" & exists("infos_ecology")){
-          if(infos_ecology[[1]] !=
-             "Formation: \r\nTaxon keiner Formation zugeordnet "){
-            hints[[i+1]] <- paste(infos_ecology[[1]])
+        if(hints_floraweb[i] == "habitat" & exists("html_main")){
+          
+          if(length(XML::xpathApply(html_main, "//div[@id='ecology']/table/tr", XML::xmlValue))>1){
+            habitat <- gsub(" +"," ", 
+                            gsub("^ ","",
+                                 gsub("\\n","",
+                                      gsub("\\r","",
+                                           XML::xpathApply(html_main, "//div[@id='ecology']/table/tr", XML::xmlValue)[[2]]))))
+            
+            if(length(habitat) > 0){
+              if(!grepl("keiner Formation zugeordnet", habitat)){
+                hints[[i+1]] <- habitat
+              }
+            }
           }
         }
         
